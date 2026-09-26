@@ -26,6 +26,16 @@ describe("createEngine", () => {
     expect(asked).toBe(0);
   });
 
+  it("should keep tied items in their original order", async () => {
+    // GIVEN three items
+    const items = ["x", "y", "z"].map((t) => item(t));
+    // WHEN every pair is answered "equal"
+    const eng = createEngine({ items });
+    const order = await eng.run(async () => 0 as const);
+    // THEN the order is unchanged
+    expect(eng.ranking(order).map((i) => i.title)).toEqual(["x", "y", "z"]);
+  });
+
   it("should answer cross-tier pairs from the tiers without asking, and never log them", async () => {
     // GIVEN one item tagged good and one tagged bad, with good ranked above bad
     const items = [item("hi", "1", [], "", ["good"]), item("lo", "2", [], "", ["bad"])];

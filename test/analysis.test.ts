@@ -85,6 +85,14 @@ describe("resolving conflicts", () => {
     expect(disagreements(next, items, pref)).toBe(1);
   });
 
+  it("should leave an order alone when no move improves it", () => {
+    // GIVEN an order that already agrees with every answer
+    const pref = preferences([said(a, b, -1)]);
+    // WHEN minimised
+    // THEN nothing moves
+    expect(minimiseDisagreements([0, 1, 2, 3], items, pref)).toEqual([0, 1, 2, 3]);
+  });
+
   it("should count repeated answers as extra weight", () => {
     // GIVEN the same preference given twice
     const pref = preferences([said(b, a, -1), said(b, a, -1)]);
