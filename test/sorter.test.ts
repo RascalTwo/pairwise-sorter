@@ -226,6 +226,23 @@ describe("Sorter: editing items", () => {
     expect(titles(s)).toEqual(["b", "c", "d", "f"]);
   });
 
+  it("should never announce a change while its question still points at items that are gone", async () => {
+    // GIVEN a question open on a four-item list
+    const s = sorterOf("a", "b", "c", "d");
+    await s.settled();
+    await s.answer(-1);
+    await s.answer(-1);
+    const seen: (string | undefined)[] = [];
+    s.addEventListener("change", () => {
+      const q = s.question;
+      seen.push(q ? `${s.list.items[q.a]?.title},${s.list.items[q.b]?.title}` : undefined);
+    });
+    // WHEN the list shrinks to two new items
+    s.setItems([item("x"), item("y")]);
+    // THEN the change was announced with no stale question
+    expect(seen).toEqual([undefined]);
+  });
+
   it("should merge duplicates, keep the existing order, and drop only deleted items' answers", async () => {
     // GIVEN a finished sort with a benched item and a tier on a tag
     const s = new Sorter({ ...emptyList("t"), items: [item("a", "", [], "", ["x"]), item("b"), item("c")] });

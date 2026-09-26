@@ -274,8 +274,10 @@ export class Sorter extends EventTarget {
 
   #change(mutate: () => void): Promise<void> {
     mutate();
-    this.#emit("change");
+    // Run first: it clears the old question synchronously, so a listener rendering on
+    // `change` never sees indices into items that have just gone.
     this.#run();
+    this.#emit("change");
     return this.settled();
   }
 

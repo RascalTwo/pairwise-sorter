@@ -14,6 +14,7 @@ export { PairwiseElement, theme } from "./base.ts";
 // Internal: used by <pairwise-sorter>, registered but not a supported standalone API.
 export { PairwiseBench, PairwiseEditor, PairwiseIo, PairwiseLists };
 export { PairwiseSorter };
+export { installConsole } from "./console.ts";
 export type { Screen } from "./app.ts";
 export { PairwiseCompare, PairwiseConflicts, PairwiseProgress, PairwiseRanking, PairwiseTiers, PairwiseWeights };
 
