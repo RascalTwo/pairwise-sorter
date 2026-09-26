@@ -139,8 +139,10 @@ export class PairwiseCompare extends PairwiseElement {
     if (this.#lightbox.isOpen) return;
     const s = this.sorter;
     if (!s?.question || this.hasAttribute("no-keyboard") || !this.checkVisibility()) return;
-    const target = e.composedPath()[0];
+    const path = e.composedPath(), target = path[0];
     if (target instanceof HTMLElement && target.matches("input, textarea, select, [contenteditable]")) return;
+    // Focus inside an open dialog (an item editor, say) means these keys are not answers.
+    if (path.some((n) => n instanceof HTMLDialogElement && n.open)) return;
     const v = ({ ArrowLeft: -1, ArrowRight: 1, ArrowDown: 0, "=": 0 } as const)[e.key as "ArrowLeft"];
     if (v !== undefined) { e.preventDefault(); s.answer(v); }
     else if (e.key === "Backspace") { e.preventDefault(); s.undo(); }
