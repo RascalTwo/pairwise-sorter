@@ -32,8 +32,11 @@
   .ctl output { font-variant-numeric: tabular-nums; color: var(--muted); }
   .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin: 8px 0 0; }
   .legend i { display: inline-block; width: 14px; height: 10px; border-radius: 3px; vertical-align: middle; margin-right: 6px; }
-  #howSvg .node, #howSvg .band, #howSvg .badge, #howSvg .link { transition: transform .55s cubic-bezier(.3,.7,.3,1), opacity .4s, fill .3s; }
-  #howSvg .node rect { transition: fill .3s, stroke .3s; }
+  #howSvg .node, #howSvg .band, #howSvg .slot, #howSvg .count { transition: transform .55s cubic-bezier(.3,.7,.3,1), opacity .4s; }
+  #howSvg .node rect, #howSvg .slot line, #howSvg .slot circle { transition: fill .3s, stroke .3s; }
+  #howSvg .better { transition: opacity .3s .15s; }
+  /* The connector GROWS out of the compared item towards the new one. */
+  #howSvg .grow { transform-box: fill-box; transform-origin: left center; transition: transform .45s cubic-bezier(.3,.7,.3,1), stroke .3s; }
   @media (prefers-reduced-motion: reduce) { #howSvg * { transition: none !important; } }
   .say { font-size: 17px; min-height: 1.5em; margin: 10px 0 0; }
   .two { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: start; }
@@ -76,7 +79,7 @@
     <h2>How it asks</h2>
     <p class="lede">Binary insertion with you as the comparator. Each item is slotted into the list already placed by halving the gap it could go in. Step through it — this trace was recorded by running the library's own <code>sortIndices</code> on eight coffees.</p>
     <figure id="howFig" tabindex="0" aria-label="Binary insertion walkthrough; use arrow keys to step" data-viz-id="how-figure" data-label="Binary insertion walkthrough">
-      <svg id="howSvg" viewBox="0 0 1000 540"></svg>
+      <svg id="howSvg" viewBox="0 0 1000 660"></svg>
       <p class="say" id="howSay"></p>
       <div class="ctl">
         <button id="howPrev" aria-label="Previous step">◀</button>
@@ -88,7 +91,8 @@
       <div class="legend">
         <span><i style="background:var(--accent)"></i>item being placed</span>
         <span><i style="background:var(--warn)"></i>the item it is compared with</span>
-        <span><i style="background:color-mix(in srgb,var(--warn) 22%,transparent);border:1px solid var(--warn)"></i>where it could still go</span>
+        <span><i style="background:color-mix(in srgb,var(--warn) 22%,transparent);border:1px solid var(--warn)"></i>items it could still land among</span>
+        <span><i style="height:0;border-top:3px dashed var(--warn);border-radius:0"></i>a place it could still go</span>
         <span><i style="background:var(--good)"></i>the better of the pair</span>
         <span><i style="background:var(--panel-2);border:1px solid var(--border);opacity:.4"></i>ruled out — no need to ask</span>
       </div>
@@ -226,79 +230,119 @@ installConsole(document.querySelector("pairwise-sorter"));
     steps.push({ kind: "done", placed: final, item: null });
     const questions = steps.filter((s) => s.kind === "ask").length;
 
-    const COL_X = 300, COL_W = 230, ROW = 58, TOP = 40, BOX_H = 44, NEW_X = 640;
+    const COL_X = 300, COL_W = 250, ROW = 74, TOP = 40, BOX_H = 44, NEW_X = 660, N = COFFEES.length;
     const rowY = (k) => TOP + k * ROW;
+    // A place the item could go: the gap ABOVE row k (k = n is below the last row).
+    const slotY = (k) => rowY(k) - (ROW - BOX_H) / 2;
     const svg = $("#howSvg");
     svg.innerHTML = `
-      <text x="${COL_X - 62}" y="${TOP + 27}" text-anchor="end" font-size="13" fill="var(--muted)">best</text>
-      <text x="${COL_X - 62}" y="${rowY(7) + 27}" text-anchor="end" font-size="13" fill="var(--muted)">worst</text>
-      <line x1="${COL_X - 50}" y1="${TOP + 8}" x2="${COL_X - 50}" y2="${rowY(7) + 36}" stroke="var(--border)" stroke-width="2" marker-end="url(#rk)"/>
+      <text x="${COL_X - 70}" y="${TOP + 27}" text-anchor="end" font-size="13" fill="var(--muted)">best</text>
+      <text x="${COL_X - 70}" y="${rowY(N - 1) + 27}" text-anchor="end" font-size="13" fill="var(--muted)">worst</text>
       <defs><marker id="rk" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,0 L5,10z" fill="var(--border)"/></marker></defs>
-      <rect class="band" id="band" x="${COL_X - 12}" y="0" width="${COL_W + 24}" height="10" rx="10"
-        fill="color-mix(in srgb, var(--warn) 16%, transparent)" stroke="var(--warn)" stroke-dasharray="5 4" data-viz-id="window" data-label="where the item could still go"/>
-      <line class="link" id="link" x1="${COL_X + COL_W}" x2="${NEW_X}" y1="0" y2="0" stroke="var(--warn)" stroke-width="2" stroke-dasharray="4 4"/>
+      <line x1="${COL_X - 58}" y1="${TOP + 8}" x2="${COL_X - 58}" y2="${rowY(N - 1) + 36}" stroke="var(--border)" stroke-width="2" marker-end="url(#rk)"/>
+      <rect class="band" id="band" x="${COL_X - 12}" y="0" width="${COL_W + 24}" height="10" rx="10" style="opacity:0"
+        fill="color-mix(in srgb, var(--warn) 12%, transparent)" stroke="var(--warn)" stroke-dasharray="5 4" data-viz-id="window" data-label="items it could still land among"/>
+      ${Array.from({ length: N + 1 }, (_, k) => `<g class="slot" id="s${k}" style="opacity:0" data-viz-id="slot-${k}" data-label="possible place #${k + 1}">
+        <line x1="0" x2="${COL_W}" y1="0" y2="0" stroke="var(--warn)" stroke-width="3" stroke-dasharray="7 6"/>
+        <circle cx="-10" cy="0" r="5" fill="var(--warn)"/></g>`).join("")}
+      <g id="link" style="opacity:0"><line class="grow" x1="0" x2="${NEW_X - COL_X - COL_W}" y1="0" y2="0" stroke="var(--warn)" stroke-width="2.5" stroke-dasharray="5 4"/></g>
       ${COFFEES.map(([name], i) => `<g class="node" id="n${i}" data-viz-id="coffee-${i}" data-label="${esc(name)}" style="opacity:0">
         <rect width="${COL_W}" height="${BOX_H}" rx="9" stroke="var(--border)"/>
-        <text x="${COL_W / 2}" y="28" text-anchor="middle" font-size="16">${esc(name)}</text>
-        <text class="rank" x="-18" y="28" text-anchor="end" font-size="13" fill="var(--muted)"></text></g>`).join("")}
-      <g class="badge" id="badge" style="opacity:0"><rect width="86" height="26" rx="13" fill="var(--good)"/>
-        <text x="43" y="18" text-anchor="middle" font-size="13" font-weight="700" fill="#04140a">✓ better</text></g>`;
+        <text x="16" y="28" font-size="16">${esc(name)}</text>
+        <text class="rank" x="-22" y="28" text-anchor="end" font-size="13" fill="var(--muted)"></text>
+        <g class="better" style="opacity:0"><rect x="${COL_W - 92}" y="9" width="84" height="26" rx="13" fill="var(--good)"/>
+          <text x="${COL_W - 50}" y="27" text-anchor="middle" font-size="13" font-weight="700" fill="#04140a">✓ better</text></g></g>`).join("")}
+      <text class="count" id="count" x="${COL_W / 2}" y="${BOX_H + 22}" text-anchor="middle" font-size="13" fill="var(--warn)" style="opacity:0"></text>`;
     const node = (i) => svg.querySelector(`#n${i}`);
-    const move = (el, x, y) => (el.style.transform = `translate(${x}px, ${y}px)`);
+    /**
+     * Move and show/hide an element. Something APPEARING jumps straight to its place with no
+     * transition — otherwise it would visibly fly in from wherever it was last parked.
+     */
+    function put(el, x, y, opacity) {
+      const t = `translate(${x}px, ${y}px)`;
+      if (Number(el.style.opacity || 0) === 0 && opacity > 0) {
+        el.style.transition = "none";
+        el.style.transform = t;
+        el.getBoundingClientRect();
+        el.style.transition = "";
+      } else el.style.transform = t;
+      el.style.opacity = opacity;
+    }
+    const places = (n) => (n === 1 ? "1 possible place" : `${n} possible places`);
 
     function drawHow(i) {
       const st = steps[i];
+      const asking = st.kind === "ask" || st.kind === "answer";
       const placed = st.placed, pos = new Map(placed.map((idx, k) => [idx, k]));
-      const inWindow = (k) => st.kind === "ask" || st.kind === "answer" ? k >= st.lo && k < st.hi : true;
+      // Rows the item could still land among (lo..hi-1) and places it could still go (lo..hi).
+      const [lo, hi] = asking ? [st.lo, st.hi] : st.kind === "take" ? [0, placed.length] : [st.at ?? 0, st.at ?? 0];
+      const winner = st.kind === "answer" ? (st.verdict < 0 ? st.item : placed[st.mid]) : null;
+      let newPos = null;
+
       COFFEES.forEach((_, c) => {
-        const el = node(c), rect = el.querySelector("rect"), label = el.querySelectorAll("text");
+        const el = node(c), rect = el.querySelector("rect"), [title, rank] = el.querySelectorAll(":scope > text");
         let x = NEW_X, y = rowY(0), op = 0, fill = "var(--panel-2)", ink = "var(--text)";
         if (pos.has(c)) {
           const k = pos.get(c);
-          x = COL_X; y = rowY(k); op = inWindow(k) || k === st.mid ? 1 : 0.35;
-          if ((st.kind === "ask" || st.kind === "answer") && k === st.mid) { fill = "var(--warn)"; ink = "#1a1300"; op = 1; }
-          label[1].textContent = `#${k + 1}`;
-        } else label[1].textContent = "";
-        if (c === st.item && st.kind !== "place") {
-          x = NEW_X; op = 1; fill = "var(--accent)"; ink = "#06101d";
-          y = st.kind === "ask" || st.kind === "answer" ? rowY(st.mid) : rowY(0);
+          x = COL_X; y = rowY(k);
+          op = asking && (k < lo || k >= hi) && k !== st.mid ? 0.35 : 1;
+          if (asking && k === st.mid) { fill = "var(--warn)"; ink = "#1a1300"; }
+          rank.textContent = `#${k + 1}`;
+        } else rank.textContent = "";
+        if (c === st.item) {
+          fill = "var(--accent)"; ink = "#06101d"; op = 1;
+          if (st.kind !== "place") { x = NEW_X; y = asking ? rowY(st.mid) : rowY(0); newPos = [x, y]; }
         }
-        if (c === st.item && st.kind === "place") { fill = "var(--accent)"; ink = "#06101d"; }
         rect.style.fill = fill;
-        label[0].style.fill = ink;
-        el.style.opacity = op;
-        move(el, x, y);
+        title.style.fill = ink;
+        el.querySelector(".better").style.opacity = c === winner ? 1 : 0;
+        put(el, x, y, op);
       });
-      // The window of slots still possible: rows lo..hi-1, or an insertion line when empty.
+
+      // Possible places: lit inside the open range, faded once ruled out, gone when not in play.
+      const inPlay = st.kind === "take" || asking || st.kind === "place";
+      for (let k = 0; k <= N; k++) {
+        const slot = svg.querySelector(`#s${k}`), exists = k <= placed.length - (st.kind === "place" ? 1 : 0);
+        const open = k >= lo && k <= hi;
+        const op = !inPlay || !exists || st.kind === "place" ? 0 : open ? 1 : 0.18;
+        slot.querySelectorAll("line, circle").forEach((m) => { m.style.stroke = m.style.fill = open ? "var(--warn)" : "var(--muted)"; });
+        slot.querySelector("line").style.fill = "none";
+        put(slot, COL_X, slotY(k), op);
+      }
+
       const band = svg.querySelector("#band");
-      if (st.kind === "ask" || st.kind === "answer") {
-        const top = rowY(st.lo) - 7, h = Math.max(6, (st.hi - st.lo) * ROW - (ROW - BOX_H) + 14 - (st.hi === st.lo ? 14 : 0));
-        band.style.opacity = 1;
-        band.style.transform = `translateY(${st.hi === st.lo ? rowY(st.lo) - 10 : top}px) scaleY(1)`;
-        band.setAttribute("height", h);
+      if (asking && hi > lo) {
+        band.setAttribute("height", (hi - lo) * ROW - (ROW - BOX_H) + 14);
+        put(band, 0, rowY(lo) - 7, 1);
       } else band.style.opacity = 0;
-      const link = svg.querySelector("#link"), badge = svg.querySelector("#badge");
-      const asking = st.kind === "ask" || st.kind === "answer";
-      link.style.opacity = asking ? 1 : 0;
-      link.style.transform = `translateY(${asking ? rowY(st.mid) + BOX_H / 2 : 0}px)`;
-      link.setAttribute("stroke", st.kind === "answer" ? "var(--good)" : "var(--warn)");
-      if (st.kind === "answer") {
-        const newWins = st.verdict < 0;
-        badge.style.opacity = 1;
-        move(badge, (newWins ? NEW_X + COL_W : COL_X + COL_W) + 10, rowY(st.mid) + 9);
-      } else badge.style.opacity = 0;
+
+      const link = svg.querySelector("#link"), grow = link.querySelector("line");
+      if (asking) {
+        put(link, COL_X + COL_W, rowY(st.mid) + BOX_H / 2, 1);
+        grow.style.stroke = st.kind === "answer" ? "var(--good)" : "var(--warn)";
+        if (st.kind === "ask") { grow.style.transition = "none"; grow.style.transform = "scaleX(0)"; grow.getBoundingClientRect(); grow.style.transition = ""; }
+        grow.style.transform = "scaleX(1)";
+      } else link.style.opacity = 0;
+
+      const count = svg.querySelector("#count"), open = hi - lo + 1;
+      if (newPos && st.kind !== "done") {
+        count.textContent = places(open);
+        put(count, newPos[0], newPos[1], 1);
+      } else count.style.opacity = 0;
 
       const name = (k) => `<b>${esc(COFFEES[k][0])}</b>`;
-      // The window holds rows lo..hi-1, so the item can still land at any of places lo+1 … hi+1.
-      const slots = (lo, hi) => (hi === lo ? `that settles it — its place is <b>#${lo + 1}</b>` : `it could still be anywhere from #${lo + 1} to #${hi + 1}, so it's asked again inside that range`);
+      const range = open === 1 ? `that leaves <b>1 possible place</b>: #${lo + 1}` : `that leaves <b>${places(open)}</b>, #${lo + 1}–#${hi + 1}`;
       $("#howSay").innerHTML = {
-        take: () => st.placed.length ? `Next up: ${name(st.item)}. It has to fit somewhere among the ${st.placed.length} already ranked.`
-          : `${name(st.item)} goes first — there is nothing to compare it with yet.`,
-        ask: () => `Is ${name(st.item)} better than ${name(st.placed[st.mid])}? It's compared with the <b>middle</b> of the open range, so one answer halves it.`,
+        take: () => placed.length
+          ? `Next up: ${name(st.item)}. With ${placed.length} already ranked it has <b>${places(placed.length + 1)}</b> — `
+            + (placed.length === 1 ? `above or below ${name(placed[0])}.` : "above them, between any two, or below them.")
+          : `${name(st.item)} goes first: with nothing ranked yet there is only <b>1 possible place</b>.`,
+        ask: () => `Is ${name(st.item)} better than ${name(placed[st.mid])}? It is compared with the <b>middle</b> of what's still open, so either answer rules out about half the places.`,
         answer: () => st.verdict < 0
-          ? `<b>Yes</b> — ${name(st.item)} is better, so it goes <b>above</b> ${name(st.placed[st.mid])}: ${slots(st.lo, st.hi)}.`
-          : `<b>No</b> — ${name(st.placed[st.mid])} is better, so ${name(st.item)} goes <b>below</b> it: ${slots(st.lo, st.hi)}.`,
-        place: () => `${name(st.item)} lands at <b>#${st.at + 1}</b>; everything under it moves down one.`,
+          ? `<b>Yes</b> — ${name(st.item)} is better, so it goes above ${name(placed[st.mid])}; ${range}.`
+          : `<b>No</b> — ${name(placed[st.mid])} is better, so ${name(st.item)} goes below it; ${range}.`,
+        place: () => `One place left — ${name(st.item)} lands at <b>#${st.at + 1}</b>`
+          + (st.at < placed.length - 1 ? " and everything under it moves down." : "."),
         done: () => `Done: 8 items ranked with <b>${questions}</b> questions. Asking about every pair would have taken 28.`,
       }[st.kind]();
       $("#howAt").textContent = `step ${i + 1} / ${steps.length}`;
