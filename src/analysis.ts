@@ -83,12 +83,15 @@ export function minimiseDisagreements(
       const rest = cur.slice(0, i).concat(cur.slice(i + 1));
       // Carry the running cost so one item's sweep is O(n), not O(n²).
       let cost = rest.reduce((s, r) => s + beats(pref, items, r, v), 0);
-      let best = 0, bestCost = cost;
+      let best = 0, bestCost = cost, stay = cost;
       for (let at = 1; at <= rest.length; at++) {
         const r = rest[at - 1]!;
         cost += beats(pref, items, v, r) - beats(pref, items, r, v);
+        if (at === i) stay = cost;
         if (cost < bestCost) { bestCost = cost; best = at; }
       }
+      // Only move for a strict gain — an unconstrained item must not drift to the top.
+      if (stay === bestCost) best = i;
       rest.splice(best, 0, v);
       if (best !== i) moved = true;
       cur = rest;
