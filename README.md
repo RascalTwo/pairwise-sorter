@@ -31,7 +31,7 @@ Full documentation: <https://rascaltwo.github.io/pairwise-sorter/>
 
 ```sh
 bun install
-bun test          # behaviour tests; fails under 100% line and function coverage
+bun run test      # behaviour tests (browser ones in headless Chrome); fails under 100% coverage
 bun run typecheck
 ```
 

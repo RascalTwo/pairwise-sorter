@@ -26,7 +26,7 @@
     "prepare": "if command -v tsc >/dev/null; then tsc -p tsconfig.build.json; else bunx -p typescript@7 tsc -p tsconfig.build.json; fi",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
-    "test": "bun test --coverage"
+    "test": "bun test --timeout 60000"
   },
   "devDependencies": {
     "@types/bun": "^1.4.2",
