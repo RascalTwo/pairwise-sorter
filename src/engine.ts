@@ -24,6 +24,9 @@ export const pairKeyOf = (idA: string, idB: string): string => (idA < idB ? idA 
 /** The orientation a verdict must be multiplied by, since it is stored relative to the key. */
 export const flipOfIds = (idA: string, idB: string): 1 | -1 => (idA < idB ? 1 : -1);
 
+/** A verdict re-oriented by `sign` (±1). `|| 0` keeps an equal answer 0 rather than -0. */
+export const orient = (v: Verdict, sign: number): Verdict => ((v * sign) || 0) as Verdict;
+
 /** Lowest priority index among an item's tags — Infinity for the untiered bottom band. */
 export const tierOf = (it: Pick<Item, "tags"> | undefined, priority: readonly string[]): number =>
   (it?.tags ?? []).reduce((best, t) => {
@@ -141,7 +144,7 @@ export function migrateId(log: LogEntry[], benched: Set<string> | undefined, old
     const [x = "", y = ""] = k.split(SEP);
     if (x !== oldId && y !== oldId) return [k, v];
     const nx = x === oldId ? newId : x, ny = y === oldId ? newId : y;
-    return nx < ny ? [nx + SEP + ny, v] : [ny + SEP + nx, -v as Verdict];
+    return nx < ny ? [nx + SEP + ny, v] : [ny + SEP + nx, orient(v, -1)];
   });
   log.length = 0;
   log.push(...out);
@@ -176,12 +179,12 @@ export function createEngine(input: EngineInput = {}) {
     const ia = idOf(s.items[a]), ib = idOf(s.items[b]);
     const k = pairKeyOf(ia, ib), flip = flipOfIds(ia, ib);
     const known = answers.get(k);
-    if (known !== undefined) return (known * flip) as Verdict;
+    if (known !== undefined) return orient(known, flip);
     const tier = tierVerdict(s.items[a]!, s.items[b]!, s.priority);
     if (tier !== null) return tier;
     const v = await ask(a, b);
-    answers.set(k, (v * flip) as Verdict);
-    s.log.push([k, (v * flip) as Verdict]);
+    answers.set(k, orient(v, flip));
+    s.log.push([k, orient(v, flip)]);
     onRecord?.(s.log);
     return v;
   }

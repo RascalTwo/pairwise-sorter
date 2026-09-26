@@ -11,7 +11,7 @@ import {
   type RankRow,
 } from "./analysis.ts";
 import {
-  findConflicts, flipOfIds, migrateId, pairKeyOf, sortIndices, tierVerdict, type Combine, type LogEntry, type Verdict,
+  findConflicts, flipOfIds, migrateId, orient, pairKeyOf, sortIndices, tierVerdict, type Combine, type LogEntry, type Verdict,
 } from "./engine.ts";
 import { idOf, idParts, item, SEP, tagOf, type Item } from "./item.ts";
 import { emptyList, type List } from "./store.ts";
@@ -329,12 +329,12 @@ export class Sorter extends EventTarget {
     // Your own answer first, so a direct answer beats the tier order — the escape hatch for
     // promoting one item across the divide.
     const known = this.#answers.get(k);
-    if (known !== undefined) return (known * flip) as Verdict;
+    if (known !== undefined) return orient(known, flip);
     const tier = tierVerdict(items[a]!, items[b]!, this.list.priority);
     if (tier !== null) return tier;
     return new Promise((resolve) => {
       this.#pending = (v) => {
-        const stored = (v * flip) as Verdict;
+        const stored = orient(v, flip);
         this.#answers.set(k, stored);
         this.list.log.push([k, stored]);
         this.#emit("change");

@@ -79,6 +79,16 @@ describe("Sorter: ranking a list", () => {
     expect(upcoming.flat().every((i) => i >= 0 && i < 5)).toBe(true);
   });
 
+  it("should store an equal answer as 0 whichever way round the pair was shown", async () => {
+    // GIVEN two items asked in an order opposite to their key order
+    const s = sorterOf("a", "b");
+    await s.settled();
+    // WHEN they are called equal
+    await s.answer(0);
+    // THEN the log holds a plain 0, never -0
+    expect(Object.is(s.list.log[0]![1], 0)).toBe(true);
+  });
+
   it("should refuse an answer when nothing is being asked", async () => {
     // GIVEN a finished sort
     const s = sorterOf("a", "b");

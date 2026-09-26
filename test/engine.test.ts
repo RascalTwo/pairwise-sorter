@@ -229,6 +229,19 @@ describe("engine bookkeeping", () => {
     expect(JSON.parse(JSON.stringify(eng.toJSON())).benched).toEqual([idOf(items[3])]);
   });
 
+  it("should keep an equal answer a plain 0 through a migrate and an engine run", async () => {
+    // GIVEN a tie logged between a and b, then a renamed to z
+    const log: [string, Verdict][] = [[pairKeyOf("a", "b"), 0]];
+    migrateId(log, undefined, "a", "z");
+    // WHEN a fresh engine is asked about a pair in flipped order and told they are equal
+    const items = [item("b"), item("a")];
+    const eng = createEngine({ items });
+    await eng.run(async () => 0 as const);
+    // THEN neither log holds -0
+    expect(Object.is(log[0]![1], 0)).toBe(true);
+    expect(Object.is(eng.state.log[0]![1], 0)).toBe(true);
+  });
+
   it("should leave the log alone when an id is migrated onto itself", () => {
     // GIVEN a log with one answer
     const log: [string, Verdict][] = [[pairKeyOf("a", "b"), 1]];

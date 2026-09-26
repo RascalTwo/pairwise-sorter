@@ -2,7 +2,7 @@
 // import/export format, and an optional localStorage adapter. The library never saves on
 // its own — a host calls these, or stores the same plain objects wherever it likes.
 
-import type { Combine, LogEntry, Verdict } from "./engine.ts";
+import { orient, type Combine, type LogEntry, type Verdict } from "./engine.ts";
 import { idOf, idParts, item, SEP, tagOf, type Item } from "./item.ts";
 import { fromJSON } from "./parse.ts";
 
@@ -182,7 +182,7 @@ export function importList(data: unknown): { list: List; count: number; kept: nu
     if (x === y || !kept.has(x) || !kept.has(y)) { skipped++; continue; }
     const v: Verdict = c.verdict > 0 ? 1 : c.verdict < 0 ? -1 : 0;
     // Re-normalise to the key's sorted order; the verdict flips with the operands.
-    log.push(x < y ? [x + SEP + y, v] : [y + SEP + x, -v as Verdict]);
+    log.push(x < y ? [x + SEP + y, v] : [y + SEP + x, orient(v, -1)]);
   }
   // `benched` since /2, `removed` in /1.
   const benched = [d.benched, d.removed].flatMap((a) => (Array.isArray(a) ? a : [])).map(idOf).filter((id) => kept.has(id));
