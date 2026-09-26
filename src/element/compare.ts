@@ -136,7 +136,7 @@ export class PairwiseCompare extends PairwiseElement {
   }
 
   #keys = (e: KeyboardEvent): void => {
-    if (this.#lightbox.isOpen) return this.#lightbox.key(e);
+    if (this.#lightbox.isOpen) return;
     const s = this.sorter;
     if (!s?.question || this.hasAttribute("no-keyboard") || !this.checkVisibility()) return;
     const target = e.composedPath()[0];

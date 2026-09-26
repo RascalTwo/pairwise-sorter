@@ -47,9 +47,13 @@ export function preload(items: readonly Item[], idxs: readonly number[]): void {
   }
 }
 
-/** A full-screen gallery inside a shadow root. While open it owns ←, → and Escape. */
+/**
+ * A full-screen gallery inside a shadow root. It takes focus when it opens, so its own ←, →
+ * and Escape handling needs no page-wide listener; elements that do listen page-wide check
+ * {@link Lightbox.isOpen} so those keys never vote.
+ */
 export class Lightbox {
-  static readonly html = `<div part="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Enlarged image">
+  static readonly html = `<div part="lightbox" class="lightbox" hidden tabindex="-1" role="dialog" aria-modal="true" aria-label="Enlarged image">
     <button class="close" aria-label="Close enlarged image">✕</button>
     <button class="nav prev" data-step="-1" aria-label="Previous image">‹</button>
     <img alt="">
@@ -66,6 +70,7 @@ export class Lightbox {
       if (t === this.el || t.matches(".close")) this.close();
       else if (t.dataset.step) this.step(Number(t.dataset.step));
     };
+    this.el.onkeydown = (e) => this.key(e);
   }
 
   get isOpen(): boolean { return !this.el.hidden; }
@@ -89,7 +94,6 @@ export class Lightbox {
     this.#draw();
   }
 
-  /** Handle a key while open. */
   key(e: KeyboardEvent): void {
     const act = ({ Escape: () => this.close(), ArrowLeft: () => this.step(-1), ArrowRight: () => this.step(1) } as Record<string, () => void>)[e.key];
     if (act) { e.preventDefault(); act(); }

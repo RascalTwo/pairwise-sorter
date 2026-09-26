@@ -50,8 +50,9 @@ describe("Sorter: ranking a list", () => {
     await s.settled();
     // WHEN one question is answered
     await s.answer(alphabetically(s));
-    // THEN the ranking is the placed items only
+    // THEN the ranking is the placed items only, and the rest are listed as unplaced
     expect(s.complete).toBe(false);
+    expect(s.unplaced().map((i) => i.title)).toEqual(["b", "d"]);
     expect(s.placement().total).toBe(4);
     expect(titles(s)).toHaveLength(s.placement().placed);
   });

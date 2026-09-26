@@ -238,6 +238,11 @@ export class Sorter extends EventTarget {
     return rankRows(src, this.list.items, this.list.log).rows.map((r) => ({ ...r, item: this.list.items[r.index]! }));
   }
 
+  /** Items with no position yet while a sort is running — empty once complete. */
+  unplaced(): Item[] {
+    return this.#partial.remaining.map((i) => this.list.items[i]!);
+  }
+
   /** Every answer given, as readable pairs; `why` is set when the ranking contradicts it. */
   comparisons(): Comparison[] {
     const byId = new Map(this.list.items.map((it) => [idOf(it), it]));
