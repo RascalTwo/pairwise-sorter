@@ -1,0 +1,10 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/index.ts", "src/element/index.ts"],
+  "tsconfig": "tsconfig.build.json",
+  "out": "site/api",
+  "name": "@rascaltwo/pairwise-sorter",
+  "readme": "none",
+  "excludePrivate": true,
+  "gitRevision": "main"
+}

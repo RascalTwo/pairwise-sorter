@@ -1,3 +1,6 @@
 node_modules/
 dist/
 coverage/
+site/
+viz-pages/pairwise-sorter/dist/
+.viz-publish/

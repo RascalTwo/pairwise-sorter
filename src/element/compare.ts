@@ -37,7 +37,8 @@ const style = css(`
 
 /**
  * `<pairwise-compare>` — the question being asked: two cards, Choose buttons and Equal.
- * Keys ← / → choose, ↓ or = means equal, Backspace undoes (turn off with `no-keyboard`).
+ * Keys ← / → choose, ↓ or = means equal, Backspace undoes (turn off with `no-keyboard`); a key
+ * another handler already prevented is left alone.
  * Images open in a lightbox instead of voting. Set `renderItem(item, box)` to draw items
  * yourself. Fires `pairwise-edit` with `{index}` when an item's edit button is pressed.
  */
@@ -138,7 +139,8 @@ export class PairwiseCompare extends PairwiseElement {
   #keys = (e: KeyboardEvent): void => {
     if (this.#lightbox.isOpen) return;
     const s = this.sorter;
-    if (!s?.question || this.hasAttribute("no-keyboard") || !this.checkVisibility()) return;
+    // defaultPrevented: another widget on the page already used this key.
+    if (e.defaultPrevented || !s?.question || this.hasAttribute("no-keyboard") || !this.checkVisibility()) return;
     const path = e.composedPath(), target = path[0];
     if (target instanceof HTMLElement && target.matches("input, textarea, select, [contenteditable]")) return;
     // Focus inside an open dialog (an item editor, say) means these keys are not answers.

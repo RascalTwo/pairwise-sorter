@@ -82,6 +82,19 @@ describe("<pairwise-compare>", () => {
     await close(page);
   });
 
+  it("should leave alone a key another handler on the page already took", async () => {
+    // GIVEN a focusable widget elsewhere that handles arrow keys itself
+    const page = await compare([["a"], ["b"]], `const w = document.createElement("div");
+      w.tabIndex = 0; w.id = "widget"; document.body.prepend(w);
+      w.addEventListener("keydown", (e) => e.preventDefault());`);
+    // WHEN ← is pressed while it has focus
+    await page.focus("#widget");
+    await page.keyboard.press("ArrowLeft");
+    // THEN nothing is answered
+    expect(await logLength(page)).toBe(0);
+    await close(page);
+  });
+
   it("should stop listening to keys once removed from the page", async () => {
     // GIVEN a compare element that is then removed
     const page = await compare([["a"], ["b"]]);

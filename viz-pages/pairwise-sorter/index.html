@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pairwise-sorter — rank anything one pair at a time</title>
+<!-- Publish posture: public — this page is the library's documentation home on GitHub Pages. -->
+<meta name="viz:uid" content="v-daec3bc3b495">
+<meta name="viz:posture" content="public">
+<meta name="viz:listed" content="listed">
+<meta name="viz:title" content="pairwise-sorter">
+<meta name="viz:description" content="Rank anything by answering &quot;which is better?&quot; one pair at a time. A TypeScript logic core and web components — how it works, what's in it, and how to use it.">
+<link rel="stylesheet" href="/_kit/viz-kit.css">
+<style>
+  body { max-width: 1180px; margin: 0 auto; padding: 24px 32px 80px; }
+  nav.links { display: flex; gap: 12px; flex-wrap: wrap; margin: 14px 0 6px; }
+  nav.links a { padding: 7px 14px; border: 1px solid var(--border); border-radius: var(--r); text-decoration: none; }
+  nav.links a.primary { background: var(--accent); color: #06101d; border-color: var(--accent); font-weight: 600; }
+  section { margin: 56px 0; }
+  section > h2 { margin-bottom: 4px; }
+  .lede { color: var(--muted); max-width: 80ch; margin: 0 0 16px; }
+  figure { margin: 0; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  figure:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  figcaption { color: var(--muted); font-size: 13px; margin-top: 10px; }
+  svg { width: 100%; height: auto; display: block; }
+  .ctl { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; font-size: 14px; }
+  .ctl button { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: var(--r); padding: 5px 12px; cursor: pointer; }
+  .ctl output { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+  .legend i { display: inline-block; width: 14px; height: 10px; border-radius: 3px; vertical-align: middle; margin-right: 6px; }
+  .say { font-size: 17px; min-height: 1.5em; margin: 10px 0 0; }
+  .two { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+  #detail { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; font-size: 14px; }
+  #detail h3 { margin: 0 0 6px; }
+  #detail code, .lede code, li code { background: var(--panel-2); padding: 1px 5px; border-radius: 4px; }
+  .arch .box rect { rx: 8; fill: var(--panel-2); stroke: var(--border); stroke-width: 1.5; cursor: pointer; }
+  .arch .box:hover rect, .arch .box.on rect { stroke: var(--accent); }
+  .arch .frame { fill: none; stroke: var(--border); stroke-dasharray: 4 4; rx: 12; }
+  .arch .edge { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+  .arch .vsvg-label { font-size: 15px; }
+  .arch .col { fill: var(--muted); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  .live { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; }
+  @media (max-width: 860px) { .live { grid-template-columns: 1fr; } }
+  .live > div { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  .live h3 { margin: 0 0 10px; font-size: 14px; color: var(--muted); font-weight: 500; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px; overflow-x: auto; font-size: 13px; line-height: 1.55; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .cards h3 { margin: 0 0 6px; font-size: 15px; }
+  table.api { border-collapse: collapse; font-size: 14px; width: 100%; }
+  table.api td { border-top: 1px solid var(--border); padding: 7px 10px 7px 0; vertical-align: top; }
+  table.api td:first-child { white-space: nowrap; }
+</style>
+</head>
+<body>
+  <div class="viz-header">
+    <h1>pairwise-sorter</h1>
+    <div class="sub">Rank anything by answering <b>“which is better?”</b> one pair at a time — about n·log₂n questions instead of every pair, and adding an item later costs only ~log₂n more. A TypeScript logic core for Node and the browser, and web components that drop into any page.</div>
+  </div>
+  <nav class="links">
+    <a class="primary" href="app/">Open the sorter app</a>
+    <a href="api/">API reference</a>
+    <a href="https://github.com/RascalTwo/pairwise-sorter">GitHub</a>
+  </nav>
+
+  <!-- ── 1. how it asks ─────────────────────────────────────────────── -->
+  <section id="how">
+    <h2>How it asks</h2>
+    <p class="lede">Binary insertion with you as the comparator. Each item is slotted into the list already placed by halving the gap it could go in. Step through it — this trace was recorded by running the library's own <code>sortIndices</code> on eight coffees.</p>
+    <figure id="howFig" tabindex="0" aria-label="Binary insertion walkthrough; use arrow keys to step" data-viz-id="how-figure" data-label="Binary insertion walkthrough">
+      <svg id="howSvg" viewBox="0 0 1000 250"></svg>
+      <p class="say" id="howSay"></p>
+      <div class="ctl">
+        <button id="howPrev" aria-label="Previous step">◀</button>
+        <button id="howPlay">▶ Play</button>
+        <button id="howNext" aria-label="Next step">▶</button>
+        <output id="howAt"></output>
+        <span class="muted">— or focus the figure and use ← →</span>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--accent)"></i>item being placed</span>
+        <span><i style="background:color-mix(in srgb,var(--warn) 30%,transparent);border:1px solid var(--warn)"></i>where it could still go</span>
+        <span><i style="background:var(--warn)"></i>the item it is compared with</span>
+        <span><i style="background:var(--panel-2);border:1px solid var(--border)"></i>already placed — final relative order</span>
+      </div>
+      <figcaption>Position left→right is rank, best first. Placed items never move relative to each other, which is why stopping early keeps everything placed so far.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ── 2. what it costs ───────────────────────────────────────────── -->
+  <section id="cost">
+    <h2>Why it's cheap</h2>
+    <p class="lede">Questions needed to rank <i>n</i> items. Comparing every pair grows with n², binary insertion with n·log₂n — and because it is append-stable, adding one more item only replays old answers and asks ~log₂n new ones.</p>
+    <figure data-viz-id="cost-figure" data-label="Questions needed against list size">
+      <svg id="costSvg" viewBox="0 0 1000 360"></svg>
+      <div class="ctl"><label>List size <input id="costN" type="range" min="2" max="200" value="30"></label> <output id="costOut"></output></div>
+      <div class="legend">
+        <span><i style="background:var(--danger)"></i>every pair, n(n−1)/2</span>
+        <span><i style="background:var(--accent)"></i>binary insertion, worst case</span>
+        <span><i style="background:var(--good)"></i>adding one item to a sorted list</span>
+      </div>
+      <figcaption>Log scale on the vertical axis; each gridline is ten times the one below.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ── 3. what's in the box ───────────────────────────────────────── -->
+  <section id="parts">
+    <h2>What's in the box</h2>
+    <p class="lede">One package, two entry points. The core is plain logic that runs anywhere and never stores anything itself; the elements are views over a shared <code>Sorter</code>. Click any box.</p>
+    <div class="two">
+      <figure class="arch" data-viz-id="arch-figure" data-label="Package architecture"><svg id="archSvg" viewBox="0 0 700 470"></svg></figure>
+      <div id="detail" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- ── 4. live ────────────────────────────────────────────────────── -->
+  <section id="try">
+    <h2>Three elements, one Sorter</h2>
+    <p class="lede">These are the real components, each handed the same <code>Sorter</code> through its <code>.sorter</code> property. Answer on the left (click, or ← → and ↓ for equal) and watch the others follow.</p>
+    <div class="live">
+      <div><h3>&lt;pairwise-compare&gt; + &lt;pairwise-progress&gt;</h3><pairwise-compare id="liveCompare"></pairwise-compare><pairwise-progress id="liveProgress" style="margin-top:14px"></pairwise-progress></div>
+      <div><h3>&lt;pairwise-ranking&gt;</h3><pairwise-ranking id="liveRanking"></pairwise-ranking>
+        <div class="ctl"><button id="liveReset">Start over</button></div></div>
+    </div>
+  </section>
+
+  <!-- ── 5. use it ──────────────────────────────────────────────────── -->
+  <section id="start">
+    <h2>Use it</h2>
+    <p class="lede">Installed straight from GitHub; a <code>prepare</code> script builds it on install. Bun skips dependency build scripts unless you trust the package, so Bun users list it in <code>trustedDependencies</code>.</p>
+    <pre>npm i github:RascalTwo/pairwise-sorter
+# or: bun add github:RascalTwo/pairwise-sorter   (+ "trustedDependencies": ["@rascaltwo/pairwise-sorter"])</pre>
+    <div class="cards">
+      <div>
+        <h3>The core, anywhere</h3>
+<pre>import { Sorter, emptyList, item } from "@rascaltwo/pairwise-sorter";
+
+const s = new Sorter({ ...emptyList("Coffee"),
+  items: ["Flat white", "Mocha", "Cold brew"].map((t) => item(t)) });
+s.addEventListener("change", () => save(s.list));
+
+await s.settled();
+while (s.question) {
+  const { a, b } = s.question;          // indices into s.list.items
+  await s.answer(await ask(a, b));      // -1 · 0 · 1
+}
+s.ranking();   // [{ rank, tied, item }]</pre>
+      </div>
+      <div>
+        <h3>The whole app, one tag</h3>
+<pre>&lt;script type="module"&gt;
+  import "@rascaltwo/pairwise-sorter/element";
+&lt;/script&gt;
+
+&lt;!-- in memory; add storage-key to keep it --&gt;
+&lt;pairwise-sorter storage-key="my-lists"&gt;&lt;/pairwise-sorter&gt;</pre>
+        <h3>Or just the parts you want</h3>
+<pre>const s = new Sorter(list);
+for (const el of document.querySelectorAll(
+  "pairwise-compare, pairwise-ranking")) el.sorter = s;</pre>
+      </div>
+      <div>
+        <h3>Theme it</h3>
+<pre>pairwise-sorter, pairwise-compare {
+  --pw-accent: hotpink;  --pw-bg: #fff;
+  --pw-panel: #f4f4f6;   --pw-text: #111;
+  --pw-muted: #666;      --pw-border: #ddd;
+  --pw-warn: #c80;       --pw-danger: #c33;
+  --pw-radius: 6px;
+}
+pairwise-compare::part(choose) { font-size: 18px; }</pre>
+        <h3>Script it</h3>
+<pre>import { installConsole } from "@rascaltwo/pairwise-sorter/element";
+installConsole(document.querySelector("pairwise-sorter"));
+// DevTools: pairwiseSorter.help()</pre>
+      </div>
+    </div>
+    <h3 style="margin-top:28px">Events</h3>
+    <table class="api">
+      <tr><td><code>question</code> · <code>change</code> · <code>done</code> · <code>upcoming</code></td><td>on a <code>Sorter</code>: a pair is waiting · the list changed, save it · a full ranking is ready · items that may be asked next (preload their media)</td></tr>
+      <tr><td><code>pairwise-change</code></td><td>on <code>&lt;pairwise-sorter&gt;</code>, detail <code>{library}</code> — every list, after any change</td></tr>
+      <tr><td><code>pairwise-edit</code></td><td>from compare, ranking and bench, detail <code>{index}</code> — an item's edit button</td></tr>
+      <tr><td><code>pairwise-stop</code></td><td>from <code>&lt;pairwise-progress&gt;</code> — “see the list” once half the items are placed</td></tr>
+    </table>
+    <p class="lede" style="margin-top:20px">Every export, type and element is documented in the <a href="api/">API reference</a>, generated from the source.</p>
+  </section>
+
+  <script type="module">
+    import { arrowMarkers, connect, labelBox, stepper, $, esc } from "/_kit/viz.js";
+    // The library itself, from ./dist/ beside this page: `bun run docs:dev` builds it here for
+    // the local viz server, and the Pages workflow puts the build beside the published page.
+    const pw = await import("./dist/index.js");
+    await import("./dist/element/index.js");
+
+    // ── 1. binary insertion, recorded from the real sortIndices ─────────
+    const COFFEES = [["Mocha", 4], ["Cold brew", 7], ["Latte", 3], ["Flat white", 8], ["Americano", 2], ["Cortado", 6], ["Drip", 1], ["Espresso", 5]];
+    const steps = [];
+    await pw.sortIndices(COFFEES.map((_, i) => i), (a, b) => {
+      const v = COFFEES[a][1] > COFFEES[b][1] ? -1 : 1;
+      steps.at(-1).verdict = v;
+      return v;
+    }, ({ placed, remaining }) => {
+      if (remaining.length) steps.push({ kind: "take", placed, item: remaining[0] });
+    }, ({ out, lo, hi, mid }) => {
+      steps.push({ kind: "probe", placed: [...out], item: steps.at(-1).item, lo, hi, mid });
+    });
+    const final = await pw.sortIndices(COFFEES.map((_, i) => i), (a, b) => (COFFEES[a][1] > COFFEES[b][1] ? -1 : 1));
+    steps.push({ kind: "done", placed: final, item: null });
+    const questions = steps.filter((s) => s.kind === "probe").length;
+
+    const W = 1000, SLOT = 112, BOX = 100, Y = 150;
+    const svg = $("#howSvg");
+    function drawHow(i) {
+      const st = steps[i];
+      const n = st.placed.length;
+      const x0 = (W - Math.max(n, 1) * SLOT) / 2;
+      const sx = (k) => x0 + k * SLOT + (SLOT - BOX) / 2;
+      let out = "";
+      if (st.kind === "probe") {
+        const wx = x0 + st.lo * SLOT, ww = Math.max(0, (st.hi - st.lo) * SLOT);
+        out += `<rect x="${wx}" y="${Y - 14}" width="${ww}" height="76" rx="10" fill="color-mix(in srgb, var(--warn) 18%, transparent)" stroke="var(--warn)" stroke-dasharray="5 4" data-viz-id="window" data-label="where the item could still go: slots ${st.lo}–${st.hi}"/>`;
+      }
+      st.placed.forEach((idx, k) => {
+        const probed = st.kind === "probe" && k === st.mid;
+        out += `<g data-viz-id="placed-${idx}" data-label="${esc(COFFEES[idx][0])}, placed at ${k + 1}">
+          <rect x="${sx(k)}" y="${Y}" width="${BOX}" height="48" rx="8" fill="${probed ? "var(--warn)" : "var(--panel-2)"}" stroke="var(--border)"/>
+          <text x="${sx(k) + BOX / 2}" y="${Y + 29}" text-anchor="middle" font-size="14" fill="${probed ? "#1a1300" : "var(--text)"}">${esc(COFFEES[idx][0])}</text>
+          <text x="${sx(k) + BOX / 2}" y="${Y + 70}" text-anchor="middle" font-size="12" fill="var(--muted)">#${k + 1}</text></g>`;
+      });
+      if (st.item !== null) {
+        const cx = st.kind === "probe" ? sx(st.mid) + BOX / 2 : W / 2;
+        out += `<g data-viz-id="new-item" data-label="item being placed: ${esc(COFFEES[st.item][0])}">
+          <rect x="${cx - BOX / 2}" y="30" width="${BOX}" height="48" rx="8" fill="var(--accent)"/>
+          <text x="${cx}" y="59" text-anchor="middle" font-size="14" font-weight="600" fill="#06101d">${esc(COFFEES[st.item][0])}</text></g>`;
+        if (st.kind === "probe") out += `<line x1="${cx}" y1="80" x2="${cx}" y2="${Y - 16}" stroke="var(--warn)" stroke-width="2" stroke-dasharray="3 3"/>`;
+      }
+      svg.innerHTML = out;
+      const name = (k) => `<b>${esc(COFFEES[k][0])}</b>`;
+      $("#howSay").innerHTML = st.kind === "take"
+        ? (st.placed.length ? `Next: place ${name(st.item)} among the ${st.placed.length} already ranked.` : `${name(st.item)} goes first — there is nothing to compare it with yet.`)
+        : st.kind === "probe"
+          ? `Is ${name(st.item)} better than ${name(st.placed[st.mid])}? → <b>${st.verdict < 0 ? "yes" : "no"}</b>, so it goes ${st.verdict < 0 ? "left" : "right"} of it.`
+          : `Done: 8 items ranked with <b>${questions}</b> questions. Every pair would have been 28.`;
+      $("#howAt").textContent = `step ${i + 1} / ${steps.length}`;
+    }
+    const how = stepper({ n: steps.length, onStep: drawHow, hashKey: "how", target: $("#howFig") });
+    $("#howPrev").onclick = () => how.prev();
+    $("#howNext").onclick = () => how.next();
+    let playing = null;
+    $("#howPlay").onclick = () => {
+      if (playing) { clearInterval(playing); playing = null; $("#howPlay").textContent = "▶ Play"; return; }
+      if (how.current === steps.length - 1) how.go(0);
+      $("#howPlay").textContent = "❚❚ Pause";
+      playing = setInterval(() => {
+        if (how.current === steps.length - 1) return $("#howPlay").click();
+        how.next();
+      }, 1100);
+    };
+
+    // ── 2. questions against n ───────────────────────────────────────────
+    const cost = $("#costSvg"), CW = 1000, CH = 360, L = 70, R = 20, T = 20, B = 40, NMAX = 200;
+    const xs = (n) => L + ((n - 2) / (NMAX - 2)) * (CW - L - R);
+    const ys = (v) => CH - B - (Math.log10(Math.max(v, 1)) / Math.log10(20000)) * (CH - T - B);
+    const series = [
+      { id: "pairs", color: "var(--danger)", f: (n) => (n * (n - 1)) / 2, label: "every pair" },
+      { id: "insert", color: "var(--accent)", f: (n) => pw.budgetFor(n), label: "binary insertion" },
+      { id: "add", color: "var(--good)", f: (n) => Math.ceil(Math.log2(n + 1)), label: "adding one item" },
+    ];
+    function drawCost(n) {
+      let g = "";
+      for (const v of [1, 10, 100, 1000, 10000]) g += `<line x1="${L}" x2="${CW - R}" y1="${ys(v)}" y2="${ys(v)}" stroke="var(--border)"/><text x="${L - 8}" y="${ys(v) + 4}" text-anchor="end" font-size="12" fill="var(--muted)">${v.toLocaleString()}</text>`;
+      for (const t of [2, 50, 100, 150, 200]) g += `<text x="${xs(t)}" y="${CH - B + 20}" text-anchor="middle" font-size="12" fill="var(--muted)">${t}</text>`;
+      g += `<text x="${(L + CW - R) / 2}" y="${CH - 4}" text-anchor="middle" font-size="12" fill="var(--muted)">items in the list (n)</text>`;
+      g += `<text transform="translate(16 ${(T + CH - B) / 2}) rotate(-90)" text-anchor="middle" font-size="12" fill="var(--muted)">questions asked</text>`;
+      for (const s of series) {
+        const d = Array.from({ length: NMAX - 1 }, (_, i) => i + 2).map((k, i) => `${i ? "L" : "M"}${xs(k).toFixed(1)},${ys(s.f(k)).toFixed(1)}`).join("");
+        g += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2.5" data-viz-id="line-${s.id}" data-label="${s.label}"/>`;
+        g += `<circle cx="${xs(n)}" cy="${ys(s.f(n))}" r="5" fill="${s.color}" data-viz-id="dot-${s.id}" data-label="${s.label} at n=${n}: ${s.f(n)}"/>`;
+      }
+      g += `<line x1="${xs(n)}" x2="${xs(n)}" y1="${T}" y2="${CH - B}" stroke="var(--muted)" stroke-dasharray="3 4"/>`;
+      cost.innerHTML = g;
+      const [p, ins, add] = series.map((s) => s.f(n));
+      $("#costOut").innerHTML = `n = <b>${n}</b>: every pair <b>${p.toLocaleString()}</b> · binary insertion at most <b>${ins}</b> (${Math.round((ins / p) * 100)}%) · one more item <b>${add}</b>`;
+    }
+    $("#costN").oninput = (e) => drawCost(+e.target.value);
+    drawCost(30);
+
+    // ── 3. architecture ──────────────────────────────────────────────────
+    const CORE = [
+      ["item", "item · parse", "One item model — {title, url, media, desc, tags} — and every way to type it.", ["item()", "idOf()", "parseItems()", "toText()", "isMedia()"]],
+      ["engine", "engine", "The decision log, tiers and the binary-insertion sort. createEngine() is the minimal API viz uses.", ["createEngine()", "sortIndices()", "tieClasses()", "findConflicts()", "migrateId()"]],
+      ["analysis", "analysis", "Reads the log and derives things to show; never picks the next question.", ["weightedOrder()", "minimiseDisagreements()", "tierOverrides()", "tieredBudget()", "rankRows()"]],
+      ["store", "store", "Saved lists, migrations that keep old data loading, the export format, and an optional localStorage helper.", ["localStore()", "migrate()", "importList()", "exportList()", "addList()"]],
+      ["sorter", "Sorter", "The live session every element drives: the open question, answers, bench, edits, tiers, resolve — and events.", ["question", "answer()", "undo()", "bench()", "editItem()", "setPriority()", "resolve()"]],
+    ];
+    const ELS = [
+      ["compare", "<pairwise-compare>", "The question: two cards with media, Choose and Equal, keyboard shortcuts, a lightbox. renderItem(item, box) draws items your way.", ["no-keyboard", "renderItem", "pairwise-edit"]],
+      ["progress", "<pairwise-progress>", "Answers against the worst case, items placed, and an offer to stop once half are placed.", ["pairwise-stop"]],
+      ["ranking", "<pairwise-ranking>", "The ranking with shared ranks for ties, tier rules, expandable rows and a title filter.", ["pairwise-edit"]],
+      ["conflicts", "<pairwise-conflicts>", "Every answer, deletable; contradicted ones flagged; Resolve reorders to contradict as few as possible.", []],
+      ["tiers", "<pairwise-tiers>", "Declare tags as tiers so cross-tier pairs are never asked.", []],
+      ["weights", "<pairwise-weights>", "Combine tiers strictly, or by weight so a lower tier's best can outrank a higher tier's worst.", []],
+    ];
+    const APP = [
+      ["app", "<pairwise-sorter>", "The whole app: several lists, items as text, the questions, the results, tiers, the bench and an editor. In memory, or storage-key=\"…\" for localStorage.", ["storage-key", ".library", "pairwise-change"]],
+      ["console", "installConsole()", "Puts a scripting API on window, so DevTools or an agent can drive the app without clicking.", ["pairwiseSorter.help()"]],
+    ];
+    const boxes = new Map();
+    const col = (list, x, y0, w, h, gap) => list.forEach(([id, label], i) => boxes.set(id, { x, y: y0 + i * (h + gap), w, h, label }));
+    col(CORE, 20, 50, 170, 56, 24);
+    col(ELS, 265, 50, 190, 44, 22);
+    col(APP, 510, 150, 170, 56, 40);
+    const all = [...CORE, ...ELS, ...APP];
+    let archOut = arrowMarkers({ ah: "var(--muted)" });
+    archOut += `<text class="col" x="20" y="30">core · Node + browser</text><text class="col" x="265" y="30">elements</text><text class="col" x="510" y="130">whole app</text>`;
+    const frame = { x: 250, y: 38, w: 220, h: 6 * 44 + 5 * 22 + 24 };
+    archOut += `<rect class="frame" x="${frame.x}" y="${frame.y}" width="${frame.w}" height="${frame.h}"/>`;
+    archOut += `<path class="edge" d="${connect(boxes.get("sorter"), frame)}" marker-end="url(#ah)"/>`;
+    archOut += `<path class="edge" d="${connect(frame, boxes.get("app"))}" marker-end="url(#ah)"/>`;
+    archOut += `<path class="edge" d="${connect(boxes.get("app"), boxes.get("console"))}" marker-end="url(#ah)"/>`;
+    for (const [id] of all) {
+      const b = boxes.get(id);
+      archOut += `<g class="box" data-id="${id}" data-viz-id="arch-${id}" data-label="${esc(b.label)}" tabindex="0" role="button"><rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}"/>${labelBox(b, esc(b.label))}</g>`;
+    }
+    $("#archSvg").innerHTML = archOut;
+    const showDetail = (id) => {
+      const [, label, what, api] = all.find((e) => e[0] === id);
+      $("#detail").innerHTML = `<h3>${esc(label)}</h3><p>${esc(what)}</p>${api.length ? `<p>${api.map((a) => `<code>${esc(a)}</code>`).join(" ")}</p>` : ""}<p class="muted"><a href="api/">Full reference →</a></p>`;
+      for (const g of document.querySelectorAll(".arch .box")) g.classList.toggle("on", g.dataset.id === id);
+    };
+    $("#archSvg").addEventListener("click", (e) => { const g = e.target.closest(".box"); if (g) showDetail(g.dataset.id); });
+    $("#archSvg").addEventListener("keydown", (e) => { const g = e.target.closest(".box"); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); showDetail(g.dataset.id); } });
+    showDetail("sorter");
+
+    // ── 4. live elements sharing one Sorter ─────────────────────────────
+    const SAMPLE = ["Flat white", "Cold brew", "Mocha", "Cortado", "Espresso", "Chai"];
+    let live;
+    const start = () => {
+      live = new pw.Sorter({ ...pw.emptyList("Coffee"), items: SAMPLE.map((t) => pw.item(t)) });
+      for (const id of ["liveCompare", "liveProgress", "liveRanking"]) document.getElementById(id).sorter = live;
+    };
+    $("#liveReset").onclick = start;
+    start();
+  </script>
+</body>
+</html>

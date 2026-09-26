@@ -123,7 +123,8 @@ export function deleteList(lib: Library, id: string): void {
   if (lib.current === id) lib.current = Object.keys(lib.lists)[0] ?? null;
 }
 
-type Ref = { title: string; url: string; key?: string };
+/** How an export names an item: its identity fields. */
+export type ItemRef = { title: string; url: string; key?: string };
 /** The interchange format: readable `{a, b, verdict}` pairs rather than internal keys. */
 export interface ExportPayload {
   format: "pairwise-sorter/3";
@@ -132,8 +133,8 @@ export interface ExportPayload {
   priority: string[];
   weights: number[];
   combine: Combine;
-  benched: Ref[];
-  comparisons: { a: Ref; b: Ref; verdict: Verdict }[];
+  benched: ItemRef[];
+  comparisons: { a: ItemRef; b: ItemRef; verdict: Verdict }[];
   /** Titles best first — a convenience for humans, ignored on import. */
   ranking: string[];
 }
@@ -141,7 +142,7 @@ export interface ExportPayload {
 /** A list as a hand-editable export. */
 export function exportList(list: List, ranking: string[] = []): ExportPayload {
   const byId = new Map(list.items.map((it) => [idOf(it), it]));
-  const ref = (id: string): Ref => {
+  const ref = (id: string): ItemRef => {
     const it = byId.get(id);
     return it ? { title: it.title, url: it.url, ...(it.key ? { key: it.key } : {}) } : idParts(id);
   };
