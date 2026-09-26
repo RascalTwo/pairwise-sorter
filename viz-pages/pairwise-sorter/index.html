@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Already dark: stop Dark Reader re-theming it (it also breaks the highlight.js theme). -->
+<meta name="darkreader-lock">
 <title>pairwise-sorter — rank anything one pair at a time</title>
 <!-- Publish posture: public — this page is the library's documentation home on GitHub Pages. -->
 <meta name="viz:uid" content="v-daec3bc3b495">
@@ -11,6 +13,8 @@
 <meta name="viz:title" content="pairwise-sorter">
 <meta name="viz:description" content="Rank anything by answering &quot;which is better?&quot; one pair at a time. A TypeScript logic core and web components — how it works, what's in it, and how to use it.">
 <link rel="stylesheet" href="/_kit/viz-kit.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <style>
   body { max-width: 1180px; margin: 0 auto; padding: 24px 32px 80px; }
   nav.links { display: flex; gap: 12px; flex-wrap: wrap; margin: 14px 0 6px; }
@@ -28,6 +32,9 @@
   .ctl output { font-variant-numeric: tabular-nums; color: var(--muted); }
   .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin: 8px 0 0; }
   .legend i { display: inline-block; width: 14px; height: 10px; border-radius: 3px; vertical-align: middle; margin-right: 6px; }
+  #howSvg .node, #howSvg .band, #howSvg .badge, #howSvg .link { transition: transform .55s cubic-bezier(.3,.7,.3,1), opacity .4s, fill .3s; }
+  #howSvg .node rect { transition: fill .3s, stroke .3s; }
+  @media (prefers-reduced-motion: reduce) { #howSvg * { transition: none !important; } }
   .say { font-size: 17px; min-height: 1.5em; margin: 10px 0 0; }
   .two { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: start; }
   @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
@@ -44,8 +51,9 @@
   @media (max-width: 860px) { .live { grid-template-columns: 1fr; } }
   .live > div { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
   .live h3 { margin: 0 0 10px; font-size: 14px; color: var(--muted); font-weight: 500; }
+  pre code.hljs { background: transparent; padding: 0; }
   pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px; overflow-x: auto; font-size: 13px; line-height: 1.55; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 16px; }
   .cards h3 { margin: 0 0 6px; font-size: 15px; }
   table.api { border-collapse: collapse; font-size: 14px; width: 100%; }
   table.api td { border-top: 1px solid var(--border); padding: 7px 10px 7px 0; vertical-align: top; }
@@ -58,8 +66,8 @@
     <div class="sub">Rank anything by answering <b>“which is better?”</b> one pair at a time — about n·log₂n questions instead of every pair, and adding an item later costs only ~log₂n more. A TypeScript logic core for Node and the browser, and web components that drop into any page.</div>
   </div>
   <nav class="links">
-    <a class="primary" href="app/">Open the sorter app</a>
-    <a href="api/">API reference</a>
+    <a class="primary" href="../">Open the sorter app</a>
+    <a href="../api/">API reference</a>
     <a href="https://github.com/RascalTwo/pairwise-sorter">GitHub</a>
   </nav>
 
@@ -68,7 +76,7 @@
     <h2>How it asks</h2>
     <p class="lede">Binary insertion with you as the comparator. Each item is slotted into the list already placed by halving the gap it could go in. Step through it — this trace was recorded by running the library's own <code>sortIndices</code> on eight coffees.</p>
     <figure id="howFig" tabindex="0" aria-label="Binary insertion walkthrough; use arrow keys to step" data-viz-id="how-figure" data-label="Binary insertion walkthrough">
-      <svg id="howSvg" viewBox="0 0 1000 250"></svg>
+      <svg id="howSvg" viewBox="0 0 1000 540"></svg>
       <p class="say" id="howSay"></p>
       <div class="ctl">
         <button id="howPrev" aria-label="Previous step">◀</button>
@@ -79,11 +87,12 @@
       </div>
       <div class="legend">
         <span><i style="background:var(--accent)"></i>item being placed</span>
-        <span><i style="background:color-mix(in srgb,var(--warn) 30%,transparent);border:1px solid var(--warn)"></i>where it could still go</span>
         <span><i style="background:var(--warn)"></i>the item it is compared with</span>
-        <span><i style="background:var(--panel-2);border:1px solid var(--border)"></i>already placed — final relative order</span>
+        <span><i style="background:color-mix(in srgb,var(--warn) 22%,transparent);border:1px solid var(--warn)"></i>where it could still go</span>
+        <span><i style="background:var(--good)"></i>the better of the pair</span>
+        <span><i style="background:var(--panel-2);border:1px solid var(--border);opacity:.4"></i>ruled out — no need to ask</span>
       </div>
-      <figcaption>Position left→right is rank, best first. Placed items never move relative to each other, which is why stopping early keeps everything placed so far.</figcaption>
+      <figcaption>Top to bottom is rank, best first. Placed items never change order relative to each other — which is why stopping early keeps everything placed so far.</figcaption>
     </figure>
   </section>
 
@@ -128,12 +137,12 @@
   <section id="start">
     <h2>Use it</h2>
     <p class="lede">Installed straight from GitHub; a <code>prepare</code> script builds it on install. Bun skips dependency build scripts unless you trust the package, so Bun users list it in <code>trustedDependencies</code>.</p>
-    <pre>npm i github:RascalTwo/pairwise-sorter
-# or: bun add github:RascalTwo/pairwise-sorter   (+ "trustedDependencies": ["@rascaltwo/pairwise-sorter"])</pre>
+    <pre><code class="language-bash">npm i github:RascalTwo/pairwise-sorter
+# or: bun add github:RascalTwo/pairwise-sorter   (+ "trustedDependencies": ["@rascaltwo/pairwise-sorter"])</code></pre>
     <div class="cards">
       <div>
         <h3>The core, anywhere</h3>
-<pre>import { Sorter, emptyList, item } from "@rascaltwo/pairwise-sorter";
+<pre><code class="language-javascript">import { Sorter, emptyList, item } from "@rascaltwo/pairwise-sorter";
 
 const s = new Sorter({ ...emptyList("Coffee"),
   items: ["Flat white", "Mocha", "Cold brew"].map((t) => item(t)) });
@@ -144,35 +153,35 @@ while (s.question) {
   const { a, b } = s.question;          // indices into s.list.items
   await s.answer(await ask(a, b));      // -1 · 0 · 1
 }
-s.ranking();   // [{ rank, tied, item }]</pre>
+s.ranking();   // [{ rank, tied, item }]</code></pre>
       </div>
       <div>
         <h3>The whole app, one tag</h3>
-<pre>&lt;script type="module"&gt;
+<pre><code class="language-xml">&lt;script type="module"&gt;
   import "@rascaltwo/pairwise-sorter/element";
 &lt;/script&gt;
 
 &lt;!-- in memory; add storage-key to keep it --&gt;
-&lt;pairwise-sorter storage-key="my-lists"&gt;&lt;/pairwise-sorter&gt;</pre>
+&lt;pairwise-sorter storage-key="my-lists"&gt;&lt;/pairwise-sorter&gt;</code></pre>
         <h3>Or just the parts you want</h3>
-<pre>const s = new Sorter(list);
+<pre><code class="language-javascript">const s = new Sorter(list);
 for (const el of document.querySelectorAll(
-  "pairwise-compare, pairwise-ranking")) el.sorter = s;</pre>
+  "pairwise-compare, pairwise-ranking")) el.sorter = s;</code></pre>
       </div>
       <div>
         <h3>Theme it</h3>
-<pre>pairwise-sorter, pairwise-compare {
+<pre><code class="language-css">pairwise-sorter, pairwise-compare {
   --pw-accent: hotpink;  --pw-bg: #fff;
   --pw-panel: #f4f4f6;   --pw-text: #111;
   --pw-muted: #666;      --pw-border: #ddd;
   --pw-warn: #c80;       --pw-danger: #c33;
   --pw-radius: 6px;
 }
-pairwise-compare::part(choose) { font-size: 18px; }</pre>
+pairwise-compare::part(choose) { font-size: 18px; }</code></pre>
         <h3>Script it</h3>
-<pre>import { installConsole } from "@rascaltwo/pairwise-sorter/element";
+<pre><code class="language-javascript">import { installConsole } from "@rascaltwo/pairwise-sorter/element";
 installConsole(document.querySelector("pairwise-sorter"));
-// DevTools: pairwiseSorter.help()</pre>
+// DevTools: pairwiseSorter.help()</code></pre>
       </div>
     </div>
     <h3 style="margin-top:28px">Events</h3>
@@ -182,7 +191,7 @@ installConsole(document.querySelector("pairwise-sorter"));
       <tr><td><code>pairwise-edit</code></td><td>from compare, ranking and bench, detail <code>{index}</code> — an item's edit button</td></tr>
       <tr><td><code>pairwise-stop</code></td><td>from <code>&lt;pairwise-progress&gt;</code> — “see the list” once half the items are placed</td></tr>
     </table>
-    <p class="lede" style="margin-top:20px">Every export, type and element is documented in the <a href="api/">API reference</a>, generated from the source.</p>
+    <p class="lede" style="margin-top:20px">Every export, type and element is documented in the <a href="../api/">API reference</a>, generated from the source.</p>
   </section>
 
   <script type="module">
@@ -193,54 +202,105 @@ installConsole(document.querySelector("pairwise-sorter"));
     await import("./dist/element/index.js");
 
     // ── 1. binary insertion, recorded from the real sortIndices ─────────
+    // Every node is created once and only MOVED between steps, so a CSS transition animates
+    // each change and stepping backwards animates too. A step is declarative: state is a
+    // function of the step index alone.
     const COFFEES = [["Mocha", 4], ["Cold brew", 7], ["Latte", 3], ["Flat white", 8], ["Americano", 2], ["Cortado", 6], ["Drip", 1], ["Espresso", 5]];
+    const better = (a, b) => (COFFEES[a][1] > COFFEES[b][1] ? -1 : 1);
     const steps = [];
+    let cur = null;
     await pw.sortIndices(COFFEES.map((_, i) => i), (a, b) => {
-      const v = COFFEES[a][1] > COFFEES[b][1] ? -1 : 1;
-      steps.at(-1).verdict = v;
+      const v = better(a, b), ask = steps.at(-1);
+      const [lo, hi] = v < 0 ? [ask.lo, ask.mid] : [ask.mid + 1, ask.hi];
+      steps.push({ ...ask, kind: "answer", verdict: v, lo, hi, was: [ask.lo, ask.hi] });
       return v;
     }, ({ placed, remaining }) => {
-      if (remaining.length) steps.push({ kind: "take", placed, item: remaining[0] });
+      if (cur !== null) steps.push({ kind: "place", placed, item: cur, at: placed.indexOf(cur) });
+      cur = remaining[0];
+      steps.push({ kind: "take", placed, item: cur });
     }, ({ out, lo, hi, mid }) => {
-      steps.push({ kind: "probe", placed: [...out], item: steps.at(-1).item, lo, hi, mid });
+      steps.push({ kind: "ask", placed: [...out], item: cur, lo, hi, mid });
     });
-    const final = await pw.sortIndices(COFFEES.map((_, i) => i), (a, b) => (COFFEES[a][1] > COFFEES[b][1] ? -1 : 1));
+    const final = await pw.sortIndices(COFFEES.map((_, i) => i), better);
+    steps.push({ kind: "place", placed: final, item: cur, at: final.indexOf(cur) });
     steps.push({ kind: "done", placed: final, item: null });
-    const questions = steps.filter((s) => s.kind === "probe").length;
+    const questions = steps.filter((s) => s.kind === "ask").length;
 
-    const W = 1000, SLOT = 112, BOX = 100, Y = 150;
+    const COL_X = 300, COL_W = 230, ROW = 58, TOP = 40, BOX_H = 44, NEW_X = 640;
+    const rowY = (k) => TOP + k * ROW;
     const svg = $("#howSvg");
+    svg.innerHTML = `
+      <text x="${COL_X - 62}" y="${TOP + 27}" text-anchor="end" font-size="13" fill="var(--muted)">best</text>
+      <text x="${COL_X - 62}" y="${rowY(7) + 27}" text-anchor="end" font-size="13" fill="var(--muted)">worst</text>
+      <line x1="${COL_X - 50}" y1="${TOP + 8}" x2="${COL_X - 50}" y2="${rowY(7) + 36}" stroke="var(--border)" stroke-width="2" marker-end="url(#rk)"/>
+      <defs><marker id="rk" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,0 L5,10z" fill="var(--border)"/></marker></defs>
+      <rect class="band" id="band" x="${COL_X - 12}" y="0" width="${COL_W + 24}" height="10" rx="10"
+        fill="color-mix(in srgb, var(--warn) 16%, transparent)" stroke="var(--warn)" stroke-dasharray="5 4" data-viz-id="window" data-label="where the item could still go"/>
+      <line class="link" id="link" x1="${COL_X + COL_W}" x2="${NEW_X}" y1="0" y2="0" stroke="var(--warn)" stroke-width="2" stroke-dasharray="4 4"/>
+      ${COFFEES.map(([name], i) => `<g class="node" id="n${i}" data-viz-id="coffee-${i}" data-label="${esc(name)}" style="opacity:0">
+        <rect width="${COL_W}" height="${BOX_H}" rx="9" stroke="var(--border)"/>
+        <text x="${COL_W / 2}" y="28" text-anchor="middle" font-size="16">${esc(name)}</text>
+        <text class="rank" x="-18" y="28" text-anchor="end" font-size="13" fill="var(--muted)"></text></g>`).join("")}
+      <g class="badge" id="badge" style="opacity:0"><rect width="86" height="26" rx="13" fill="var(--good)"/>
+        <text x="43" y="18" text-anchor="middle" font-size="13" font-weight="700" fill="#04140a">✓ better</text></g>`;
+    const node = (i) => svg.querySelector(`#n${i}`);
+    const move = (el, x, y) => (el.style.transform = `translate(${x}px, ${y}px)`);
+
     function drawHow(i) {
       const st = steps[i];
-      const n = st.placed.length;
-      const x0 = (W - Math.max(n, 1) * SLOT) / 2;
-      const sx = (k) => x0 + k * SLOT + (SLOT - BOX) / 2;
-      let out = "";
-      if (st.kind === "probe") {
-        const wx = x0 + st.lo * SLOT, ww = Math.max(0, (st.hi - st.lo) * SLOT);
-        out += `<rect x="${wx}" y="${Y - 14}" width="${ww}" height="76" rx="10" fill="color-mix(in srgb, var(--warn) 18%, transparent)" stroke="var(--warn)" stroke-dasharray="5 4" data-viz-id="window" data-label="where the item could still go: slots ${st.lo}–${st.hi}"/>`;
-      }
-      st.placed.forEach((idx, k) => {
-        const probed = st.kind === "probe" && k === st.mid;
-        out += `<g data-viz-id="placed-${idx}" data-label="${esc(COFFEES[idx][0])}, placed at ${k + 1}">
-          <rect x="${sx(k)}" y="${Y}" width="${BOX}" height="48" rx="8" fill="${probed ? "var(--warn)" : "var(--panel-2)"}" stroke="var(--border)"/>
-          <text x="${sx(k) + BOX / 2}" y="${Y + 29}" text-anchor="middle" font-size="14" fill="${probed ? "#1a1300" : "var(--text)"}">${esc(COFFEES[idx][0])}</text>
-          <text x="${sx(k) + BOX / 2}" y="${Y + 70}" text-anchor="middle" font-size="12" fill="var(--muted)">#${k + 1}</text></g>`;
+      const placed = st.placed, pos = new Map(placed.map((idx, k) => [idx, k]));
+      const inWindow = (k) => st.kind === "ask" || st.kind === "answer" ? k >= st.lo && k < st.hi : true;
+      COFFEES.forEach((_, c) => {
+        const el = node(c), rect = el.querySelector("rect"), label = el.querySelectorAll("text");
+        let x = NEW_X, y = rowY(0), op = 0, fill = "var(--panel-2)", ink = "var(--text)";
+        if (pos.has(c)) {
+          const k = pos.get(c);
+          x = COL_X; y = rowY(k); op = inWindow(k) || k === st.mid ? 1 : 0.35;
+          if ((st.kind === "ask" || st.kind === "answer") && k === st.mid) { fill = "var(--warn)"; ink = "#1a1300"; op = 1; }
+          label[1].textContent = `#${k + 1}`;
+        } else label[1].textContent = "";
+        if (c === st.item && st.kind !== "place") {
+          x = NEW_X; op = 1; fill = "var(--accent)"; ink = "#06101d";
+          y = st.kind === "ask" || st.kind === "answer" ? rowY(st.mid) : rowY(0);
+        }
+        if (c === st.item && st.kind === "place") { fill = "var(--accent)"; ink = "#06101d"; }
+        rect.style.fill = fill;
+        label[0].style.fill = ink;
+        el.style.opacity = op;
+        move(el, x, y);
       });
-      if (st.item !== null) {
-        const cx = st.kind === "probe" ? sx(st.mid) + BOX / 2 : W / 2;
-        out += `<g data-viz-id="new-item" data-label="item being placed: ${esc(COFFEES[st.item][0])}">
-          <rect x="${cx - BOX / 2}" y="30" width="${BOX}" height="48" rx="8" fill="var(--accent)"/>
-          <text x="${cx}" y="59" text-anchor="middle" font-size="14" font-weight="600" fill="#06101d">${esc(COFFEES[st.item][0])}</text></g>`;
-        if (st.kind === "probe") out += `<line x1="${cx}" y1="80" x2="${cx}" y2="${Y - 16}" stroke="var(--warn)" stroke-width="2" stroke-dasharray="3 3"/>`;
-      }
-      svg.innerHTML = out;
+      // The window of slots still possible: rows lo..hi-1, or an insertion line when empty.
+      const band = svg.querySelector("#band");
+      if (st.kind === "ask" || st.kind === "answer") {
+        const top = rowY(st.lo) - 7, h = Math.max(6, (st.hi - st.lo) * ROW - (ROW - BOX_H) + 14 - (st.hi === st.lo ? 14 : 0));
+        band.style.opacity = 1;
+        band.style.transform = `translateY(${st.hi === st.lo ? rowY(st.lo) - 10 : top}px) scaleY(1)`;
+        band.setAttribute("height", h);
+      } else band.style.opacity = 0;
+      const link = svg.querySelector("#link"), badge = svg.querySelector("#badge");
+      const asking = st.kind === "ask" || st.kind === "answer";
+      link.style.opacity = asking ? 1 : 0;
+      link.style.transform = `translateY(${asking ? rowY(st.mid) + BOX_H / 2 : 0}px)`;
+      link.setAttribute("stroke", st.kind === "answer" ? "var(--good)" : "var(--warn)");
+      if (st.kind === "answer") {
+        const newWins = st.verdict < 0;
+        badge.style.opacity = 1;
+        move(badge, (newWins ? NEW_X + COL_W : COL_X + COL_W) + 10, rowY(st.mid) + 9);
+      } else badge.style.opacity = 0;
+
       const name = (k) => `<b>${esc(COFFEES[k][0])}</b>`;
-      $("#howSay").innerHTML = st.kind === "take"
-        ? (st.placed.length ? `Next: place ${name(st.item)} among the ${st.placed.length} already ranked.` : `${name(st.item)} goes first — there is nothing to compare it with yet.`)
-        : st.kind === "probe"
-          ? `Is ${name(st.item)} better than ${name(st.placed[st.mid])}? → <b>${st.verdict < 0 ? "yes" : "no"}</b>, so it goes ${st.verdict < 0 ? "left" : "right"} of it.`
-          : `Done: 8 items ranked with <b>${questions}</b> questions. Every pair would have been 28.`;
+      // The window holds rows lo..hi-1, so the item can still land at any of places lo+1 … hi+1.
+      const slots = (lo, hi) => (hi === lo ? `that settles it — its place is <b>#${lo + 1}</b>` : `it could still be anywhere from #${lo + 1} to #${hi + 1}, so it's asked again inside that range`);
+      $("#howSay").innerHTML = {
+        take: () => st.placed.length ? `Next up: ${name(st.item)}. It has to fit somewhere among the ${st.placed.length} already ranked.`
+          : `${name(st.item)} goes first — there is nothing to compare it with yet.`,
+        ask: () => `Is ${name(st.item)} better than ${name(st.placed[st.mid])}? It's compared with the <b>middle</b> of the open range, so one answer halves it.`,
+        answer: () => st.verdict < 0
+          ? `<b>Yes</b> — ${name(st.item)} is better, so it goes <b>above</b> ${name(st.placed[st.mid])}: ${slots(st.lo, st.hi)}.`
+          : `<b>No</b> — ${name(st.placed[st.mid])} is better, so ${name(st.item)} goes <b>below</b> it: ${slots(st.lo, st.hi)}.`,
+        place: () => `${name(st.item)} lands at <b>#${st.at + 1}</b>; everything under it moves down one.`,
+        done: () => `Done: 8 items ranked with <b>${questions}</b> questions. Asking about every pair would have taken 28.`,
+      }[st.kind]();
       $("#howAt").textContent = `step ${i + 1} / ${steps.length}`;
     }
     const how = stepper({ n: steps.length, onStep: drawHow, hashKey: "how", target: $("#howFig") });
@@ -254,7 +314,7 @@ installConsole(document.querySelector("pairwise-sorter"));
       playing = setInterval(() => {
         if (how.current === steps.length - 1) return $("#howPlay").click();
         how.next();
-      }, 1100);
+      }, 1300);
     };
 
     // ── 2. questions against n ───────────────────────────────────────────
@@ -325,7 +385,7 @@ installConsole(document.querySelector("pairwise-sorter"));
     $("#archSvg").innerHTML = archOut;
     const showDetail = (id) => {
       const [, label, what, api] = all.find((e) => e[0] === id);
-      $("#detail").innerHTML = `<h3>${esc(label)}</h3><p>${esc(what)}</p>${api.length ? `<p>${api.map((a) => `<code>${esc(a)}</code>`).join(" ")}</p>` : ""}<p class="muted"><a href="api/">Full reference →</a></p>`;
+      $("#detail").innerHTML = `<h3>${esc(label)}</h3><p>${esc(what)}</p>${api.length ? `<p>${api.map((a) => `<code>${esc(a)}</code>`).join(" ")}</p>` : ""}<p class="muted"><a href="../api/">Full reference →</a></p>`;
       for (const g of document.querySelectorAll(".arch .box")) g.classList.toggle("on", g.dataset.id === id);
     };
     $("#archSvg").addEventListener("click", (e) => { const g = e.target.closest(".box"); if (g) showDetail(g.dataset.id); });
@@ -341,6 +401,7 @@ installConsole(document.querySelector("pairwise-sorter"));
     };
     $("#liveReset").onclick = start;
     start();
+    hljs.highlightAll();
   </script>
 </body>
 </html>

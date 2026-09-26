@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
-      # The home page (pages/index.html) is committed: it is a published viz, and CI has no viz skill.
+      # The docs page (pages/docs/index.html) is committed: it is a published viz, and CI has no viz skill.
       - run: bun run site
       - uses: actions/upload-pages-artifact@v3
         with:

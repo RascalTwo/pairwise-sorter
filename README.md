@@ -25,7 +25,7 @@ while (sorter.question) {
 console.log(sorter.ranking().map((r) => `${r.rank}. ${r.item.title}`));
 ```
 
-Full documentation: <https://rascaltwo.github.io/pairwise-sorter/>
+Try it: <https://rascaltwo.github.io/pairwise-sorter/> · Documentation: <https://rascaltwo.github.io/pairwise-sorter/docs/>
 
 ## Develop
 
@@ -33,10 +33,10 @@ Full documentation: <https://rascaltwo.github.io/pairwise-sorter/>
 bun install
 bun run test      # behaviour tests (browser ones in headless Chrome); fails under 100% coverage
 bun run typecheck
-bun run site      # build what GitHub Pages serves into site/: home page, API reference (TypeDoc), app
+bun run site      # build what GitHub Pages serves into site/: the app, docs/, api/ (TypeDoc)
 ```
 
 The docs home page is a [/viz](https://github.com/RascalTwo/ai-setup) page in `viz-pages/pairwise-sorter/`.
-After editing it, `bun run docs:publish` (needs the viz skill) regenerates the committed `pages/index.html`.
+After editing it, `bun run docs:publish` (needs the viz skill) regenerates the committed `pages/docs/index.html`.
 
 MIT licensed.

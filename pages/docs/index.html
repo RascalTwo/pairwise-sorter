@@ -1,0 +1,3056 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script type="importmap">{"imports":{"/_kit/viz.js":"data:text/javascript;base64,Ly8gdml6LmpzIOKAlCBzaGFyZWQgaGVscGVycyBmb3IgL3ZpeiBwYWdlcy4gTG9hZCB3aXRoOgovLyAgIDxzY3JpcHQgdHlwZT0ibW9kdWxlIj4KLy8gICAgIGltcG9ydCB7IGFycm93TWFya2VycywgY29ubmVjdCwgc2lkZSwgbGFiZWxCb3gsIHZpekF1ZGl0LCAkLCAkJCwgZXNjLCBzYXZlSGFzaCwgbG9hZEhhc2gsIHZpekVudiB9IGZyb20gIi9fa2l0L3Zpei5qcyI7Ci8vICAgPC9zY3JpcHQ+Ci8vIFNlcnZlZCBieSB0aGUgdml6IHNlcnZlciBhdCAvX2tpdC92aXouanMgZnJvbSB0aGUgc2tpbGwncyBvd24ga2l0LyBkaXIsIHNvIGl0J3MKLy8gb25lIHNvdXJjZSBvZiB0cnV0aCBhY3Jvc3MgZXZlcnkgdml6LiBQYWlycyB3aXRoIC9fa2l0L3Zpei1raXQuY3NzLgoKZXhwb3J0IGNvbnN0IFNWR05TID0gImh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIjsKCi8vIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQovLyBTVkcgZGlhZ3JhbXMg4oCUIGdlb21ldHJ5IGZpcnN0LgovLwovLyBUaGUgcmVjdXJyaW5nIHJld29yayBpbiBib3hlcy1hbmQtYXJyb3dzIGRpYWdyYW1zIGNvbWVzIGZyb20gdHlwaW5nIGxhYmVsIGFuZAovLyBhcnJvdyBjb29yZGluYXRlcyBhcyBpbmRlcGVuZGVudCBsaXRlcmFsczogYSBib3ggZ2V0cyByZXNpemVkIG9yIG1vdmVkLCBidXQgdGhlCi8vIGFycm93IGVuZHBvaW50IGFuZCB0aGUgbGFiZWwgcG9zaXRpb24gd2VyZSBndWVzc2VkIGFnYWluc3QgdGhlICpvbGQqIGdlb21ldHJ5LAovLyBzbyB0aGUgYXJyb3cgbm93IHBvaW50cyBhdCBlbXB0eSBzcGFjZSAob3IgdGhlIHdyb25nIGJveCkgYW5kIHRoZSBsYWJlbCBzcGlsbHMKLy8gb3V0LiBUaGUgZml4IGlzIHRvIG5ldmVyIGhhbmQtcGxhY2UgdGhvc2U6IGRlZmluZSBlYWNoIG5vZGUgT05DRSBhcyB7eCx5LHcsaH0KLy8gYW5kIGNvbXB1dGUgZXZlcnl0aGluZyBlbHNlIGZyb20gaXQuCi8vIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKLy8gRGVmYXVsdCBhcnJvd2hlYWQgcGFsZXR0ZSwga2V5ZWQgdG8gdGhlIHZpei1raXQgaW50ZW50IHRva2Vucy4gU1ZHIG1hcmtlcnMgY2FuJ3QKLy8gaW5oZXJpdCB0aGUgc3Ryb2tlIGNvbG9yIG9mIHRoZSBsaW5lIHRoYXQgdXNlcyB0aGVtLCBzbyB5b3UgZ2VudWluZWx5IG5lZWQgb25lCi8vIG1hcmtlciBwZXIgY29sb3Ig4oCUIHRoaXMgZW1pdHMgdGhlbSBhbGwgd2l0aCBzdGFibGUgaWRzIHNvIHlvdSBzdG9wIHJlLWRlcml2aW5nCi8vIHRoZSBzYW1lIDxtYXJrZXI+IGJsb2NrIHBlciBkaWFncmFtLiBSZWZlcmVuY2UgYXMgbWFya2VyLWVuZD0idXJsKCNhaC1hY2NlbnQpIi4KLy8KLy8gVGhlc2UgYXJlIHZhcigpIHJlZmVyZW5jZXMsIG5vdCBoZXhlcywgT04gUFVSUE9TRTogYSBwYWdlIHRoYXQgb3ZlcnJpZGVzIHRoZQovLyB0b2tlbnMgKHNlZSBraXQvUkVBRE1FLm1kKSByZS10aGVtZXMgaXRzIGFycm93aGVhZHMgZm9yIGZyZWUuIEhhcmRjb2RpbmcgdGhlCi8vIGhleGVzIGhlcmUgd291bGQgc2lsZW50bHkgc3RyYW5kIGV2ZXJ5IG1hcmtlciBhdCB0aGUgZGVmYXVsdCBwYWxldHRlLgpjb25zdCBERUZBVUxUX01BUktFUlMgPSB7CiAgYWg6ICJ2YXIoLS1tdXRlZCkiLCAvLyB0aGUgZGVmYXVsdCBlZGdlCiAgImFoLWFjY2VudCI6ICJ2YXIoLS1hY2NlbnQpIiwKICAiYWgtZ29vZCI6ICJ2YXIoLS1nb29kKSIsCiAgImFoLXdhcm4iOiAidmFyKC0td2FybikiLAogICJhaC1kYW5nZXIiOiAidmFyKC0tZGFuZ2VyKSIsCn07CgovLyBSZXR1cm5zIGEgPGRlZnM+4oCmPC9kZWZzPiBzdHJpbmcuIERyb3AgaXQgb25jZSBhdCB0aGUgdG9wIG9mIHlvdXIgPHN2Zz4uCmV4cG9ydCBmdW5jdGlvbiBhcnJvd01hcmtlcnMocGFsZXR0ZSA9IERFRkFVTFRfTUFSS0VSUykgewogIGNvbnN0IG1hcmtlcnMgPSBPYmplY3QuZW50cmllcyhwYWxldHRlKQogICAgLm1hcCgKICAgICAgKFtpZCwgZmlsbF0pID0+CiAgICAgICAgYDxtYXJrZXIgaWQ9IiR7aWR9IiB2aWV3Qm94PSIwIDAgMTAgMTAiIHJlZlg9IjkiIHJlZlk9IjUiIGAgKwogICAgICAgIGBtYXJrZXJXaWR0aD0iNyIgbWFya2VySGVpZ2h0PSI3IiBvcmllbnQ9ImF1dG8tc3RhcnQtcmV2ZXJzZSI+YCArCiAgICAgICAgYDxwYXRoIGQ9Ik0wLDAgTDEwLDUgTDAsMTAgeiIgZmlsbD0iJHtmaWxsfSIvPjwvbWFya2VyPmAsCiAgICApCiAgICAuam9pbigiIik7CiAgcmV0dXJuIGA8ZGVmcz4ke21hcmtlcnN9PC9kZWZzPmA7Cn0KCi8vIEEgbm9kZSBpcyBqdXN0IHt4LCB5LCB3LCBofS4gY2VudGVyKCkgYW5kIHNpZGUoKSBkZXJpdmUgY29ubmVjdGlvbiBwb2ludHMgZnJvbQovLyBpdCwgc28gYW4gZWRnZSBzdGF5cyBhdHRhY2hlZCB0byB0aGUgYm94IG5vIG1hdHRlciBob3cgdGhlIGJveCBjaGFuZ2VzLgpleHBvcnQgY29uc3QgY2VudGVyID0gKG4pID0+ICh7IHg6IG4ueCArIG4udyAvIDIsIHk6IG4ueSArIG4uaCAvIDIgfSk7CgpleHBvcnQgY29uc3Qgc2lkZSA9IChuLCB3aGVyZSkgPT4KICAoewogICAgdG9wOiB7IHg6IG4ueCArIG4udyAvIDIsIHk6IG4ueSB9LAogICAgYm90dG9tOiB7IHg6IG4ueCArIG4udyAvIDIsIHk6IG4ueSArIG4uaCB9LAogICAgbGVmdDogeyB4OiBuLngsIHk6IG4ueSArIG4uaCAvIDIgfSwKICAgIHJpZ2h0OiB7IHg6IG4ueCArIG4udywgeTogbi55ICsgbi5oIC8gMiB9LAogIH0pW3doZXJlXTsKCi8vIFN0cmFpZ2h0IGVkZ2UgYmV0d2VlbiB0d28gbm9kZXMsIGF1dG8tcGlja2luZyB0aGUgZmFjaW5nIHNpZGVzIGJhc2VkIG9uIHRoZWlyCi8vIHJlbGF0aXZlIHBvc2l0aW9uLiBSZXR1cm5zIGFuIFNWRyBwYXRoICJkIiBzdHJpbmc7IHNldCB0aGUgbWFya2VyIHlvdXJzZWxmIHZpYQovLyB0aGUgZWxlbWVudCdzIG1hcmtlci1lbmQgYXR0cmlidXRlLiBGb3IgPjUgbm9kZXMgd2l0aCBjcm9zc2luZyBlZGdlcywgcmVhY2ggZm9yCi8vIGEgbGF5b3V0IGVuZ2luZSAoZGFncmUgLyBkMy1kYWcgLyBtZXJtYWlkKSBpbnN0ZWFkIG9mIHBsYWNpbmcgbm9kZXMgYnkgaGFuZCDigJQKLy8gdGhhdCdzIHRoZSBwb2ludCB3aGVyZSBtYW51YWwgY29vcmRpbmF0ZXMgc3RvcCBiZWluZyB3b3J0aCBpdC4KZXhwb3J0IGZ1bmN0aW9uIGNvbm5lY3QoYSwgYikgewogIGNvbnN0IGNhID0gY2VudGVyKGEpLAogICAgY2IgPSBjZW50ZXIoYik7CiAgY29uc3QgaG9yaXogPSBNYXRoLmFicyhjYi54IC0gY2EueCkgPiBNYXRoLmFicyhjYi55IC0gY2EueSk7CiAgY29uc3QgcGEgPSBob3JpegogICAgPyBzaWRlKGEsIGNiLnggPiBjYS54ID8gInJpZ2h0IiA6ICJsZWZ0IikKICAgIDogc2lkZShhLCBjYi55ID4gY2EueSA/ICJib3R0b20iIDogInRvcCIpOwogIGNvbnN0IHBiID0gaG9yaXoKICAgID8gc2lkZShiLCBjYi54ID4gY2EueCA/ICJsZWZ0IiA6ICJyaWdodCIpCiAgICA6IHNpZGUoYiwgY2IueSA+IGNhLnkgPyAidG9wIiA6ICJib3R0b20iKTsKICByZXR1cm4gYE0gJHtwYS54fSAke3BhLnl9IEwgJHtwYi54fSAke3BiLnl9YDsKfQoKLy8gQSBsYWJlbCB0aGF0IENBTk5PVCBvdmVyZmxvdyBpdHMgYm94LiA8Zm9yZWlnbk9iamVjdD4gbGV0cyB0aGUgYnJvd3NlciB3cmFwIGFuZAovLyBlbGxpcHNpemUgSFRNTCBuYXRpdmVseSwgdW5saWtlIHJhdyA8dGV4dD4gd2hpY2ggeW91J2QgaGF2ZSB0byBtZWFzdXJlIGJ5IGhhbmQKLy8gKGFuZCBoaXN0b3JpY2FsbHkgZ3Vlc3NlZCB3cm9uZykuIFVzZSB0aGlzIGZvciBhbnkgbXVsdGktd29yZCBsYWJlbCBpbnNpZGUgYQovLyBmaXhlZC13aWR0aCBib3guIFN0eWxlIHZpYSB0aGUgLnZzdmctbGFiZWwgY2xhc3MgaW4gdml6LWtpdC5jc3MuCmV4cG9ydCBmdW5jdGlvbiBsYWJlbEJveChub2RlLCBodG1sLCBjbHMgPSAiIikgewogIHJldHVybiAoCiAgICBgPGZvcmVpZ25PYmplY3QgeD0iJHtub2RlLnh9IiB5PSIke25vZGUueX0iIHdpZHRoPSIke25vZGUud30iIGhlaWdodD0iJHtub2RlLmh9Ij5gICsKICAgIGA8ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBjbGFzcz0idnN2Zy1sYWJlbCAke2Nsc30iPiR7aHRtbH08L2Rpdj5gICsKICAgIGA8L2ZvcmVpZ25PYmplY3Q+YAogICk7Cn0KCi8vIFZlcmlmaWNhdGlvbiBiYWNrc3RvcC4gSWYgeW91IERPIGhhbmQtcm9sbCA8dGV4dD4sIGNhbGwgdGhpcyBvbmNlIGFmdGVyIHJlbmRlcjoKLy8gaXQgb3V0bGluZXMgKGluIHJlZCkgYW55IDx0ZXh0PiB3aG9zZSBib3VuZGluZyBib3ggc3BpbGxzIHBhc3QgdGhlIDxyZWN0PiBpbiBpdHMKLy8gZ3JvdXAsIGFuZCBkcm9wcyBhIGZpeGVkIGJhbm5lciBzbyBhbiBvdmVyZmxvdyBpcyBpbXBvc3NpYmxlIHRvIG1pc3MgaW4gdGhlIG9wZW4KLy8gYnJvd3NlciDigJQgb3IgaW4gYW55IHNjcmVlbnNob3QgeW91IHRha2UgdG8gdmVyaWZ5IHRoZSBwYWdlLiBSZXR1cm5zIHRoZSBsaXN0IG9mCi8vIG9mZmVuZGluZyBzdHJpbmdzIChlbXB0eSA9IGNsZWFuKS4gVGhlIHJlY3QtaW4tc2FtZS08Zz4gcGFpcmluZyBpcyBhIGhldXJpc3RpYzsKLy8gaXQgY2F0Y2hlcyB0aGUgY29tbW9uIGNhc2Ugd2hlcmUgZWFjaCBib3grbGFiZWwgbGl2ZSBpbiBvbmUgPGc+LgpleHBvcnQgZnVuY3Rpb24gdml6QXVkaXQocm9vdCA9IGRvY3VtZW50KSB7CiAgY29uc3QgYmFkID0gW107CiAgZm9yIChjb25zdCB0IG9mIHJvb3QucXVlcnlTZWxlY3RvckFsbCgidGV4dCIpKSB7CiAgICBjb25zdCByZWN0ID0gdC5jbG9zZXN0KCJnIik/LnF1ZXJ5U2VsZWN0b3IoInJlY3QiKTsKICAgIGlmICghcmVjdCkgY29udGludWU7CiAgICBjb25zdCB0YiA9IHQuZ2V0QkJveCgpOwogICAgY29uc3QgcmIgPSByZWN0LmdldEJCb3goKTsKICAgIGNvbnN0IHNwaWxscyA9CiAgICAgIHRiLnggPCByYi54IC0gMSB8fAogICAgICB0Yi55IDwgcmIueSAtIDEgfHwKICAgICAgdGIueCArIHRiLndpZHRoID4gcmIueCArIHJiLndpZHRoICsgMSB8fAogICAgICB0Yi55ICsgdGIuaGVpZ2h0ID4gcmIueSArIHJiLmhlaWdodCArIDE7CiAgICBpZiAoc3BpbGxzKSB7CiAgICAgIHQuc3R5bGUub3V0bGluZSA9ICIxcHggc29saWQgI2Y4NTE0OSI7CiAgICAgIGJhZC5wdXNoKHQudGV4dENvbnRlbnQpOwogICAgfQogIH0KICBpZiAoYmFkLmxlbmd0aCkgewogICAgY29uc29sZS5lcnJvcigiW3ZpekF1ZGl0XSB0ZXh0IG92ZXJmbG93OiIsIGJhZCk7CiAgICBjb25zdCBiYW5uZXIgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTsKICAgIGJhbm5lci50ZXh0Q29udGVudCA9IGDimqAgJHtiYWQubGVuZ3RofSB0ZXh0IG92ZXJmbG93KHMpIOKAlCBzZWUgcmVkIG91dGxpbmVzYDsKICAgIGJhbm5lci5zdHlsZS5jc3NUZXh0ID0KICAgICAgInBvc2l0aW9uOmZpeGVkO2xlZnQ6OHB4O2JvdHRvbTo4cHg7ei1pbmRleDo5OTk5O2JhY2tncm91bmQ6I2Y4NTE0OTtjb2xvcjojZmZmOyIgKwogICAgICAiZm9udDoxMnB4LzEgc2Fucy1zZXJpZjtwYWRkaW5nOjZweCAxMHB4O2JvcmRlci1yYWRpdXM6NnB4IjsKICAgIGRvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQoYmFubmVyKTsKICB9CiAgcmV0dXJuIGJhZDsKfQoKLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi8vIFNtYWxsIHV0aWxpdGllcyB0aGF0IGV2ZXJ5IHZpeiByZS1kZXJpdmVzLgovLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCmV4cG9ydCBjb25zdCAkID0gKHNlbCwgcm9vdCA9IGRvY3VtZW50KSA9PiByb290LnF1ZXJ5U2VsZWN0b3Ioc2VsKTsKZXhwb3J0IGNvbnN0ICQkID0gKHNlbCwgcm9vdCA9IGRvY3VtZW50KSA9PiBbLi4ucm9vdC5xdWVyeVNlbGVjdG9yQWxsKHNlbCldOwoKLy8gRXNjYXBlIGJlZm9yZSBpbmplY3RpbmcgdGV4dCBpbnRvIGlubmVySFRNTC4KZXhwb3J0IGNvbnN0IGVzYyA9IChzKSA9PgogIFN0cmluZyhzKS5yZXBsYWNlKAogICAgL1smPD4iJ10vZywKICAgIChjKSA9PiAoeyAiJiI6ICImYW1wOyIsICI8IjogIiZsdDsiLCAiPiI6ICImZ3Q7IiwgJyInOiAiJnF1b3Q7IiwgIiciOiAiJiMzOTsiIH0pW2NdLAogICk7CgovLyBIb3QtcmVsb2FkIChhbmQgZXZlcnkgc2F2ZSkgZG9lcyBhIGZ1bGwgcGFnZSByZWZyZXNoLCBzbyBpbi1wYWdlIHN0YXRlIGlzIHdpcGVkLgovLyBQZXJzaXN0IGFueXRoaW5nIHlvdSB3YW50IHRvIHN1cnZpdmUg4oCUIG9wZW4gcGFuZWwsIHNlbGVjdGVkIHN0ZXAsIGFjdGl2ZSBmaWx0ZXJzIOKAlAovLyB0byB0aGUgVVJMIGhhc2guIEJvbnVzOiB0aGUgVVJMIGJlY29tZXMgc2hhcmVhYmxlL2RlZXAtbGlua2FibGUgZm9yIGZyZWUuCi8vIFJvdW5kLXRyaXBzIGEgcGxhaW4gb2JqZWN0LgpleHBvcnQgY29uc3Qgc2F2ZUhhc2ggPSAob2JqKSA9PgogIGxvY2F0aW9uLnJlcGxhY2UoIiMiICsgZW5jb2RlVVJJQ29tcG9uZW50KEpTT04uc3RyaW5naWZ5KG9iaikpKTsKCmV4cG9ydCBjb25zdCBsb2FkSGFzaCA9ICgpID0+IHsKICB0cnkgewogICAgcmV0dXJuIEpTT04ucGFyc2UoZGVjb2RlVVJJQ29tcG9uZW50KGxvY2F0aW9uLmhhc2guc2xpY2UoMSkpIHx8ICJ7fSIpOwogIH0gY2F0Y2ggewogICAgcmV0dXJuIHt9OwogIH0KfTsKCi8vIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQovLyBTdGVwcGVkIHdhbGt0aHJvdWdocyDigJQgdGhlIHNlY29uZC1tb3N0IHJlLWRlcml2ZWQgdGhpbmcgYWZ0ZXIgU1ZHIGdlb21ldHJ5LgovLwovLyB+MjAgdml6emVzIGhhbmQtcm9sbGVkIGFycm93LWtleSBzdGVwcGluZyBhbmQgZWFjaCBnb3QgYSBkaWZmZXJlbnQgc3Vic2V0Ci8vIHJpZ2h0OiBzb21lIGNhbGxlZCBwcmV2ZW50RGVmYXVsdCAoc28gdGhlIHBhZ2UgZGlkbid0IGFsc28gc2Nyb2xsKSwgc29tZQovLyBjbGFtcGVkIGF0IHRoZSBlbmRzLCBzb21lIHdyYXBwZWQsIHNvbWUgbGVmdCBhbiBhdXRvcGxheSB0aW1lciBydW5uaW5nIGFmdGVyCi8vIHRoZSB1c2VyIG1hbnVhbGx5IG5hdmlnYXRlZC4gVGhpcyBpcyB0aGF0IGxvZ2ljIG9uY2UsIHdpdGggdGhlIFVSTC1oYXNoCi8vIHJvdW5kLXRyaXAgd2lyZWQgaW4gc28gYSBzdGVwIHN1cnZpdmVzIGhvdC1yZWxvYWQuCi8vCi8vICAgY29uc3QgcyA9IHN0ZXBwZXIoeyBuOiBTVEVQUy5sZW5ndGgsIG9uU3RlcDogaSA9PiByZW5kZXIoaSkgfSk7Ci8vCi8vIEJpbmRzIOKGkC/ihpIv4oaRL+KGkywgU3BhY2UsIFBhZ2VVcC9Eb3duLCBIb21lL0VuZCBvbiB0aGUgZG9jdW1lbnQuIEF1dG9wbGF5IHBhdXNlcwovLyBvbiBhbnkgbWFudWFsIG5hdmlnYXRpb24uIFJldHVybnMgaGFuZGxlcyBzbyB5b3UgY2FuIGRyaXZlIGl0IGZyb20gYnV0dG9ucyB0b28uCmV4cG9ydCBmdW5jdGlvbiBzdGVwcGVyKHsgbiwgb25TdGVwLCBhdXRvcGxheU1zID0gMCwgaGFzaEtleSA9ICJzdGVwIiwgdGFyZ2V0ID0gZG9jdW1lbnQgfSA9IHt9KSB7CiAgbGV0IGkgPSBNYXRoLm1pbihNYXRoLm1heChsb2FkSGFzaCgpW2hhc2hLZXldID8/IDAsIDApLCBuIC0gMSk7CiAgbGV0IHRpbWVyID0gbnVsbDsKCiAgY29uc3QgZW1pdCA9ICgpID0+IHsKICAgIHNhdmVIYXNoKHsgLi4ubG9hZEhhc2goKSwgW2hhc2hLZXldOiBpIH0pOwogICAgb25TdGVwPy4oaSk7CiAgfTsKICBjb25zdCBnbyA9ICh0bywgbWFudWFsID0gdHJ1ZSkgPT4gewogICAgY29uc3QgbmV4dCA9IE1hdGgubWluKE1hdGgubWF4KHRvLCAwKSwgbiAtIDEpOwogICAgaWYgKG1hbnVhbCkgcGF1c2UoKTsgLy8gYSBtYW51YWwgbmF2IGFsd2F5cyB3aW5zIG92ZXIgYXV0b3BsYXkKICAgIGlmIChuZXh0ID09PSBpKSByZXR1cm47CiAgICBpID0gbmV4dDsKICAgIGVtaXQoKTsKICB9OwogIGNvbnN0IHBsYXkgPSAoKSA9PiB7CiAgICBpZiAodGltZXIgfHwgIWF1dG9wbGF5TXMpIHJldHVybjsKICAgIHRpbWVyID0gc2V0SW50ZXJ2YWwoKCkgPT4gewogICAgICBpZiAoaSA+PSBuIC0gMSkgcmV0dXJuIHBhdXNlKCk7CiAgICAgIGdvKGkgKyAxLCBmYWxzZSk7CiAgICB9LCBhdXRvcGxheU1zKTsKICB9OwogIGNvbnN0IHBhdXNlID0gKCkgPT4gewogICAgY2xlYXJJbnRlcnZhbCh0aW1lcik7CiAgICB0aW1lciA9IG51bGw7CiAgfTsKCiAgY29uc3QgS0VZUyA9IHsKICAgIEFycm93UmlnaHQ6IDEsIEFycm93RG93bjogMSwgUGFnZURvd246IDEsICIgIjogMSwKICAgIEFycm93TGVmdDogLTEsIEFycm93VXA6IC0xLCBQYWdlVXA6IC0xLAogIH07CiAgdGFyZ2V0LmFkZEV2ZW50TGlzdGVuZXIoImtleWRvd24iLCAoZSkgPT4gewogICAgaWYgKGUubWV0YUtleSB8fCBlLmN0cmxLZXkgfHwgZS5hbHRLZXkpIHJldHVybjsKICAgIGlmICgvXihJTlBVVHxURVhUQVJFQXxTRUxFQ1QpJC8udGVzdChlLnRhcmdldC50YWdOYW1lKSB8fCBlLnRhcmdldC5pc0NvbnRlbnRFZGl0YWJsZSkgcmV0dXJuOwogICAgaWYgKGUua2V5IGluIEtFWVMpIHsKICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpOyAvLyBlbHNlIFNwYWNlL1BhZ2VEb3duIHNjcm9sbHMgdGhlIHBhZ2UgdG9vCiAgICAgIGdvKGkgKyBLRVlTW2Uua2V5XSk7CiAgICB9IGVsc2UgaWYgKGUua2V5ID09PSAiSG9tZSIpIHsKICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpOwogICAgICBnbygwKTsKICAgIH0gZWxzZSBpZiAoZS5rZXkgPT09ICJFbmQiKSB7CiAgICAgIGUucHJldmVudERlZmF1bHQoKTsKICAgICAgZ28obiAtIDEpOwogICAgfQogIH0pOwoKICBlbWl0KCk7CiAgaWYgKGF1dG9wbGF5TXMpIHBsYXkoKTsKCiAgcmV0dXJuIHsKICAgIGdvLAogICAgbmV4dDogKCkgPT4gZ28oaSArIDEpLAogICAgcHJldjogKCkgPT4gZ28oaSAtIDEpLAogICAgcGxheSwKICAgIHBhdXNlLAogICAgZ2V0IGN1cnJlbnQoKSB7CiAgICAgIHJldHVybiBpOwogICAgfSwKICB9Owp9CgovLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLy8gRGlyZWN0IG1hbmlwdWxhdGlvbiDigJQgZHJhZyB0aGUgYXJ0d29yaywgbm90IGEgc2xpZGVyLgovLwovLyBUaGUgYmVzdCBpbnRlcmFjdGl2ZSBleHBsYWluZXJzIG9uIHRoZSB3ZWIgKENpZWNoYW5vd3NraSdzLCBub3RhYmx5KSBjb250YWluCi8vIGFsbW9zdCB6ZXJvIDxpbnB1dCB0eXBlPSJyYW5nZSI+LiBJbnN0ZWFkIHlvdSBkcmFnIHRoZSBmaWd1cmUgSVRTRUxGLCBhbmQgb25lCi8vIHBvaW50ZXIgZHJhZyBkcml2ZXMgdHdvIHBhcmFtZXRlcnMgYXQgb25jZS4gQSBzbGlkZXIgcHV0cyBhIHN0cmlwIG9mIFVJIGNocm9tZQovLyBiZXR3ZWVuIHRoZSByZWFkZXIgYW5kIHRoZSBwaGVub21lbm9uOyBkcmFnZ2luZyB0aGUgdGhpbmcgcmVtb3ZlcyBpdC4KLy8KLy8gICB0d29BeGlzKHN2ZywgewovLyAgICAgeDogWzAsIDFdLCB5OiBbLTkwLCA5MF0sICAgICAgICAgIC8vIGNsYW1wZWQgcmFuZ2VzCi8vICAgICBvbkNoYW5nZTogKHgsIHkpID0+IHJlZHJhdyh4LCB5KSwKLy8gICB9KTsKLy8KLy8gVXNlcyBwb2ludGVyIGV2ZW50cyArIHNldFBvaW50ZXJDYXB0dXJlLCBzbyBtb3VzZS90b3VjaC9wZW4gYWxsIHdvcmsgYW5kIGEgZHJhZwovLyB0aGF0IGxlYXZlcyB0aGUgZWxlbWVudCBzdGlsbCB0cmFja3MuIFNldCBgc3BlZWRgIHRvIHR1bmUgc2Vuc2l0aXZpdHkuCmV4cG9ydCBmdW5jdGlvbiB0d29BeGlzKGVsLCB7IHg6IHhyID0gWzAsIDFdLCB5OiB5ciA9IFswLCAxXSwgc3RhcnQsIG9uQ2hhbmdlLCBzcGVlZCA9IDEgfSA9IHt9KSB7CiAgY29uc3QgY2xhbXAgPSAodiwgW2xvLCBoaV0pID0+IE1hdGgubWluKGhpLCBNYXRoLm1heChsbywgdikpOwogIGNvbnN0IHNwYW4gPSAocikgPT4gclsxXSAtIHJbMF07CiAgbGV0IHggPSBzdGFydCA/IHN0YXJ0WzBdIDogKHhyWzBdICsgeHJbMV0pIC8gMjsKICBsZXQgeSA9IHN0YXJ0ID8gc3RhcnRbMV0gOiAoeXJbMF0gKyB5clsxXSkgLyAyOwogIGxldCBweCA9IG51bGwsIHB5ID0gbnVsbDsKCiAgZWwuc3R5bGUudG91Y2hBY3Rpb24gPSAibm9uZSI7IC8vIGVsc2UgdGhlIGJyb3dzZXIgc2Nyb2xscyBpbnN0ZWFkIG9mIGRyYWdnaW5nCiAgZWwuc3R5bGUuY3Vyc29yID0gImdyYWIiOwoKICBlbC5hZGRFdmVudExpc3RlbmVyKCJwb2ludGVyZG93biIsIChlKSA9PiB7CiAgICBweCA9IGUuY2xpZW50WDsgcHkgPSBlLmNsaWVudFk7CiAgICBlbC5zZXRQb2ludGVyQ2FwdHVyZShlLnBvaW50ZXJJZCk7CiAgICBlbC5zdHlsZS5jdXJzb3IgPSAiZ3JhYmJpbmciOwogIH0pOwogIGVsLmFkZEV2ZW50TGlzdGVuZXIoInBvaW50ZXJtb3ZlIiwgKGUpID0+IHsKICAgIGlmIChweCA9PT0gbnVsbCkgcmV0dXJuOwogICAgY29uc3QgciA9IGVsLmdldEJvdW5kaW5nQ2xpZW50UmVjdCgpOwogICAgLy8gTm9ybWFsaXplIGJ5IGVsZW1lbnQgc2l6ZSBzbyBzZW5zaXRpdml0eSBkb2Vzbid0IGRlcGVuZCBvbiByZW5kZXIgc2NhbGUuCiAgICB4ID0gY2xhbXAoeCArICgoZS5jbGllbnRYIC0gcHgpIC8gci53aWR0aCkgKiBzcGFuKHhyKSAqIHNwZWVkLCB4cik7CiAgICB5ID0gY2xhbXAoeSArICgoZS5jbGllbnRZIC0gcHkpIC8gci5oZWlnaHQpICogc3Bhbih5cikgKiBzcGVlZCwgeXIpOwogICAgcHggPSBlLmNsaWVudFg7IHB5ID0gZS5jbGllbnRZOwogICAgb25DaGFuZ2U/Lih4LCB5KTsKICB9KTsKICBjb25zdCBlbmQgPSAoKSA9PiB7CiAgICBweCA9IHB5ID0gbnVsbDsKICAgIGVsLnN0eWxlLmN1cnNvciA9ICJncmFiIjsKICB9OwogIGVsLmFkZEV2ZW50TGlzdGVuZXIoInBvaW50ZXJ1cCIsIGVuZCk7CiAgZWwuYWRkRXZlbnRMaXN0ZW5lcigicG9pbnRlcmNhbmNlbCIsIGVuZCk7CgogIG9uQ2hhbmdlPy4oeCwgeSk7CiAgcmV0dXJuIHsKICAgIHNldDogKG54LCBueSkgPT4gewogICAgICB4ID0gY2xhbXAobngsIHhyKTsgeSA9IGNsYW1wKG55LCB5cik7CiAgICAgIG9uQ2hhbmdlPy4oeCwgeSk7CiAgICB9LAogICAgZ2V0IHZhbHVlKCkgewogICAgICByZXR1cm4gW3gsIHldOwogICAgfSwKICB9Owp9CgovLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLy8gRmlndXJlIGxpZmVjeWNsZSDigJQgb25seSByZW5kZXIgd2hhdCdzIG9uIHNjcmVlbiwgYW5kIGdpdmUgT05FIGZpZ3VyZSBmb2N1cy4KLy8KLy8gQSBsb25nIGV4cGxhaW5lciB3aXRoIG1hbnkgYW5pbWF0ZWQgZmlndXJlcyB3aWxsIG1lbHQgYSBsYXB0b3AgaWYgdGhleSBhbGwgcnVuCi8vIGF0IG9uY2UuIFR3byBzZXBhcmF0ZSBzaWduYWxzIGZpeCBpdCwgYW5kIHRoZSBzZWNvbmQgaXMgYSBuYXJyYXRpdmUgZGV2aWNlIGFzCi8vIG11Y2ggYXMgYSBwZXJmIG9uZToKLy8gICB2aXNpYmxlIOKAlCBpcyB0aGlzIGZpZ3VyZSBvbiBzY3JlZW4gYXQgYWxsPyAg4oaSIHN0b3AgZHJhd2luZyB3aGVuIGl0IGlzbid0Ci8vICAgYWN0aXZlICDigJQgaXMgdGhpcyB0aGUgZmlndXJlIHRoZSByZWFkZXIgaXMgTE9PS0lORyBhdCAobW9zdCBjZW50ZXJlZCk/Ci8vICAgICAgICAgICAgIOKGkiBleGFjdGx5IG9uZSBhdCBhIHRpbWU7IHVzZSBpdCB0byBydW4gdGhlICJoZXJvIiBhbmltYXRpb24sIHNob3cKLy8gICAgICAgICAgICAgICBjb250cm9scywgb3Igc3RhcnQgYXVkaW8sIHNvIHRoZSBwYWdlIHRlbGxzIHlvdSB3aGVyZSB0byBsb29rLgovLwovLyAgIGZpZ3VyZUxpZmVjeWNsZShbeyBlbCwgc2V0VmlzaWJsZSwgc2V0QWN0aXZlIH0sIC4uLl0pOwovLwovLyBBbHNvIHBhdXNlcyBldmVyeXRoaW5nIHdoZW4gdGhlIHRhYiBpcyBoaWRkZW4g4oCUIGJhY2tncm91bmQgdGFicyB0aHJvdHRsZQovLyByZXF1ZXN0QW5pbWF0aW9uRnJhbWUgdG8gfjFmcHMsIHdoaWNoIHNpbGVudGx5IHN0YWxscyBhbmltYXRpb24gbG9vcHMuCmV4cG9ydCBmdW5jdGlvbiBmaWd1cmVMaWZlY3ljbGUoZmlndXJlcywgeyByb290ID0gbnVsbCB9ID0ge30pIHsKICBjb25zdCBzZWVuID0gbmV3IE1hcCgpOwoKICBjb25zdCBpbyA9IG5ldyBJbnRlcnNlY3Rpb25PYnNlcnZlcigKICAgIChlbnRyaWVzKSA9PiB7CiAgICAgIGZvciAoY29uc3QgZSBvZiBlbnRyaWVzKSB7CiAgICAgICAgY29uc3QgZiA9IGZpZ3VyZXMuZmluZCgoZikgPT4gZi5lbCA9PT0gZS50YXJnZXQpOwogICAgICAgIGlmICghZikgY29udGludWU7CiAgICAgICAgc2Vlbi5zZXQoZiwgZS5pc0ludGVyc2VjdGluZyk7CiAgICAgICAgZi5zZXRWaXNpYmxlPy4oZS5pc0ludGVyc2VjdGluZyAmJiAhZG9jdW1lbnQuaGlkZGVuKTsKICAgICAgfQogICAgICBwaWNrQWN0aXZlKCk7CiAgICB9LAogICAgeyByb290LCB0aHJlc2hvbGQ6IDAgfSwKICApOwogIGZpZ3VyZXMuZm9yRWFjaCgoZikgPT4gaW8ub2JzZXJ2ZShmLmVsKSk7CgogIGxldCBhY3RpdmVGID0gbnVsbDsKICBmdW5jdGlvbiBwaWNrQWN0aXZlKCkgewogICAgY29uc3QgbWlkID0gd2luZG93LmlubmVySGVpZ2h0IC8gMjsKICAgIGxldCBiZXN0ID0gbnVsbCwgYmVzdEQgPSBJbmZpbml0eTsKICAgIGZvciAoY29uc3QgZiBvZiBmaWd1cmVzKSB7CiAgICAgIGlmICghc2Vlbi5nZXQoZikpIGNvbnRpbnVlOwogICAgICBjb25zdCByID0gZi5lbC5nZXRCb3VuZGluZ0NsaWVudFJlY3QoKTsKICAgICAgY29uc3QgZCA9IE1hdGguYWJzKHIudG9wICsgci5oZWlnaHQgLyAyIC0gbWlkKTsKICAgICAgaWYgKGQgPCBiZXN0RCkgeyBiZXN0RCA9IGQ7IGJlc3QgPSBmOyB9CiAgICB9CiAgICBpZiAoYmVzdCA9PT0gYWN0aXZlRikgcmV0dXJuOwogICAgYWN0aXZlRj8uc2V0QWN0aXZlPy4oZmFsc2UpOwogICAgYWN0aXZlRiA9IGJlc3Q7CiAgICBhY3RpdmVGPy5zZXRBY3RpdmU/Lih0cnVlKTsKICB9CgogIGxldCBxdWV1ZWQgPSBmYWxzZTsKICBjb25zdCBvblNjcm9sbCA9ICgpID0+IHsKICAgIGlmIChxdWV1ZWQpIHJldHVybjsKICAgIHF1ZXVlZCA9IHRydWU7CiAgICByZXF1ZXN0QW5pbWF0aW9uRnJhbWUoKCkgPT4geyBxdWV1ZWQgPSBmYWxzZTsgcGlja0FjdGl2ZSgpOyB9KTsKICB9OwogIGFkZEV2ZW50TGlzdGVuZXIoInNjcm9sbCIsIG9uU2Nyb2xsLCB7IHBhc3NpdmU6IHRydWUgfSk7CiAgYWRkRXZlbnRMaXN0ZW5lcigicmVzaXplIiwgb25TY3JvbGwsIHsgcGFzc2l2ZTogdHJ1ZSB9KTsKICBkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCJ2aXNpYmlsaXR5Y2hhbmdlIiwgKCkgPT4gewogICAgZm9yIChjb25zdCBmIG9mIGZpZ3VyZXMpIGYuc2V0VmlzaWJsZT8uKCFkb2N1bWVudC5oaWRkZW4gJiYgISFzZWVuLmdldChmKSk7CiAgfSk7CgogIHBpY2tBY3RpdmUoKTsKICByZXR1cm4gewogICAgZ2V0IGFjdGl2ZSgpIHsgcmV0dXJuIGFjdGl2ZUY7IH0sCiAgICBkZXN0cm95KCkgewogICAgICBpby5kaXNjb25uZWN0KCk7CiAgICAgIHJlbW92ZUV2ZW50TGlzdGVuZXIoInNjcm9sbCIsIG9uU2Nyb2xsKTsKICAgICAgcmVtb3ZlRXZlbnRMaXN0ZW5lcigicmVzaXplIiwgb25TY3JvbGwpOwogICAgfSwKICB9Owp9CgovLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLy8gUnVudGltZSBlbnZpcm9ubWVudCDigJQgaXMgdGhlcmUgYSBsaXZlIHZpeiBzZXJ2ZXIgYmVoaW5kIHRoaXMgcGFnZT8KLy8KLy8gQSB2aXogY2FuIHJ1biBpbiB0aHJlZSB3b3JsZHMsIGFuZCBsaXZlLWRhdGEgVUkgbmVlZHMgdG8ga25vdyB3aGljaDoKLy8gICAic3RhdGljIiAg4oCUIGEgcHVibGlzaGVkL2lubGluZWQgYnVpbGQuIFRoZXJlIGlzIE5PIHNlcnZlciBhbmQgbmV2ZXIgd2lsbCBiZQovLyAgICAgICAgICAgICAgIG9uZSB0aGlzIHNlc3Npb247IHZpeiBwdWJsaXNoIHN0YW1wcyB3aW5kb3cuX19WSVpfU1RBVElDX18gaW50byB0aGUKLy8gICAgICAgICAgICAgICBzZWxmLWNvbnRhaW5lZCBIVE1MIGl0IGVtaXRzLgovLyAgICJsaXZlIiAgICDigJQgc2VydmVkIGJ5IHRoZSB2aXogZGV2IHNlcnZlciwgYW5kIGl0IGFuc3dlcnMgKGZldGNoIGFwaS8qIHdpbGwgd29yaykuCi8vICAgIm9mZmxpbmUiIOKAlCBzZXJ2ZWQgYXMgaWYgYnkgYSBzZXJ2ZXIsIGJ1dCBpdCBpc24ndCBhbnN3ZXJpbmcgcmlnaHQgbm93IChkZXYKLy8gICAgICAgICAgICAgICBzZXJ2ZXIgc3RvcHBlZCwgb3BlbmVkIGZyb20gZGlzaywgZXRjLikg4oCUIHRyZWF0IGxpa2Ugc3RhdGljLgovLwovLyBQcm9iZXMgdGhlIHNlcnZlci1nbG9iYWwgL19oZWFsdGggb25jZSBhbmQgY2FjaGVzIHRoZSBwcm9taXNlLiBVc2UgaXQgdG8gZ2F0ZQovLyBhbnl0aGluZyB0aGF0IGZldGNoZXMgYXBpLyo6IHJlbmRlciByZWFsIGRhdGEgb25seSBvbiAibGl2ZSIsIG90aGVyd2lzZSBzaG93IGEKLy8gInJ1biBtZSBsb2NhbGx5IGZvciBsaXZlIGRhdGEiIHBsYWNlaG9sZGVyIGluc3RlYWQgb2Ygc3Bpbm5pbmcgZm9yZXZlci4KLy8gICBjb25zdCBlbnYgPSBhd2FpdCB2aXpFbnYoKTsKLy8gICBpZiAoZW52ICE9PSAibGl2ZSIpIHsgc2hvd1BsYWNlaG9sZGVyKCk7IHJldHVybjsgfQpsZXQgX3ZpekVudlA7CmV4cG9ydCBmdW5jdGlvbiB2aXpFbnYoKSB7CiAgcmV0dXJuIChfdml6RW52UCA/Pz0gKGFzeW5jICgpID0+IHsKICAgIGlmICh0eXBlb2Ygd2luZG93ICE9PSAidW5kZWZpbmVkIiAmJiB3aW5kb3cuX19WSVpfU1RBVElDX18pIHJldHVybiAic3RhdGljIjsKICAgIHRyeSB7CiAgICAgIGNvbnN0IHIgPSBhd2FpdCBmZXRjaCgiL19oZWFsdGgiLCB7IGNhY2hlOiAibm8tc3RvcmUiIH0pOwogICAgICByZXR1cm4gci5vayA/ICJsaXZlIiA6ICJvZmZsaW5lIjsKICAgIH0gY2F0Y2ggewogICAgICByZXR1cm4gIm9mZmxpbmUiOwogICAgfQogIH0pKCkpOwp9CgovLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLy8gTmFycmF0aW9uIOKAlCBwbGF5IGEgZmlsbSdzIG5hcnJhdGlvbi5qc29uIGluIHN5bmMgd2l0aCBpdHMgdGltZWxpbmUuCi8vCi8vIGB2aXogdmVyaWZ5YCAvIGB2aXogcmVuZGVyYCBjb21waWxlIG5hcnJhdGlvbi5qc29uIGludG8gLnR0cy9tYW5pZmVzdC5qc29uIChLb2tvcm8KLy8gY2xpcHMgKyB5b3VyIGF1ZGlvLyBmaWxlcywgZWFjaCBwbGFjZWQgYXQgYSB0aW1lKS4gVGhpcyBwbGF5cyB0aGUgc2FtZSBjbGlwcyBhdCB0aGUKLy8gc2FtZSBtb21lbnRzLCBzbyBzdGVwcGluZyB0aGUgcGFnZSBzb3VuZHMgbGlrZSB0aGUgcmVuZGVyZWQgdmlkZW8uIENhcHRpb25zIHNob3cKLy8gb24gdGhlIHBhZ2UgYmVoaW5kIGEgQ0MgdG9nZ2xlOyBgdml6IHJlbmRlcmAgaGlkZXMgdGhlbSAodGhlIG1wNCBjYXJyaWVzIGEgc3VidGl0bGUKLy8gdHJhY2sgaW5zdGVhZCkuIENhbGwgb25jZSwgYWZ0ZXIgcmVnaXN0ZXJpbmcgdGhlIHRpbWVsaW5lOgovLyAgIHdpbmRvdy5fX3ZpeiA9IHsgdGltZWxpbmU6IHsgdG90YWwsIHNlZWssIHBsYXksIHBhdXNlLCBhdCwgY2hhcHRlcnMgfSB9OwovLyAgIG5hcnJhdGUod2luZG93Ll9fdml6LnRpbWVsaW5lKTsKLy8gSXQgb25seSByZWFkcyB0aW1lbGluZS5hdCgpOiB0aGUgcGxheWhlYWQgY3JlZXBpbmcgZm9yd2FyZCBmcmFtZSB0byBmcmFtZSBpcyAicGxheWluZyI7Ci8vIHN0YW5kaW5nIHN0aWxsIG9yIGp1bXBpbmcgKGEgc2VlaywgYSBzdGVwKSBpcyBub3QuIFNvIGl0IG5lZWRzIG5vIGhvb2tzIGludG8gdGhlIGZpbG0sCi8vIGFuZCBhIGZpbG0gdGhhdCBhdXRvcGxheXMsIGxvb3BzIG9yIGVuZHMgb24gaXRzIG93biBzdGlsbCBzb3VuZHMgcmlnaHQuCmV4cG9ydCBhc3luYyBmdW5jdGlvbiBuYXJyYXRlKHRpbWVsaW5lLCB7IG1hbmlmZXN0ID0gIi50dHMvbWFuaWZlc3QuanNvbiIsIGNvbnRyb2xzID0gbnVsbCB9ID0ge30pIHsKICAvLyBBIHB1Ymxpc2hlZCBidWlsZCBpbmxpbmVzIHRoZSBtYW5pZmVzdCAoY2xpcHMgYXMgZGF0YTogVVJMcyk7IGEgbGl2ZSBwYWdlIGZldGNoZXMgaXQuCiAgY29uc3QgZGF0YSA9IHdpbmRvdy5fX3ZpelR0cyA/PyAoYXdhaXQgZmV0Y2gobWFuaWZlc3QpLnRoZW4oKHIpID0+IChyLm9rID8gci5qc29uKCkgOiBudWxsKSwgKCkgPT4gbnVsbCkpOwogIGlmICghZGF0YSkgcmV0dXJuIGNvbnNvbGUuaW5mbygiW3ZpeiBuYXJyYXRpb25dIG5vIC50dHMvbWFuaWZlc3QuanNvbiB5ZXQg4oCUIGB2aXogdmVyaWZ5YCBjb21waWxlcyBuYXJyYXRpb24uanNvbiIpOwogIGZvciAoY29uc3QgdyBvZiBkYXRhLndhcm5pbmdzID8/IFtdKSBjb25zb2xlLndhcm4oYFt2aXogbmFycmF0aW9uXSAke3d9YCk7CgogIGNvbnN0IGN1ZXMgPSBkYXRhLmN1ZXMubWFwKChjKSA9PiAoeyAuLi5jLCBlbDogT2JqZWN0LmFzc2lnbihuZXcgQXVkaW8oYy5zcmMpLCB7IHByZWxvYWQ6ICJhdXRvIiwgdm9sdW1lOiBNYXRoLm1pbigxLCAxMCAqKiAoKGMuZ2FpbiA/PyAwKSAvIDIwKSkgfSkgfSkpOwogIC8vIENhcHRpb25zOiBib3R0b20tY2VudHJlIGJ5IGRlZmF1bHQ7IGRyYWcgdGhlbSBhbnl3aGVyZSAocmVtZW1iZXJlZCBwZXIgcGFnZSksIGRvdWJsZS1jbGljawogIC8vIHRvIHB1dCB0aGVtIGJhY2suICN2aXotY2FwdGlvbnMgaXMgaGlkZGVuIGluIHJlbmRlcnMg4oCUIHRoZSBtcDQgY2FycmllcyBhIHN1YnRpdGxlIHRyYWNrLgogIGNvbnN0IGJveCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoImRpdiIpOwogIGJveC5pZCA9ICJ2aXotY2FwdGlvbnMiOwogIGJveC5pbm5lckhUTUwgPSBgPHAgaGlkZGVuIHRpdGxlPSJkcmFnIHRvIG1vdmUgwrcgZG91YmxlLWNsaWNrIHRvIHJlc2V0Ij48L3A+YDsKICBib3guc3R5bGUuY3NzVGV4dCA9ICJwb3NpdGlvbjpmaXhlZDtpbnNldDowO3BvaW50ZXItZXZlbnRzOm5vbmU7ei1pbmRleDoyMTQ3NDgzMDAwIjsKICBjb25zdCBbdGV4dF0gPSBib3guY2hpbGRyZW47CiAgdGV4dC5zdHlsZS5jc3NUZXh0ID0gInBvc2l0aW9uOmZpeGVkO21hcmdpbjowO21heC13aWR0aDptaW4oODBjaCw5MHZ3KTtwYWRkaW5nOjZweCAxMnB4O2JvcmRlci1yYWRpdXM6NnB4O2JhY2tncm91bmQ6cmdiYSgwLDAsMCwuNzUpO2NvbG9yOiNmZmY7Zm9udDo1MDAgMjBweC8xLjM1IHN5c3RlbS11aSxzYW5zLXNlcmlmO3RleHQtYWxpZ246Y2VudGVyO3BvaW50ZXItZXZlbnRzOmF1dG87Y3Vyc29yOmdyYWI7dXNlci1zZWxlY3Q6bm9uZTt0b3VjaC1hY3Rpb246bm9uZSI7CiAgZG9jdW1lbnQuYm9keS5hcHBlbmQoYm94KTsKICBjb25zdCBwb3NLZXkgPSBgdml6LWNjLXBvczoke2xvY2F0aW9uLnBhdGhuYW1lfWA7CiAgY29uc3QgcGxhY2UgPSAocCkgPT4gewogICAgaWYgKHApIE9iamVjdC5hc3NpZ24odGV4dC5zdHlsZSwgeyBsZWZ0OiBwLnggKiBpbm5lcldpZHRoICsgInB4IiwgdG9wOiBwLnkgKiBpbm5lckhlaWdodCArICJweCIsIGJvdHRvbTogIiIsIHRyYW5zZm9ybTogInRyYW5zbGF0ZSgtNTAlLC01MCUpIiB9KTsKICAgIGVsc2UgT2JqZWN0LmFzc2lnbih0ZXh0LnN0eWxlLCB7IGxlZnQ6ICI1MCUiLCB0b3A6ICIiLCBib3R0b206ICJ2YXIoLS12aXotY2FwdGlvbnMtYm90dG9tLDI0cHgpIiwgdHJhbnNmb3JtOiAidHJhbnNsYXRlWCgtNTAlKSIgfSk7CiAgfTsKICBwbGFjZShKU09OLnBhcnNlKGxvY2FsU3RvcmFnZS5nZXRJdGVtKHBvc0tleSkgPz8gIm51bGwiKSk7CiAgdGV4dC5hZGRFdmVudExpc3RlbmVyKCJwb2ludGVyZG93biIsIChlKSA9PiB7CiAgICB0ZXh0LnNldFBvaW50ZXJDYXB0dXJlKGUucG9pbnRlcklkKTsKICAgIHRleHQuc3R5bGUuY3Vyc29yID0gImdyYWJiaW5nIjsKICAgIGNvbnN0IG1vdmUgPSAoZXYpID0+IHBsYWNlKHsgeDogZXYuY2xpZW50WCAvIGlubmVyV2lkdGgsIHk6IGV2LmNsaWVudFkgLyBpbm5lckhlaWdodCB9KTsKICAgIGNvbnN0IHVwID0gKGV2KSA9PiB7IHRleHQucmVtb3ZlRXZlbnRMaXN0ZW5lcigicG9pbnRlcm1vdmUiLCBtb3ZlKTsgdGV4dC5zdHlsZS5jdXJzb3IgPSAiZ3JhYiI7CiAgICAgIGxvY2FsU3RvcmFnZS5zZXRJdGVtKHBvc0tleSwgSlNPTi5zdHJpbmdpZnkoeyB4OiBldi5jbGllbnRYIC8gaW5uZXJXaWR0aCwgeTogZXYuY2xpZW50WSAvIGlubmVySGVpZ2h0IH0pKTsgfTsKICAgIHRleHQuYWRkRXZlbnRMaXN0ZW5lcigicG9pbnRlcm1vdmUiLCBtb3ZlKTsKICAgIHRleHQuYWRkRXZlbnRMaXN0ZW5lcigicG9pbnRlcnVwIiwgdXAsIHsgb25jZTogdHJ1ZSB9KTsKICB9KTsKICB0ZXh0LmFkZEV2ZW50TGlzdGVuZXIoImRibGNsaWNrIiwgKCkgPT4geyBsb2NhbFN0b3JhZ2UucmVtb3ZlSXRlbShwb3NLZXkpOyBwbGFjZShudWxsKTsgfSk7CgogIC8vIENDIHRvZ2dsZTogaW5zaWRlIHRoZSBwYWdlJ3Mgb3duIGNvbnRyb2xzIHdoZW4gaXQgaGFzIHRoZW0gKGZpbG0oKSBwYXNzZXMgaXRzIGJhciksIGVsc2UKICAvLyBib3R0b20tbGVmdCDigJQgYm90dG9tLXJpZ2h0IGJlbG9uZ3MgdG8gdGhlIHZpeiBjb21tZW50IGJ1YmJsZS4KICBjb25zdCBjYyA9IE9iamVjdC5hc3NpZ24oZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiYnV0dG9uIiksIHsgdHlwZTogImJ1dHRvbiIsIHRpdGxlOiAiQ2FwdGlvbnMgKGMpIiwgdGV4dENvbnRlbnQ6ICJDQyIgfSk7CiAgY2Muc2V0QXR0cmlidXRlKCJhcmlhLXByZXNzZWQiLCAidHJ1ZSIpOwogIGlmIChjb250cm9scykgY29udHJvbHMuYXBwZW5kKGNjKTsKICBlbHNlIHsgY2Muc3R5bGUuY3NzVGV4dCA9ICJwb3NpdGlvbjpmaXhlZDtsZWZ0OjEycHg7Ym90dG9tOjEycHg7Zm9udDo2MDAgMTFweCB1aS1tb25vc3BhY2UsbW9ub3NwYWNlO3BhZGRpbmc6M3B4IDdweDtib3JkZXItcmFkaXVzOjRweDtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJvcmRlciwjMzAzNjNkKTtiYWNrZ3JvdW5kOnZhcigtLXBhbmVsLCMxNjFiMjIpO2NvbG9yOnZhcigtLXRleHQsI2U2ZWRmMyk7Y3Vyc29yOnBvaW50ZXI7ei1pbmRleDoyMTQ3NDgzMDAwIjsgZG9jdW1lbnQuYm9keS5hcHBlbmQoY2MpOyB9CiAgY2MuZGF0YXNldC52aXpDaHJvbWUgPSAiIjsKCiAgbGV0IG9uID0gbG9jYWxTdG9yYWdlLmdldEl0ZW0oInZpei1jYyIpICE9PSAiMCI7CiAgY29uc3Qgc2hvdyA9ICgpID0+IHsgY2Muc2V0QXR0cmlidXRlKCJhcmlhLXByZXNzZWQiLCBTdHJpbmcob24pKTsgY2Muc3R5bGUub3BhY2l0eSA9IG9uID8gIjEiIDogIi41IjsgfTsKICBjb25zdCB0b2dnbGUgPSAoKSA9PiB7IG9uID0gIW9uOyBsb2NhbFN0b3JhZ2Uuc2V0SXRlbSgidml6LWNjIiwgb24gPyAiMSIgOiAiMCIpOyBzaG93KCk7IH07CiAgc2hvdygpOwogIGNjLm9uY2xpY2sgPSB0b2dnbGU7CiAgYWRkRXZlbnRMaXN0ZW5lcigia2V5ZG93biIsIChlKSA9PiB7IGlmIChlLmtleSA9PT0gImMiICYmICFlLm1ldGFLZXkgJiYgIWUuY3RybEtleSAmJiAhL0lOUFVUfFRFWFRBUkVBLy50ZXN0KGUudGFyZ2V0LnRhZ05hbWUpKSB0b2dnbGUoKTsgfSk7CgogIGxldCBsYXN0ID0gdGltZWxpbmUuYXQoKTsKICAoZnVuY3Rpb24gbG9vcCgpIHsKICAgIGNvbnN0IHQgPSB0aW1lbGluZS5hdCgpOwogICAgY29uc3Qgc3RlcCA9IHQgLSBsYXN0OwogICAgbGFzdCA9IHQ7CiAgICBjb25zdCBwbGF5aW5nID0gc3RlcCA+IDAgJiYgc3RlcCA8IDAuMjU7IC8vIGZvcndhcmQgYnkgYWJvdXQgYSBmcmFtZTsgYmlnZ2VyIGp1bXBzIGFyZSBzZWVrcwogICAgZm9yIChjb25zdCBjIG9mIGN1ZXMpIHsKICAgICAgY29uc3QgaW50byA9IHQgLSBjLnQ7CiAgICAgIGlmIChwbGF5aW5nICYmIGludG8gPj0gMCAmJiBpbnRvIDwgYy5kdXIpIHsKICAgICAgICAvLyBTdGFydCwgb3IgcHVsbCBiYWNrIGludG8gc3luYyBpZiB0aGUgZmlsbSBhbmQgdGhlIGNsaXAgaGF2ZSBkcmlmdGVkIGFwYXJ0LgogICAgICAgIGlmIChjLmVsLnBhdXNlZCB8fCBNYXRoLmFicyhjLmVsLmN1cnJlbnRUaW1lIC0gaW50bykgPiAwLjMpIHsgYy5lbC5jdXJyZW50VGltZSA9IGludG87IGMuZWwucGxheSgpLmNhdGNoKCgpID0+IHt9KTsgfQogICAgICB9IGVsc2UgaWYgKCFjLmVsLnBhdXNlZCkgYy5lbC5wYXVzZSgpOwogICAgfQogICAgY29uc3Qgc2FpZCA9IG9uICYmIGN1ZXMuZmluZCgoYykgPT4gYy50ZXh0ICYmIHQgPj0gYy50ICYmIHQgPCBjLnQgKyBjLmR1cik7CiAgICB0ZXh0LnRleHRDb250ZW50ID0gc2FpZCA/IHNhaWQudGV4dCA6ICIiOwogICAgdGV4dC5oaWRkZW4gPSAhc2FpZDsKICAgIHJlcXVlc3RBbmltYXRpb25GcmFtZShsb29wKTsKICB9KSgpOwp9Cg=="}}</script>
+<script>window.__VIZ_STATIC__=true;</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Already dark: stop Dark Reader re-theming it (it also breaks the highlight.js theme). -->
+<meta name="darkreader-lock">
+<title>pairwise-sorter — rank anything one pair at a time</title>
+<!-- Publish posture: public — this page is the library's documentation home on GitHub Pages. -->
+<meta name="viz:uid" content="v-daec3bc3b495">
+<meta name="viz:posture" content="public">
+<meta name="viz:listed" content="listed">
+<meta name="viz:title" content="pairwise-sorter">
+<meta name="viz:description" content="Rank anything by answering &quot;which is better?&quot; one pair at a time. A TypeScript logic core and web components — how it works, what's in it, and how to use it.">
+<style>
+/* viz-kit.css — the /viz house style. Load with:
+     <link rel="stylesheet" href="/_kit/viz-kit.css">
+   Served by the viz server at /_kit/viz-kit.css from the skill's own kit/ dir.
+
+   Why this exists: nearly every viz independently re-derived the same dark theme
+   (a GitHub-dark palette), re-guessed the exact hexes (so the "same" background
+   drifted across files), and invented its own variable names (--txt vs --text vs
+   --ink) for identical concepts. This file fixes the palette and the names ONCE so
+   you can reach for var(--accent) / var(--good) instead of re-picking colors.
+
+   The dark GitHub-ish palette is the DEFAULT, not a constraint. Every rule below
+   reads its colors through var() — there is not one hardcoded hex outside :root —
+   so a page needing a brand or one-off palette overrides the tokens in a later
+   :root and keeps every component. Re-theme; don't fork. See kit/README.md. */
+
+:root {
+  /* Surfaces, back to front */
+  --bg: #0d1117;
+  --panel: #161b22;
+  --panel-2: #21262d;
+  --border: #30363d;
+
+  /* Text — three tiers. --faint is for de-emphasized chrome (axis ticks, units,
+     footnotes, "n of m" counters); 72 vizzes re-derived a third tier by hand
+     before it existed here, at half a dozen different grays. */
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --faint: #6e7681;
+
+  /* Intent — accents that carry meaning */
+  --accent: #58a6ff; /* primary / links / selection */
+  --good: #3fb950; /* success / healthy / "yes" */
+  --warn: #d29922; /* caution / pending */
+  --danger: #f85149; /* error / blocked / "no" */
+
+  /* Categorical ramp — visually separable hues for diagram categories / series.
+     Use these when you need N separable colors, NOT meaning.
+
+     ⚠ ALIASING TRAP — c1/c2/c3/c6 are byte-identical to the intent colors above:
+       --c1 == --accent   --c2 == --good   --c3 == --warn   --c6 == --danger
+     So a categorical series rendered in --c2 reads as "success" next to anything
+     using --good, and --c6 reads as "error". Only --c4, --c5, --c7, --c8 are
+     unique to this ramp. This has already caused rework (a poster themed on --c2
+     went monochrome against a --good meter and had to be re-themed to --c5).
+     If your viz mixes categorical series WITH semantic color, pick from
+     --c4/--c5/--c7/--c8 first, then reach for the aliased four knowingly.
+
+     The four aliased slots are DEFINED AS the intent colors rather than repeating
+     their hexes. That's deliberate: the aliasing is self-evident wherever you read
+     this file, it cannot drift, and a re-theme keeps them in sync automatically.
+     The slots with a literal hex are the meaning-free ones. */
+  --c1: var(--accent); /* blue  — ALIAS, reads as "primary/selected" */
+  --c2: var(--good); /* green — ALIAS, reads as "success" */
+  --c3: var(--warn); /* amber — ALIAS, reads as "caution" */
+  --c4: #bc8cff; /* purple — meaning-free */
+  --c5: #4ec9b0; /* teal   — meaning-free */
+  --c6: var(--danger); /* red — ALIAS, reads as "error" */
+  --c7: #5d52b4; /* indigo  — meaning-free (ΔE 21.3 from the nearest intent color) */
+  --c8: #b70385; /* magenta — meaning-free (ΔE 20.9) */
+  /* No orange slot exists on purpose: every orange sits between --danger (hue 27°)
+     and --warn (80°), and none clears ΔE 15 from both under CVD simulation. The
+     obvious #f0883e is ΔE 1.5 from --warn to a protanope — indistinguishable. */
+
+  /* Type */
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Spacing rhythm */
+  --r: 8px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+html {
+  /* Paint the canvas itself. body is height:100% (one viewport), so on a page taller
+     than the viewport the area BELOW the body box would otherwise reveal the browser's
+     default (lighter) canvas when scrolled — showing as a horizontal "line" mid-page
+     where body's --bg ends. Putting --bg on the root keeps the whole canvas dark. */
+  background-color: var(--bg);
+}
+
+body {
+  /* A faint top-glow over the flat background — the recurring "radial-gradient at
+     60% 0%" idiom, standardized. Sized large and faded to transparent well past the
+     fold (color-mix dilutes --panel) so the glow→--bg transition never forms a
+     visible edge mid-page — the earlier tight 600px gradient left a "boundary" band. */
+  background:
+    radial-gradient(1600px 1000px at 50% -30%, color-mix(in srgb, var(--panel) 55%, transparent), transparent 75%),
+    var(--bg);
+  color: var(--text);
+  font: 14px/1.5 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Links. There was no bare `a` rule here until 2026-08-19, so every naked anchor
+   in every viz fell through to the user-agent default: #0000EE on a #0d1117
+   background (2.3:1 — below the 4.5:1 floor), and #551A8B once visited, which is
+   1.5:1 and effectively invisible. Both tiers now come from tokens, so they follow
+   a re-theme. --c4 keeps the "visited is purple" convention at 8.2:1 instead of
+   abandoning it. Lowest possible specificity, so any component rule still wins. */
+a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+a:visited { color: var(--c4); }
+a:hover { color: var(--text); text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+/* Header: title + one-line muted subtitle — the chrome ~19/22 vizzes open with. */
+.viz-header {
+  padding: 20px 24px;
+}
+.viz-header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.viz-header .sub,
+.sub {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+/* Panels / cards */
+.panel,
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--r) * 1.5);
+  padding: 16px;
+}
+
+/* Slide-in detail drawer (click a node → details). Toggle .open. */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(420px, 90vw);
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  transform: translateX(100%);
+  transition: transform 0.2s ease;
+  overflow: auto;
+  padding: 20px;
+  z-index: 50;
+}
+.drawer.open {
+  transform: none;
+}
+
+/* Legend: the single most common component (~16/22), reinvented differently each
+   time. Two swatch shapes: a filled square for nodes, a short rule for edge types. */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex: none;
+  background: var(--accent);
+}
+/* Colour comes from `background` (inherited from .swatch), NOT border-top. It was
+   `height:0` + `border-top` until 2026-08-19, which made the documented way to
+   colour a swatch — an inline `background:` — a silent no-op: every line swatch in
+   the corpus rendered accent-blue regardless of what it was labelling. All 5
+   usages passed `background`; none passed `border-top-color`. */
+.swatch.line {
+  width: 16px;
+  height: 2px;
+  border-radius: 0;
+}
+/* Round swatch. Its absence is why 25 vizzes abandoned .swatch entirely and
+   hand-rolled a .dot/.sw at five different sizes — the shape was the blocker,
+   not the component. */
+.swatch.dot {
+  border-radius: 50%;
+}
+
+/* Status / label pill — uppercase micro-badge. Recurs in ~120 files (the
+   border-radius:999px + text-transform:uppercase idiom) and was re-derived at a
+   different size almost every time. Modifiers tint text + border together. */
+.pill {
+  display: inline-block;
+  font: 700 11px var(--sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.pill.accent {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+.pill.good {
+  color: var(--good);
+  border-color: color-mix(in srgb, var(--good) 50%, transparent);
+}
+.pill.warn {
+  color: var(--warn);
+  border-color: color-mix(in srgb, var(--warn) 50%, transparent);
+}
+.pill.danger {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 50%, transparent);
+}
+
+/* Animated "flow" edge — dashed line whose dashes drift along the path. The
+   @keyframes was identical everywhere but for the offset magnitude; here it's one
+   class. Apply to an SVG <path>/<line>: <path class="flow" .../>. */
+@keyframes viz-dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+.flow {
+  stroke-dasharray: 6 4;
+  animation: viz-dash 1s linear infinite;
+}
+
+/* Reduced motion. 108 of 161 corpus vizzes animate (rAF, @keyframes, transitions,
+   setInterval); 3 guarded it. Guarding per-viz was never going to happen, so the
+   kit does it once for everyone that links this file.
+
+   Motion is not removed, it is collapsed: near-zero durations keep transition/
+   animation END events firing, so state machines that advance on `transitionend`
+   still advance instead of deadlocking (the usual bug in a naive
+   `animation: none !important` reset).
+
+   This cannot reach a JS rAF loop. If your viz animates in JS, gate it yourself:
+     const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+   and jump to the end state instead of tweening to it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* The dashed-edge drift reads as decoration, not information — stop it dead
+     rather than freezing it mid-dash. */
+  .flow {
+    animation: none !important;
+  }
+}
+
+/* Auto-wrapping SVG label (see labelBox() in viz.js). Fills its <foreignObject>
+   and centers; overflow is clipped, never spilled. */
+.vsvg-label {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text);
+  font: 12px/1.25 var(--sans);
+  overflow: hidden;
+  padding: 2px 6px;
+}
+
+/* --- .elsewhere — third-party explainers -------------------------------------
+   A pointer to somebody ELSE explaining the same thing. Deliberately its own
+   look, because a page that cites standards needs three visually distinct
+   kinds of evidence and a reader must never mistake one for another:
+
+     normative   what makes the claim true      (RFC / NIST / regulator)
+     first-party what we read or decided        (source code, our own choice)
+     elsewhere   a second teacher               <- this
+
+   Uses --c5 (teal, one of the meaning-free categorical slots) so it reads as
+   "a different kind of thing" rather than as success or warning.
+
+   Convention that makes it worth having: the `.why` line says what the source
+   is actually good for, INCLUDING where it is thinner than its reputation. An
+   unread link presented as authoritative is the exact impression this component
+   exists to prevent. Pair it with a rot checker — external pages 404.  */
+.elsewhere {
+  border-left: 2px solid var(--c5);
+  padding: 8px 0 2px 12px;
+  margin-top: 12px;
+}
+.elsewhere > .lbl {
+  display: block;
+  font: 700 9px/1 var(--sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c5);
+  margin-bottom: 5px;
+}
+.elsewhere a {
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid var(--c5);
+}
+.elsewhere a:hover { color: var(--c5) }
+.elsewhere .who { color: var(--faint); font-size: 0.85em; margin-left: 6px }
+.elsewhere .why {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.92em;
+  line-height: 1.55;
+}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+  body { max-width: 1180px; margin: 0 auto; padding: 24px 32px 80px; }
+  nav.links { display: flex; gap: 12px; flex-wrap: wrap; margin: 14px 0 6px; }
+  nav.links a { padding: 7px 14px; border: 1px solid var(--border); border-radius: var(--r); text-decoration: none; }
+  nav.links a.primary { background: var(--accent); color: #06101d; border-color: var(--accent); font-weight: 600; }
+  section { margin: 56px 0; }
+  section > h2 { margin-bottom: 4px; }
+  .lede { color: var(--muted); max-width: 80ch; margin: 0 0 16px; }
+  figure { margin: 0; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  figure:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  figcaption { color: var(--muted); font-size: 13px; margin-top: 10px; }
+  svg { width: 100%; height: auto; display: block; }
+  .ctl { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; font-size: 14px; }
+  .ctl button { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: var(--r); padding: 5px 12px; cursor: pointer; }
+  .ctl output { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+  .legend i { display: inline-block; width: 14px; height: 10px; border-radius: 3px; vertical-align: middle; margin-right: 6px; }
+  #howSvg .node, #howSvg .band, #howSvg .badge, #howSvg .link { transition: transform .55s cubic-bezier(.3,.7,.3,1), opacity .4s, fill .3s; }
+  #howSvg .node rect { transition: fill .3s, stroke .3s; }
+  @media (prefers-reduced-motion: reduce) { #howSvg * { transition: none !important; } }
+  .say { font-size: 17px; min-height: 1.5em; margin: 10px 0 0; }
+  .two { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+  #detail { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; font-size: 14px; }
+  #detail h3 { margin: 0 0 6px; }
+  #detail code, .lede code, li code { background: var(--panel-2); padding: 1px 5px; border-radius: 4px; }
+  .arch .box rect { rx: 8; fill: var(--panel-2); stroke: var(--border); stroke-width: 1.5; cursor: pointer; }
+  .arch .box:hover rect, .arch .box.on rect { stroke: var(--accent); }
+  .arch .frame { fill: none; stroke: var(--border); stroke-dasharray: 4 4; rx: 12; }
+  .arch .edge { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+  .arch .vsvg-label { font-size: 15px; }
+  .arch .col { fill: var(--muted); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  .live { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; }
+  @media (max-width: 860px) { .live { grid-template-columns: 1fr; } }
+  .live > div { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  .live h3 { margin: 0 0 10px; font-size: 14px; color: var(--muted); font-weight: 500; }
+  pre code.hljs { background: transparent; padding: 0; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px; overflow-x: auto; font-size: 13px; line-height: 1.55; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 16px; }
+  .cards h3 { margin: 0 0 6px; font-size: 15px; }
+  table.api { border-collapse: collapse; font-size: 14px; width: 100%; }
+  table.api td { border-top: 1px solid var(--border); padding: 7px 10px 7px 0; vertical-align: top; }
+  table.api td:first-child { white-space: nowrap; }
+</style>
+<meta property="og:type" content="website">
+<meta property="og:title" content="pairwise-sorter">
+<meta property="og:description" content="Rank anything by answering &quot;which is better?&quot; one pair at a time. A TypeScript logic core and web components — how it works, what's in it, and how to use it.">
+<meta name="twitter:card" content="summary">
+</head>
+<body>
+  <div class="viz-header">
+    <h1>pairwise-sorter</h1>
+    <div class="sub">Rank anything by answering <b>“which is better?”</b> one pair at a time — about n·log₂n questions instead of every pair, and adding an item later costs only ~log₂n more. A TypeScript logic core for Node and the browser, and web components that drop into any page.</div>
+  </div>
+  <nav class="links">
+    <a class="primary" href="../">Open the sorter app</a>
+    <a href="../api/">API reference</a>
+    <a href="https://github.com/RascalTwo/pairwise-sorter">GitHub</a>
+  </nav>
+
+  <!-- ── 1. how it asks ─────────────────────────────────────────────── -->
+  <section id="how">
+    <h2>How it asks</h2>
+    <p class="lede">Binary insertion with you as the comparator. Each item is slotted into the list already placed by halving the gap it could go in. Step through it — this trace was recorded by running the library's own <code>sortIndices</code> on eight coffees.</p>
+    <figure id="howFig" tabindex="0" aria-label="Binary insertion walkthrough; use arrow keys to step" data-viz-id="how-figure" data-label="Binary insertion walkthrough">
+      <svg id="howSvg" viewBox="0 0 1000 540"></svg>
+      <p class="say" id="howSay"></p>
+      <div class="ctl">
+        <button id="howPrev" aria-label="Previous step">◀</button>
+        <button id="howPlay">▶ Play</button>
+        <button id="howNext" aria-label="Next step">▶</button>
+        <output id="howAt"></output>
+        <span class="muted">— or focus the figure and use ← →</span>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--accent)"></i>item being placed</span>
+        <span><i style="background:var(--warn)"></i>the item it is compared with</span>
+        <span><i style="background:color-mix(in srgb,var(--warn) 22%,transparent);border:1px solid var(--warn)"></i>where it could still go</span>
+        <span><i style="background:var(--good)"></i>the better of the pair</span>
+        <span><i style="background:var(--panel-2);border:1px solid var(--border);opacity:.4"></i>ruled out — no need to ask</span>
+      </div>
+      <figcaption>Top to bottom is rank, best first. Placed items never change order relative to each other — which is why stopping early keeps everything placed so far.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ── 2. what it costs ───────────────────────────────────────────── -->
+  <section id="cost">
+    <h2>Why it's cheap</h2>
+    <p class="lede">Questions needed to rank <i>n</i> items. Comparing every pair grows with n², binary insertion with n·log₂n — and because it is append-stable, adding one more item only replays old answers and asks ~log₂n new ones.</p>
+    <figure data-viz-id="cost-figure" data-label="Questions needed against list size">
+      <svg id="costSvg" viewBox="0 0 1000 360"></svg>
+      <div class="ctl"><label>List size <input id="costN" type="range" min="2" max="200" value="30"></label> <output id="costOut"></output></div>
+      <div class="legend">
+        <span><i style="background:var(--danger)"></i>every pair, n(n−1)/2</span>
+        <span><i style="background:var(--accent)"></i>binary insertion, worst case</span>
+        <span><i style="background:var(--good)"></i>adding one item to a sorted list</span>
+      </div>
+      <figcaption>Log scale on the vertical axis; each gridline is ten times the one below.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ── 3. what's in the box ───────────────────────────────────────── -->
+  <section id="parts">
+    <h2>What's in the box</h2>
+    <p class="lede">One package, two entry points. The core is plain logic that runs anywhere and never stores anything itself; the elements are views over a shared <code>Sorter</code>. Click any box.</p>
+    <div class="two">
+      <figure class="arch" data-viz-id="arch-figure" data-label="Package architecture"><svg id="archSvg" viewBox="0 0 700 470"></svg></figure>
+      <div id="detail" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- ── 4. live ────────────────────────────────────────────────────── -->
+  <section id="try">
+    <h2>Three elements, one Sorter</h2>
+    <p class="lede">These are the real components, each handed the same <code>Sorter</code> through its <code>.sorter</code> property. Answer on the left (click, or ← → and ↓ for equal) and watch the others follow.</p>
+    <div class="live">
+      <div><h3>&lt;pairwise-compare&gt; + &lt;pairwise-progress&gt;</h3><pairwise-compare id="liveCompare"></pairwise-compare><pairwise-progress id="liveProgress" style="margin-top:14px"></pairwise-progress></div>
+      <div><h3>&lt;pairwise-ranking&gt;</h3><pairwise-ranking id="liveRanking"></pairwise-ranking>
+        <div class="ctl"><button id="liveReset">Start over</button></div></div>
+    </div>
+  </section>
+
+  <!-- ── 5. use it ──────────────────────────────────────────────────── -->
+  <section id="start">
+    <h2>Use it</h2>
+    <p class="lede">Installed straight from GitHub; a <code>prepare</code> script builds it on install. Bun skips dependency build scripts unless you trust the package, so Bun users list it in <code>trustedDependencies</code>.</p>
+    <pre><code class="language-bash">npm i github:RascalTwo/pairwise-sorter
+# or: bun add github:RascalTwo/pairwise-sorter   (+ "trustedDependencies": ["@rascaltwo/pairwise-sorter"])</code></pre>
+    <div class="cards">
+      <div>
+        <h3>The core, anywhere</h3>
+<pre><code class="language-javascript">import { Sorter, emptyList, item } from "@rascaltwo/pairwise-sorter";
+
+const s = new Sorter({ ...emptyList("Coffee"),
+  items: ["Flat white", "Mocha", "Cold brew"].map((t) => item(t)) });
+s.addEventListener("change", () => save(s.list));
+
+await s.settled();
+while (s.question) {
+  const { a, b } = s.question;          // indices into s.list.items
+  await s.answer(await ask(a, b));      // -1 · 0 · 1
+}
+s.ranking();   // [{ rank, tied, item }]</code></pre>
+      </div>
+      <div>
+        <h3>The whole app, one tag</h3>
+<pre><code class="language-xml">&lt;script type="module"&gt;
+  import "@rascaltwo/pairwise-sorter/element";
+&lt;/script&gt;
+
+&lt;!-- in memory; add storage-key to keep it --&gt;
+&lt;pairwise-sorter storage-key="my-lists"&gt;&lt;/pairwise-sorter&gt;</code></pre>
+        <h3>Or just the parts you want</h3>
+<pre><code class="language-javascript">const s = new Sorter(list);
+for (const el of document.querySelectorAll(
+  "pairwise-compare, pairwise-ranking")) el.sorter = s;</code></pre>
+      </div>
+      <div>
+        <h3>Theme it</h3>
+<pre><code class="language-css">pairwise-sorter, pairwise-compare {
+  --pw-accent: hotpink;  --pw-bg: #fff;
+  --pw-panel: #f4f4f6;   --pw-text: #111;
+  --pw-muted: #666;      --pw-border: #ddd;
+  --pw-warn: #c80;       --pw-danger: #c33;
+  --pw-radius: 6px;
+}
+pairwise-compare::part(choose) { font-size: 18px; }</code></pre>
+        <h3>Script it</h3>
+<pre><code class="language-javascript">import { installConsole } from "@rascaltwo/pairwise-sorter/element";
+installConsole(document.querySelector("pairwise-sorter"));
+// DevTools: pairwiseSorter.help()</code></pre>
+      </div>
+    </div>
+    <h3 style="margin-top:28px">Events</h3>
+    <table class="api">
+      <tr><td><code>question</code> · <code>change</code> · <code>done</code> · <code>upcoming</code></td><td>on a <code>Sorter</code>: a pair is waiting · the list changed, save it · a full ranking is ready · items that may be asked next (preload their media)</td></tr>
+      <tr><td><code>pairwise-change</code></td><td>on <code>&lt;pairwise-sorter&gt;</code>, detail <code>{library}</code> — every list, after any change</td></tr>
+      <tr><td><code>pairwise-edit</code></td><td>from compare, ranking and bench, detail <code>{index}</code> — an item's edit button</td></tr>
+      <tr><td><code>pairwise-stop</code></td><td>from <code>&lt;pairwise-progress&gt;</code> — “see the list” once half the items are placed</td></tr>
+    </table>
+    <p class="lede" style="margin-top:20px">Every export, type and element is documented in the <a href="../api/">API reference</a>, generated from the source.</p>
+  </section>
+
+  <script type="module">
+var __defProp = Object.defineProperty;
+var __returnValue = (v) => v;
+function __exportSetter(name, newValue) {
+  this[name] = __returnValue.bind(null, newValue);
+}
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, {
+      get: all[name],
+      enumerable: true,
+      configurable: true,
+      set: __exportSetter.bind(all, name)
+    });
+};
+var __esm = (fn, res) => () => (fn && (res = fn(fn = 0)), res);
+
+// dist/item.js
+var SEP = "\x01", SEP_ID = "\x00", tagOf = (t) => String(t).trim().replace(/^#/, "").replace(/\s+/g, "-"), item = (title, url = "", media = [], desc = "", tags = [], key = "") => ({
+  title: String(title ?? ""),
+  url: String(url ?? ""),
+  media: [media].flat().filter(Boolean).map(String),
+  desc: String(desc ?? ""),
+  tags: [...new Set([tags].flat().filter(Boolean).map(tagOf).filter(Boolean))],
+  ...key ? { key: String(key) } : {}
+}), idOf = (it) => it?.key ? String(it.key) : (it?.title ?? "") + SEP_ID + (it?.url ?? ""), idParts = (id) => {
+  const [title = "", url = ""] = id.split(SEP_ID);
+  return { title, url };
+};
+
+// dist/engine.js
+function tierVerdict(a, b, priority) {
+  if (!priority.length)
+    return null;
+  const ta = tierOf(a, priority), tb = tierOf(b, priority);
+  if (ta === tb)
+    return null;
+  return ta < tb ? -1 : 1;
+}
+function budgetFor(n) {
+  let t = 0;
+  for (let i = 1;i < n; i++)
+    t += Math.ceil(Math.log2(i + 1));
+  return Math.max(1, t);
+}
+async function sortIndices(arr, cmp, onProgress, onProbe) {
+  const out = [];
+  for (let n = 0;n < arr.length; n++) {
+    onProgress?.({ placed: [...out], remaining: arr.slice(n), next: arr[n + 1] });
+    let lo = 0, hi = out.length;
+    while (lo < hi) {
+      const mid = lo + hi >> 1;
+      onProbe?.({ out, lo, hi, mid });
+      const v = await cmp(arr[n], out[mid]);
+      if (v < 0)
+        hi = mid;
+      else
+        lo = mid + 1;
+    }
+    out.splice(lo, 0, arr[n]);
+  }
+  return out;
+}
+function tieClasses(items, log) {
+  const parent = new Map(items.map((it) => [idOf(it), idOf(it)]));
+  const find = (x) => {
+    while (parent.has(x) && parent.get(x) !== x) {
+      parent.set(x, parent.get(parent.get(x)));
+      x = parent.get(x);
+    }
+    return x;
+  };
+  for (const [k, v] of log) {
+    if (v !== 0)
+      continue;
+    const [a = "", b = ""] = k.split(SEP);
+    if (!parent.has(a) || !parent.has(b))
+      continue;
+    const ra = find(a), rb = find(b);
+    if (ra !== rb)
+      parent.set(ra, rb);
+  }
+  return find;
+}
+function findConflicts(log, rankById) {
+  const bad = new Map;
+  log.forEach(([k, v], n) => {
+    const [x = "", y = ""] = k.split(SEP);
+    const rx = rankById.get(x), ry = rankById.get(y);
+    if (rx === undefined || ry === undefined)
+      return;
+    if (v === 0) {
+      if (rx !== ry)
+        bad.set(n, "you called these equal, but they ranked apart");
+    } else {
+      const [win, lose] = v < 0 ? [rx, ry] : [ry, rx];
+      if (win >= lose)
+        bad.set(n, "this answer disagrees with the final ranking");
+    }
+  });
+  return bad;
+}
+function migrateId(log, benched, oldId, newId) {
+  if (oldId === newId)
+    return log;
+  const out = log.map(([k, v]) => {
+    const [x = "", y = ""] = k.split(SEP);
+    if (x !== oldId && y !== oldId)
+      return [k, v];
+    const nx = x === oldId ? newId : x, ny = y === oldId ? newId : y;
+    return nx < ny ? [nx + SEP + ny, v] : [ny + SEP + nx, orient(v, -1)];
+  });
+  log.length = 0;
+  log.push(...out);
+  if (benched?.delete(oldId))
+    benched.add(newId);
+  return log;
+}
+function createEngine(input = {}) {
+  const s = {
+    items: input.items ?? [],
+    log: input.log ?? [],
+    benched: new Set(input.benched ?? []),
+    priority: input.priority ?? [],
+    weights: input.weights ?? [],
+    combine: input.combine ?? "order"
+  };
+  const answers = new Map(s.log);
+  const live = () => s.items.map((_, i) => i).filter((i) => !s.benched.has(idOf(s.items[i])));
+  async function cmp(a, b, ask, onRecord) {
+    const ia = idOf(s.items[a]), ib = idOf(s.items[b]);
+    const k = pairKeyOf(ia, ib), flip = flipOfIds(ia, ib);
+    const known = answers.get(k);
+    if (known !== undefined)
+      return orient(known, flip);
+    const tier = tierVerdict(s.items[a], s.items[b], s.priority);
+    if (tier !== null)
+      return tier;
+    const v = await ask(a, b);
+    answers.set(k, orient(v, flip));
+    s.log.push([k, orient(v, flip)]);
+    onRecord?.(s.log);
+    return v;
+  }
+  return {
+    state: s,
+    live,
+    budget: () => budgetFor(live().length),
+    answeredCount: () => s.log.length,
+    run: (ask, { onProgress, onRecord, onProbe } = {}) => sortIndices(live(), (a, b) => cmp(a, b, ask, onRecord), onProgress, onProbe),
+    ranking: (order) => order.map((i) => s.items[i]),
+    ties: () => tieClasses(s.items, s.log),
+    conflicts: (rankById) => findConflicts(s.log, rankById),
+    migrate: (oldId, newId) => {
+      migrateId(s.log, s.benched, oldId, newId);
+      answers.clear();
+      for (const [k, v] of s.log)
+        answers.set(k, v);
+    },
+    toJSON: () => ({ ...s, benched: [...s.benched] })
+  };
+}
+var pairKeyOf = (idA, idB) => idA < idB ? idA + SEP + idB : idB + SEP + idA, flipOfIds = (idA, idB) => idA < idB ? 1 : -1, orient = (v, sign) => v * sign || 0, tierOf = (it, priority) => (it?.tags ?? []).reduce((best, t) => {
+  const i = priority.indexOf(t);
+  return i >= 0 && i < best ? i : best;
+}, Infinity), tierName = (t, priority) => t === Infinity ? "untiered" : "#" + priority[t];
+var init_engine = () => {};
+
+// dist/parse.js
+function fromJSON(o) {
+  if (typeof o === "string")
+    return item(o);
+  if (!o || typeof o !== "object")
+    return null;
+  const r = o;
+  return item(r.title ?? r.name ?? r.label ?? "", r.url ?? r.link ?? r.href ?? "", r.media ?? r.images ?? r.img ?? r.image ?? r.thumbnail ?? [], r.desc ?? r.description ?? r.subtitle ?? "", tagsOf(r), r.key ?? "");
+}
+function parseLine(line) {
+  const md = line.match(/^\[(.+?)\]\((\S+?)\)\s*\|?\s*(.*)$/);
+  const src = md ? [md[1], md[2], md[3]].filter(Boolean).join(" | ") : line;
+  let url = "";
+  const media = [], text = [], tags = [];
+  for (const f of src.split("|").map((s) => s.trim()).filter(Boolean)) {
+    if (TAG_FIELD.test(f) && f.split(/\s+/).every((t) => t.startsWith("#")))
+      tags.push(...f.split(/\s+/));
+    else if (!/^https?:\/\//i.test(f))
+      text.push(f);
+    else if (isMedia(f))
+      media.push(f);
+    else if (!url)
+      url = f;
+    else
+      media.push(f);
+  }
+  return item(text[0] || url || media[0] || src, url, media, text.slice(1).join(" — "), tags);
+}
+function parseItems(raw) {
+  const t = raw.trim();
+  if (t.startsWith("[") || t.startsWith("{")) {
+    try {
+      let parsed = JSON.parse(t);
+      if (parsed && !Array.isArray(parsed) && Array.isArray(parsed.items))
+        parsed = parsed.items;
+      return (Array.isArray(parsed) ? parsed : [parsed]).map(fromJSON).filter((x) => !!x);
+    } catch {}
+  }
+  return t.split(`
+`).map((l) => l.trim()).filter(Boolean).map(parseLine);
+}
+var VIDEO_EXT, AUDIO_EXT, IMAGE_EXT, isVideo = (url) => VIDEO_EXT.test(url), isAudio = (url) => AUDIO_EXT.test(url), isMedia = (url) => IMAGE_EXT.test(url) || isVideo(url) || isAudio(url), tagsOf = (o) => o.tags ?? o.tag ?? o.labels ?? o.categories ?? o.category ?? [], TAG_FIELD, toText = (list) => list.map((i) => [i.title, i.url, ...i.media, i.tags.map((t) => "#" + t).join(" "), i.desc].filter(Boolean).join(" | ")).join(`
+`);
+var init_parse = __esm(() => {
+  VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogv)([?#]|$)/i;
+  AUDIO_EXT = /\.(mp3|wav|ogg|oga|m4a|aac|flac|opus)([?#]|$)/i;
+  IMAGE_EXT = /\.(png|jpe?g|gif|webp|avif|svg|bmp|ico)([?#]|$)/i;
+  TAG_FIELD = /^#\S/;
+});
+
+// dist/analysis.js
+function roc(rank, n) {
+  let s = 0;
+  for (let i = rank;i <= n; i++)
+    s += 1 / i;
+  return s / n;
+}
+function weightedOrder(base, items, priority, weights, combine) {
+  if (!priority.length || combine !== "weights")
+    return [...base];
+  const within = new Map(priority.map((t) => [t, []]));
+  for (const idx of base)
+    for (const t of items[idx].tags)
+      within.get(t)?.push(idx);
+  const local = new Map;
+  for (const [t, list] of within)
+    list.forEach((idx, i) => local.set(t + SEP + idx, roc(i + 1, list.length)));
+  const weightOf = (t) => {
+    const w = weights[priority.indexOf(t)] ?? 1;
+    return w > 0 ? w : 1;
+  };
+  const scored = [], untiered = [];
+  for (const idx of base) {
+    const tags = items[idx].tags.filter((t) => within.has(t));
+    if (!tags.length) {
+      untiered.push(idx);
+      continue;
+    }
+    scored.push([idx, tags.reduce((s, t) => s + weightOf(t) * local.get(t + SEP + idx), 0)]);
+  }
+  return scored.map((e, i) => [...e, i]).sort((a, b) => b[1] - a[1] || a[2] - b[2]).map((e) => e[0]).concat(untiered);
+}
+function preferences(log) {
+  const pref = new Map;
+  for (const [k, v] of log) {
+    if (v === 0)
+      continue;
+    const [x, y] = k.split(SEP);
+    const key = v < 0 ? x + SEP + y : y + SEP + x;
+    pref.set(key, (pref.get(key) ?? 0) + 1);
+  }
+  return pref;
+}
+function disagreements(order, items, pref) {
+  let total = 0;
+  for (let i = 0;i < order.length; i++)
+    for (let j = i + 1;j < order.length; j++)
+      total += beats(pref, items, order[j], order[i]);
+  return total;
+}
+function minimiseDisagreements(order, items, pref, maxPasses = 25) {
+  let cur = [...order];
+  for (let pass = 0;pass < maxPasses; pass++) {
+    let moved = false;
+    for (let i = 0;i < cur.length; i++) {
+      const v = cur[i];
+      const rest = cur.slice(0, i).concat(cur.slice(i + 1));
+      let cost = rest.reduce((s, r) => s + beats(pref, items, r, v), 0);
+      let best = 0, bestCost = cost, stay = cost;
+      for (let at = 1;at <= rest.length; at++) {
+        const r = rest[at - 1];
+        cost += beats(pref, items, v, r) - beats(pref, items, r, v);
+        if (at === i)
+          stay = cost;
+        if (cost < bestCost) {
+          bestCost = cost;
+          best = at;
+        }
+      }
+      if (stay === bestCost)
+        best = i;
+      rest.splice(best, 0, v);
+      if (best !== i)
+        moved = true;
+      cur = rest;
+    }
+    if (!moved)
+      break;
+  }
+  return cur;
+}
+function tierOverrides(items, log, priority) {
+  if (!priority.length)
+    return [];
+  const byId = new Map(items.map((it) => [idOf(it), it]));
+  return log.flatMap(([k, v], n) => {
+    const [x = "", y = ""] = k.split(SEP);
+    const a = byId.get(x), b = byId.get(y);
+    if (!a || !b)
+      return [];
+    const t = tierVerdict(a, b, priority);
+    return t !== null && t !== v ? [n] : [];
+  });
+}
+function tieredBudget(items, live, priority) {
+  if (!priority.length)
+    return budgetFor(live.length);
+  const perTier = new Map;
+  for (const i of live) {
+    const t = tierOf(items[i], priority);
+    perTier.set(t, (perTier.get(t) ?? 0) + 1);
+  }
+  return [...perTier.values()].reduce((sum, n) => sum + budgetFor(n), 0);
+}
+function placement(partial) {
+  const placed = partial.placed.length, total = placed + partial.remaining.length;
+  return { placed, total, pct: total ? Math.round(placed / total * 100) : 100 };
+}
+function rankRows(order, items, log) {
+  const cls = tieClasses(items, log);
+  const rankById = new Map;
+  let rank = 0;
+  const rows = order.map((index, pos) => {
+    const tied = pos > 0 && cls(idOf(items[order[pos - 1]])) === cls(idOf(items[index]));
+    if (!tied)
+      rank = pos + 1;
+    rankById.set(idOf(items[index]), rank);
+    return { index, rank, tied };
+  });
+  return { rows, rankById };
+}
+var beats = (pref, items, a, b) => pref.get(idOf(items[a]) + SEP + idOf(items[b])) ?? 0, STOP_AT = 50;
+var init_analysis = __esm(() => {
+  init_engine();
+});
+
+// dist/store.js
+function migrate(db) {
+  const from = Number.isInteger(db.version) ? db.version : 0;
+  if (from > SCHEMA)
+    return 0;
+  for (let v = from;v < SCHEMA; v++)
+    MIGRATIONS[v](db);
+  db.version = SCHEMA;
+  return SCHEMA - from;
+}
+function localStore(key = "pairwise-sorter/v4", storage = globalThis.localStorage) {
+  return {
+    load() {
+      let d = null;
+      try {
+        d = JSON.parse(storage.getItem(key) ?? "null");
+      } catch {}
+      if (!d || !d.lists || typeof d.lists !== "object")
+        return emptyLibrary();
+      migrate(d);
+      return d;
+    },
+    save(lib) {
+      lib.version = Math.max(SCHEMA, Number.isInteger(lib.version) ? lib.version : SCHEMA);
+      storage.setItem(key, JSON.stringify(lib));
+    }
+  };
+}
+function addList(lib, name) {
+  const id = "l" + Math.random().toString(36).slice(2, 9);
+  lib.lists[id] = emptyList(name || `List ${Object.keys(lib.lists).length + 1}`);
+  lib.current = id;
+  return id;
+}
+function resolveList(lib, ref) {
+  if (lib.lists[ref])
+    return ref;
+  const hits = Object.keys(lib.lists).filter((id) => lib.lists[id].name === ref);
+  if (hits.length === 1)
+    return hits[0];
+  if (!hits.length)
+    throw new Error(`no list named ${JSON.stringify(ref)} — have: ${Object.values(lib.lists).map((l) => l.name).join(", ")}`);
+  throw new Error(`${hits.length} lists are named ${JSON.stringify(ref)} — pass an id instead: ${hits.join(", ")}`);
+}
+function deleteList(lib, id) {
+  delete lib.lists[id];
+  if (lib.current === id)
+    lib.current = Object.keys(lib.lists)[0] ?? null;
+}
+function exportList(list, ranking = []) {
+  const byId = new Map(list.items.map((it) => [idOf(it), it]));
+  const ref = (id) => {
+    const it = byId.get(id);
+    return it ? { title: it.title, url: it.url, ...it.key ? { key: it.key } : {} } : idParts(id);
+  };
+  return {
+    format: "pairwise-sorter/3",
+    name: list.name,
+    items: list.items,
+    priority: list.priority,
+    weights: list.weights,
+    combine: list.combine,
+    benched: list.benched.map(ref),
+    comparisons: list.log.map(([k, verdict]) => {
+      const [a = "", b = ""] = k.split(SEP);
+      return { a: ref(a), b: ref(b), verdict };
+    }),
+    ranking
+  };
+}
+function importList(data) {
+  if (!data || typeof data !== "object")
+    throw new Error("not a JSON object");
+  const d = data;
+  const source = Array.isArray(d) ? d : d.items;
+  if (!Array.isArray(source))
+    throw new Error("no `items` array");
+  const items = [...new Map(source.map(fromJSON).filter((x) => !!x).map((i) => [idOf(i), i])).values()];
+  if (items.length < 2)
+    throw new Error("needs at least 2 distinct items");
+  const kept = new Set(items.map(idOf));
+  let skipped = 0;
+  const log = [];
+  for (const c of Array.isArray(d.comparisons) ? d.comparisons : []) {
+    const x = idOf(c?.a), y = idOf(c?.b);
+    if (x === y || !kept.has(x) || !kept.has(y)) {
+      skipped++;
+      continue;
+    }
+    const v = c.verdict > 0 ? 1 : c.verdict < 0 ? -1 : 0;
+    log.push(x < y ? [x + SEP + y, v] : [y + SEP + x, orient(v, -1)]);
+  }
+  const benched = [d.benched, d.removed].flatMap((a) => Array.isArray(a) ? a : []).map(idOf).filter((id) => kept.has(id));
+  const tagged = new Set(items.flatMap((i) => i.tags));
+  const priority = [], weights = [];
+  (Array.isArray(d.priority) ? d.priority : []).forEach((t, i) => {
+    const obj = typeof t === "object" && t !== null ? t : null;
+    const tag = typeof t === "string" ? tagOf(t) : tagOf(obj?.tag ?? "");
+    if (!tagged.has(tag) || priority.includes(tag))
+      return;
+    priority.push(tag);
+    const w = Number(obj ? obj.weight : d.weights?.[i]);
+    weights.push(w > 0 ? w : 1);
+  });
+  const list = {
+    name: d.name || "Imported",
+    items,
+    log,
+    benched,
+    priority,
+    weights,
+    combine: d.combine === "weights" ? "weights" : "order"
+  };
+  return { list, count: items.length, kept: log.length, skipped };
+}
+var emptyList = (name) => ({ name, items: [], log: [], benched: [], priority: [], weights: [], combine: "order" }), emptyLibrary = () => ({ version: SCHEMA, current: null, lists: {} }), lists = (db) => Object.values(db.lists ?? {}), MIGRATIONS, SCHEMA;
+var init_store = __esm(() => {
+  init_engine();
+  init_parse();
+  MIGRATIONS = [
+    (db) => {
+      for (const l of lists(db)) {
+        l.items = (Array.isArray(l.items) ? l.items : []).filter((it) => it && typeof it === "object").map((it) => item(it.title ?? "", it.url ?? "", it.media ?? [], it.desc ?? "", it.tags ?? []));
+        l.log = Array.isArray(l.log) ? l.log : [];
+        l.priority = (Array.isArray(l.priority) ? l.priority : []).filter((t) => typeof t === "string");
+        l.weights = l.priority.map((_, i) => Number(l.weights?.[i]) > 0 ? Number(l.weights[i]) : 1);
+        l.combine = l.combine === "weights" ? "weights" : "order";
+      }
+    },
+    (db) => {
+      for (const l of lists(db)) {
+        l.benched = (Array.isArray(l.benched) ? l.benched : l.removed ?? []).filter((x) => typeof x === "string");
+        delete l.removed;
+      }
+    }
+  ];
+  SCHEMA = MIGRATIONS.length;
+});
+
+// dist/sorter.js
+var VERDICTS, Sorter;
+var init_sorter = __esm(() => {
+  init_analysis();
+  init_engine();
+  init_store();
+  VERDICTS = new Set([-1, 0, 1]);
+  Sorter = class Sorter extends EventTarget {
+    list;
+    question = null;
+    #token = 0;
+    #pending = null;
+    #answers = new Map;
+    #order = [];
+    #partial = { placed: [], remaining: [] };
+    #conflicts = new Map;
+    #finished = false;
+    #quiet = false;
+    #waiters = [];
+    constructor(list = emptyList("Untitled")) {
+      super();
+      this.open(list);
+    }
+    open(list) {
+      list.log = (Array.isArray(list.log) ? list.log : []).filter((e) => Array.isArray(e) && e.length === 2 && typeof e[0] === "string" && e[0].includes(SEP) && VERDICTS.has(e[1]));
+      this.list = list;
+      this.#run();
+    }
+    settled() {
+      return new Promise((r) => this.#quiet ? r() : this.#waiters.push(r));
+    }
+    get complete() {
+      return this.#finished;
+    }
+    answer(v) {
+      const p = this.#pending;
+      if (!p)
+        throw new Error("nothing is being asked right now");
+      this.#pending = null;
+      this.question = null;
+      this.#quiet = false;
+      p(v);
+      return this.settled();
+    }
+    undo() {
+      if (this.list.log.length)
+        this.#change(() => this.list.log.pop());
+      return this.settled();
+    }
+    deleteAnswer(i) {
+      if (!Number.isInteger(i) || i < 0 || i >= this.list.log.length)
+        throw new Error(`no comparison at index ${i}`);
+      return this.#change(() => this.list.log.splice(i, 1));
+    }
+    resetAnswers() {
+      return this.#change(() => {
+        this.list.log = [];
+      });
+    }
+    bench(ids) {
+      return this.#change(() => {
+        this.list.benched = [...new Set([...this.list.benched, ...ids])];
+      });
+    }
+    subIn(id) {
+      if (!this.list.benched.includes(id))
+        throw new Error("that item is not benched");
+      return this.#change(() => {
+        this.list.benched = this.list.benched.filter((b) => b !== id);
+      });
+    }
+    subAll() {
+      return this.#change(() => {
+        this.list.benched = [];
+      });
+    }
+    benchedItems() {
+      const byId = new Map(this.list.items.map((it) => [idOf(it), it]));
+      return this.list.benched.flatMap((id) => byId.get(id) ?? []);
+    }
+    setItems(next) {
+      const byId = new Map, dupes = [];
+      for (const it of next) {
+        const id = idOf(it);
+        if (byId.has(id))
+          dupes.push(it.title);
+        else
+          byId.set(id, it);
+      }
+      if (byId.size < 2)
+        throw new Error("need at least 2 distinct items");
+      const l = this.list;
+      const old = new Set(l.items.map(idOf));
+      const before = l.log.length;
+      this.#change(() => {
+        l.items = l.items.filter((it) => byId.has(idOf(it))).map((it) => byId.get(idOf(it))).concat([...byId.values()].filter((it) => !old.has(idOf(it))));
+        const kept = new Set(l.items.map(idOf));
+        l.log = l.log.filter(([k]) => k.split(SEP).every((id) => kept.has(id)));
+        l.benched = l.benched.filter((id) => kept.has(id));
+        this.#pruneTiers();
+      });
+      return { dupes: [...new Set(dupes)], dropped: before - l.log.length };
+    }
+    editItem(index, patch) {
+      const l = this.list, cur = l.items[index];
+      if (!cur)
+        throw new Error(`no item at index ${index}`);
+      const next = item(String(patch.title ?? cur.title).trim(), patch.url ?? cur.url, patch.media ?? cur.media, patch.desc ?? cur.desc, patch.tags ?? cur.tags, cur.key);
+      if (!next.title)
+        throw new Error("a title is required");
+      const oldId = idOf(cur), newId = idOf(next);
+      if (oldId !== newId && l.items.some((o, j) => j !== index && idOf(o) === newId))
+        throw new Error("another item already has that title and link");
+      return this.#change(() => {
+        const benched = new Set(l.benched);
+        migrateId(l.log, benched, oldId, newId);
+        l.benched = [...benched];
+        l.items[index] = next;
+        this.#pruneTiers();
+      });
+    }
+    tags() {
+      return [...new Set(this.list.items.flatMap((it) => it.tags))].sort();
+    }
+    setPriority(tiers) {
+      const seen = new Map;
+      for (const e of tiers) {
+        const tag = tagOf(typeof e === "string" ? e : e.tag ?? e.name ?? "");
+        const w = typeof e === "object" ? Number(e.weight) : 1;
+        if (tag && !seen.has(tag))
+          seen.set(tag, w > 0 ? w : 1);
+      }
+      const known = new Set(this.tags());
+      const unknown = [...seen.keys()].filter((t) => !known.has(t));
+      if (unknown.length)
+        throw new Error(`no item carries ${unknown.map((t) => "#" + t).join(", ")} — have: ${[...known].join(", ") || "none"}`);
+      return this.#change(() => {
+        this.list.priority = [...seen.keys()];
+        this.list.weights = [...seen.values()];
+      });
+    }
+    setCombine(mode) {
+      if (mode !== "order" && mode !== "weights")
+        throw new Error("combine expects 'order' or 'weights'");
+      return this.#change(() => {
+        this.list.combine = mode;
+      });
+    }
+    overrides() {
+      const all = this.comparisons();
+      return tierOverrides(this.list.items, this.list.log, this.list.priority).map((n) => all[n]);
+    }
+    dropOverrides() {
+      const drop = new Set(tierOverrides(this.list.items, this.list.log, this.list.priority));
+      return this.#change(() => {
+        this.list.log = this.list.log.filter((_, n) => !drop.has(n));
+      });
+    }
+    live() {
+      const benched = new Set(this.list.benched);
+      return this.list.items.map((_, i) => i).filter((i) => !benched.has(idOf(this.list.items[i])));
+    }
+    budget() {
+      return tieredBudget(this.list.items, this.live(), this.list.priority);
+    }
+    placement() {
+      return placement(this.#partial);
+    }
+    ranking() {
+      const src = this.#finished ? this.#order : this.#partial.placed;
+      return rankRows(src, this.list.items, this.list.log).rows.map((r) => ({ ...r, item: this.list.items[r.index] }));
+    }
+    unplaced() {
+      return this.#partial.remaining.map((i) => this.list.items[i]);
+    }
+    comparisons() {
+      const byId = new Map(this.list.items.map((it) => [idOf(it), it]));
+      const ref = (id) => {
+        const it = byId.get(id);
+        return it ? { title: it.title, url: it.url } : idParts(id);
+      };
+      return this.list.log.map(([k, verdict], index) => {
+        const [x = "", y = ""] = k.split(SEP);
+        return { index, a: ref(x), b: ref(y), verdict, why: this.#conflicts.get(index) ?? null };
+      });
+    }
+    resolve() {
+      const { items } = this.list, pref = preferences(this.list.log);
+      const before = disagreements(this.#order, items, pref);
+      const next = minimiseDisagreements(this.#order, items, pref);
+      const after = disagreements(next, items, pref);
+      if (after >= before)
+        return { before, after: before };
+      this.#order = next;
+      this.#conflicts = findConflicts(this.list.log, rankRows(next, items, this.list.log).rankById);
+      this.#emit("done");
+      return { before, after };
+    }
+    #change(mutate) {
+      mutate();
+      this.#run();
+      this.#emit("change");
+      return this.settled();
+    }
+    #pruneTiers() {
+      const l = this.list, tagged = new Set(l.items.flatMap((it) => it.tags));
+      l.weights = l.priority.map((t, i) => [t, l.weights[i] ?? 1]).filter(([t]) => tagged.has(t)).map(([, w]) => w);
+      l.priority = l.priority.filter((t) => tagged.has(t));
+    }
+    #emit(type, detail) {
+      this.dispatchEvent(new CustomEvent(type, { detail }));
+    }
+    #settle() {
+      this.#quiet = true;
+      for (const w of this.#waiters.splice(0))
+        w();
+    }
+    async#run() {
+      const my = ++this.#token;
+      this.#pending = null;
+      this.question = null;
+      this.#quiet = false;
+      this.#finished = false;
+      this.#order = [];
+      this.#partial = { placed: [], remaining: [] };
+      this.#conflicts = new Map;
+      this.#answers = new Map(this.list.log);
+      await null;
+      if (my !== this.#token)
+        return;
+      const { items } = this.list;
+      const sorted = await sortIndices(this.live(), (a, b) => this.#cmp(a, b, my), ({ placed, remaining, next }) => {
+        this.#partial = { placed, remaining };
+        if (next !== undefined)
+          this.#emit("upcoming", [next]);
+      }, ({ out, lo, hi, mid }) => this.#emit("upcoming", [out[lo + mid >> 1], out[mid + 1 + hi >> 1]].filter((i) => i !== undefined)));
+      this.#order = weightedOrder(sorted, items, this.list.priority, this.list.weights, this.list.combine);
+      this.#partial = { placed: [...sorted], remaining: [] };
+      this.#conflicts = findConflicts(this.list.log, rankRows(this.#order, items, this.list.log).rankById);
+      this.#finished = true;
+      this.#emit("done");
+      this.#settle();
+    }
+    #cmp(a, b, my) {
+      const { items } = this.list;
+      const ia = idOf(items[a]), ib = idOf(items[b]);
+      const k = pairKeyOf(ia, ib), flip = flipOfIds(ia, ib);
+      const known = this.#answers.get(k);
+      if (known !== undefined)
+        return orient(known, flip);
+      const tier = tierVerdict(items[a], items[b], this.list.priority);
+      if (tier !== null)
+        return tier;
+      return new Promise((resolve) => {
+        this.#pending = (v) => {
+          const stored = orient(v, flip);
+          this.#answers.set(k, stored);
+          this.list.log.push([k, stored]);
+          this.#emit("change");
+          resolve(v);
+        };
+        this.question = { a, b };
+        this.#emit("question", this.question);
+        this.#settle();
+      });
+    }
+  };
+});
+
+// dist/index.js
+var exports_dist = {};
+__export(exports_dist, {
+  weightedOrder: () => weightedOrder,
+  toText: () => toText,
+  tieredBudget: () => tieredBudget,
+  tierVerdict: () => tierVerdict,
+  tierOverrides: () => tierOverrides,
+  tierOf: () => tierOf,
+  tierName: () => tierName,
+  tieClasses: () => tieClasses,
+  tagOf: () => tagOf,
+  sortIndices: () => sortIndices,
+  roc: () => roc,
+  resolveList: () => resolveList,
+  rankRows: () => rankRows,
+  preferences: () => preferences,
+  placement: () => placement,
+  parseLine: () => parseLine,
+  parseItems: () => parseItems,
+  pairKeyOf: () => pairKeyOf,
+  orient: () => orient,
+  minimiseDisagreements: () => minimiseDisagreements,
+  migrateId: () => migrateId,
+  migrate: () => migrate,
+  localStore: () => localStore,
+  item: () => item,
+  isVideo: () => isVideo,
+  isMedia: () => isMedia,
+  isAudio: () => isAudio,
+  importList: () => importList,
+  idParts: () => idParts,
+  idOf: () => idOf,
+  fromJSON: () => fromJSON,
+  flipOfIds: () => flipOfIds,
+  findConflicts: () => findConflicts,
+  exportList: () => exportList,
+  emptyList: () => emptyList,
+  emptyLibrary: () => emptyLibrary,
+  disagreements: () => disagreements,
+  deleteList: () => deleteList,
+  createEngine: () => createEngine,
+  budgetFor: () => budgetFor,
+  addList: () => addList,
+  Sorter: () => Sorter,
+  STOP_AT: () => STOP_AT,
+  SEP_ID: () => SEP_ID,
+  SEP: () => SEP,
+  SCHEMA: () => SCHEMA
+});
+var init_dist = __esm(() => {
+  init_engine();
+  init_parse();
+  init_analysis();
+  init_store();
+  init_sorter();
+});
+
+// dist/element/base.js
+var theme, esc = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`), PairwiseElement, css = (text) => {
+  const sheet = new CSSStyleSheet;
+  sheet.replaceSync(text);
+  return sheet;
+};
+var init_base = __esm(() => {
+  theme = new CSSStyleSheet;
+  theme.replaceSync(`
+  :host {
+    --pw-bg: #0f1420; --pw-panel: #171e2e; --pw-text: #e6eaf2; --pw-muted: #8a95a8;
+    --pw-border: #2a3448; --pw-accent: #6aa8ff; --pw-warn: #e0b04a; --pw-danger: #e06a6a;
+    --pw-radius: 8px;
+    display: block; color: var(--pw-text); font: inherit;
+  }
+  :host([hidden]) { display: none; }
+  [hidden] { display: none !important; }
+  button { background: var(--pw-panel); color: var(--pw-text); border: 1px solid var(--pw-border);
+           border-radius: var(--pw-radius); padding: 6px 12px; font: inherit; font-size: 14px; cursor: pointer; }
+  button:hover:not(:disabled) { border-color: var(--pw-accent); }
+  button:disabled { opacity: .4; cursor: default; }
+  button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--pw-accent); outline-offset: 2px; }
+  input, select, textarea { background: var(--pw-panel); color: var(--pw-text); border: 1px solid var(--pw-border);
+           border-radius: var(--pw-radius); padding: 6px 9px; font: inherit; font-size: 14px; }
+  a { color: var(--pw-accent); }
+  .muted { color: var(--pw-muted); font-size: 13px; }
+  .tag { display: inline-flex; gap: 4px; padding: 1px 8px; border: 1px solid var(--pw-border); border-radius: 999px;
+         font-size: 12px; color: var(--pw-muted); background: var(--pw-panel); white-space: nowrap; }
+  .tag.on { border-color: var(--pw-accent); color: var(--pw-accent); }
+  .banner { background: var(--pw-panel); border: 1px solid var(--pw-warn); border-left-width: 3px;
+            border-radius: var(--pw-radius); padding: 10px 14px; font-size: 13px; margin: 8px 0; }
+  .banner.info { border-color: var(--pw-accent); }
+  .banner button { padding: 3px 10px; font-size: 12px; margin-left: 10px; }
+`);
+  PairwiseElement = class PairwiseElement extends HTMLElement {
+    root = this.attachShadow({ mode: "open" });
+    #sorter = null;
+    #listening = null;
+    constructor() {
+      super();
+      this.root.adoptedStyleSheets = [theme, ...this.styles()];
+    }
+    get sorter() {
+      return this.#sorter;
+    }
+    set sorter(s) {
+      this.#listening?.abort();
+      this.#sorter = s;
+      if (s) {
+        this.#listening = new AbortController;
+        const signal = this.#listening.signal;
+        for (const type of ["question", "change", "done"])
+          s.addEventListener(type, () => this.render(), { signal });
+        this.listen(s, signal);
+      }
+      this.render();
+    }
+    connectedCallback() {
+      this.render();
+    }
+    listen(_s, _signal) {}
+    fire(type, detail) {
+      this.dispatchEvent(new CustomEvent(type, { detail, bubbles: true, composed: true }));
+    }
+  };
+});
+
+// dist/element/app.js
+var style, PairwiseSorter;
+var init_app = __esm(() => {
+  init_sorter();
+  init_store();
+  init_base();
+  style = css(`
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: space-between; margin: 16px 0; }
+  .row > span { display: flex; gap: 10px; flex-wrap: wrap; }
+  pairwise-lists { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--pw-border); }
+  pairwise-progress { margin-top: 24px; }
+  details { margin: 12px 0; }
+  summary { cursor: pointer; color: var(--pw-muted); font-size: 13px; }
+  .tabs button.on { border-color: var(--pw-accent); }
+`);
+  PairwiseSorter = class PairwiseSorter extends PairwiseElement {
+    #library = emptyLibrary();
+    #store = null;
+    #view = "sort";
+    #paused = false;
+    #tab = "ranking";
+    #started = false;
+    constructor() {
+      super();
+      this.root.innerHTML = `
+      <pairwise-lists></pairwise-lists>
+      <section part="setup"><pairwise-io></pairwise-io></section>
+      <section part="import"><pairwise-io view="import"></pairwise-io></section>
+      <section part="compare"><pairwise-compare></pairwise-compare><pairwise-progress></pairwise-progress></section>
+      <section part="done">
+        <div class="row"><strong part="heading"></strong>
+          <span class="tabs"><button part="tab-ranking"></button><button part="tab-comparisons"></button></span></div>
+        <details part="tiers-panel"><summary>Tiers and weights</summary><pairwise-tiers></pairwise-tiers><pairwise-weights></pairwise-weights></details>
+        <pairwise-ranking></pairwise-ranking><pairwise-conflicts></pairwise-conflicts>
+      </section>
+      <div class="row" part="controls">
+        <span><button part="undo">↩ Undo</button><button part="resume">↩ Resume sorting</button></span>
+        <span><button part="pause">See list so far</button><button part="export">Export JSON</button>
+          <button part="edit-list">Edit list</button><button part="reset">Reset answers</button></span>
+      </div>
+      <details part="bench-panel"><summary>Bench</summary><pairwise-bench></pairwise-bench></details>
+      <pairwise-editor></pairwise-editor>`;
+      const $ = (p) => this.root.querySelector(`[part=${p}]`);
+      const on = (type, f) => this.root.addEventListener(type, (e) => {
+        e.stopPropagation();
+        f(e.detail);
+      });
+      $("undo").onclick = () => this.sorter.undo();
+      $("reset").onclick = () => this.sorter.resetAnswers();
+      $("edit-list").onclick = () => this.goto("setup");
+      $("pause").onclick = () => this.pause();
+      $("resume").onclick = () => this.resume();
+      $("export").onclick = () => this.#copy();
+      $("tab-ranking").onclick = () => this.tab("ranking");
+      $("tab-comparisons").onclick = () => this.tab("comparisons");
+      on("pairwise-edit", (d) => this.root.querySelector("pairwise-editor").edit(d.index));
+      on("pairwise-stop", () => this.pause());
+      on("pairwise-list-open", (d) => this.openList(d.id));
+      on("pairwise-list-new", () => this.newList());
+      on("pairwise-list-rename", (d) => this.renameList(d.name));
+      on("pairwise-list-delete", () => this.deleteList(this.#library.current));
+      on("pairwise-import", () => this.goto("import"));
+      on("pairwise-imported", (d) => this.addList(d.list));
+      on("pairwise-cancel", () => this.goto("compare"));
+      on("pairwise-saved", () => {
+        this.#view = "sort";
+        this.#paused = false;
+        this.render();
+      });
+      this.sorter = new Sorter;
+      this.sorter.addEventListener("change", () => this.#save());
+      this.sorter.addEventListener("done", () => {
+        this.#paused = false;
+        this.render();
+      });
+    }
+    styles() {
+      return [style];
+    }
+    connectedCallback() {
+      if (!this.#started) {
+        this.#started = true;
+        const key = this.getAttribute("storage-key");
+        if (key)
+          this.#store = localStore(key);
+        this.library = this.#store?.load() ?? this.#library;
+      }
+      super.connectedCallback();
+    }
+    get library() {
+      return this.#library;
+    }
+    set library(lib) {
+      this.#library = lib;
+      const id = lib.current && lib.lists[lib.current] ? lib.current : Object.keys(lib.lists)[0];
+      if (id)
+        this.openList(id);
+      else
+        this.newList();
+    }
+    get screen() {
+      const s = this.sorter;
+      if (this.#view !== "sort")
+        return this.#view;
+      if (s.live().length < 2)
+        return "setup";
+      return s.question && !this.#paused ? "compare" : "done";
+    }
+    get paused() {
+      return this.#paused && !!this.sorter.question;
+    }
+    openList(id) {
+      this.#library.current = id;
+      this.#view = "sort";
+      this.#paused = false;
+      this.sorter.open(this.#library.lists[id]);
+      this.root.querySelector("pairwise-io").reset();
+      this.#save();
+    }
+    newList(name) {
+      const id = addList(this.#library, name);
+      this.openList(id);
+      return id;
+    }
+    addList(list) {
+      const id = this.newList();
+      this.#library.lists[id] = list;
+      this.openList(id);
+      return id;
+    }
+    renameList(name) {
+      this.sorter.list.name = name;
+      this.#save();
+    }
+    deleteList(id) {
+      deleteList(this.#library, id);
+      this.library = this.#library;
+    }
+    goto(screen) {
+      this.#view = screen === "setup" || screen === "import" ? screen : "sort";
+      this.#paused = screen === "done";
+      if (screen === "setup")
+        this.root.querySelector("pairwise-io").reset();
+      this.render();
+    }
+    pause() {
+      if (!this.sorter.question)
+        return false;
+      this.goto("done");
+      return true;
+    }
+    resume() {
+      if (!this.paused)
+        return false;
+      this.goto("compare");
+      return true;
+    }
+    tab(which) {
+      this.#tab = which;
+      this.render();
+    }
+    exportJSON() {
+      return exportList(this.sorter.list, this.sorter.ranking().map((r) => r.item.title));
+    }
+    render() {
+      const s = this.sorter, lists2 = this.root.querySelector("pairwise-lists");
+      const $ = (p) => this.root.querySelector(`[part=${p}]`);
+      const screen = this.screen, cmp = this.#tab === "comparisons";
+      for (const el of this.root.querySelectorAll("pairwise-io, pairwise-compare, pairwise-progress, pairwise-tiers, pairwise-weights, pairwise-ranking, pairwise-conflicts, pairwise-bench, pairwise-editor"))
+        if (el.sorter !== s)
+          el.sorter = s;
+      lists2.library = this.#library;
+      for (const part of ["setup", "import", "compare", "done"])
+        $(part).hidden = part !== screen;
+      $("controls").hidden = screen === "setup" || screen === "import";
+      $("pause").hidden = screen !== "compare";
+      $("resume").hidden = !this.paused;
+      $("export").hidden = screen !== "done";
+      $("heading").textContent = cmp ? "Comparisons you made" : "Sorted — best first";
+      $("tab-ranking").textContent = `${s.ranking().length} items`;
+      $("tab-comparisons").textContent = `${s.list.log.length} comparisons`;
+      $("tab-ranking").classList.toggle("on", !cmp);
+      $("tab-comparisons").classList.toggle("on", cmp);
+      this.root.querySelector("pairwise-ranking").hidden = cmp;
+      this.root.querySelector("pairwise-conflicts").hidden = !cmp;
+      $("tiers-panel").hidden = !s.tags().length;
+      $("bench-panel").hidden = !s.list.benched.length;
+    }
+    #save() {
+      this.#store?.save(this.#library);
+      this.fire("pairwise-change", { library: this.#library });
+      this.render();
+    }
+    async#copy() {
+      const text = JSON.stringify(this.exportJSON(), null, 2), btn = this.root.querySelector("[part=export]");
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = "Copied";
+        setTimeout(() => btn.textContent = "Export JSON", 1200);
+      } catch {
+        this.goto("import");
+        this.root.querySelector("pairwise-io[view=import]").show(text, "Copy failed — the export is in the box below; select it and copy.");
+      }
+    }
+  };
+});
+
+// dist/element/bench.js
+var style2, PairwiseBench;
+var init_bench = __esm(() => {
+  init_base();
+  style2 = css(`
+  ul { list-style: none; padding: 0; margin: 10px 0 0; }
+  li { display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--pw-border); }
+  li [part=name] { flex: 1; color: var(--pw-muted); overflow-wrap: anywhere; }
+  li button { padding: 3px 10px; font-size: 12px; }
+`);
+  PairwiseBench = class PairwiseBench extends PairwiseElement {
+    constructor() {
+      super();
+      this.root.innerHTML = `
+      <div class="muted">Benched — <span part="count">0</span>
+        <button part="sub-all">Sub all in</button></div>
+      <ul part="list"></ul>`;
+      this.root.querySelector("[part=sub-all]").onclick = () => this.sorter.subAll();
+      this.root.querySelector("[part=list]").onclick = (e) => {
+        const d = e.target.closest("button")?.dataset;
+        if (!d)
+          return;
+        const s = this.sorter, i = Number(d.i);
+        if (d.edit)
+          this.fire("pairwise-edit", { index: i });
+        else
+          s.subIn(idOf(s.list.items[i]));
+      };
+    }
+    styles() {
+      return [style2];
+    }
+    render() {
+      const s = this.sorter, benched = s?.benchedItems() ?? [];
+      this.root.querySelector("[part=count]").textContent = String(benched.length);
+      this.root.querySelector("[part=list]").innerHTML = benched.map((it) => {
+        const i = s.list.items.indexOf(it), name = esc(it.title);
+        return `<li part="benched"><span part="name">${name}</span>
+        <button part="edit" data-i="${i}" data-edit="1" aria-label="Edit ${name}">✎</button>
+        <button part="sub-in" data-i="${i}">Sub in</button></li>`;
+      }).join("");
+    }
+  };
+});
+
+// dist/element/media.js
+function preload(items, idxs) {
+  for (const i of idxs)
+    for (const m of imagesOf(items[i])) {
+      if (preloaded.has(m))
+        continue;
+      preloaded.add(m);
+      new Image().src = m;
+    }
+}
+
+class Lightbox {
+  static html = `<div part="lightbox" class="lightbox" hidden tabindex="-1" role="dialog" aria-modal="true" aria-label="Enlarged image">
+    <button class="close" aria-label="Close enlarged image">✕</button>
+    <button class="nav prev" data-step="-1" aria-label="Previous image">‹</button>
+    <img alt="">
+    <button class="nav next" data-step="1" aria-label="Next image">›</button>
+    <span class="count"></span></div>`;
+  el;
+  #pool = [];
+  #at = 0;
+  constructor(root) {
+    this.el = root.querySelector("[part=lightbox]");
+    this.el.onclick = (e) => {
+      const t = e.target;
+      if (t === this.el || t.matches(".close"))
+        this.close();
+      else if (t.dataset.step)
+        this.step(Number(t.dataset.step));
+    };
+    this.el.onkeydown = (e) => this.key(e);
+  }
+  get isOpen() {
+    return !this.el.hidden;
+  }
+  show(src, pool) {
+    this.#pool = pool.length ? pool : [src];
+    this.#at = Math.max(0, this.#pool.indexOf(src));
+    this.el.hidden = false;
+    this.#draw();
+    this.el.querySelector(".close").focus();
+  }
+  close() {
+    this.el.hidden = true;
+    this.el.querySelector("img").removeAttribute("src");
+  }
+  step(d) {
+    if (this.#pool.length < 2)
+      return;
+    this.#at = (this.#at + d + this.#pool.length) % this.#pool.length;
+    this.#draw();
+  }
+  key(e) {
+    const act = { Escape: () => this.close(), ArrowLeft: () => this.step(-1), ArrowRight: () => this.step(1) }[e.key];
+    if (act) {
+      e.preventDefault();
+      act();
+    }
+  }
+  #draw() {
+    const many = this.#pool.length > 1;
+    this.el.querySelector("img").src = this.#pool[this.#at];
+    this.el.querySelector(".count").textContent = many ? `${this.#at + 1} / ${this.#pool.length}` : "";
+    for (const b of this.el.querySelectorAll("[data-step]"))
+      b.hidden = !many;
+  }
+}
+var mediaStyle, mediaHTML = (m) => isVideo(m) ? `<video src="${esc(m)}" controls loop muted playsinline preload="metadata"></video>` : isAudio(m) ? `<audio src="${esc(m)}" controls preload="metadata"></audio>` : `<img src="${esc(m)}" alt="">`, imagesOf = (it) => it.media.filter((m) => !isVideo(m) && !isAudio(m)), tagChip = (t, priority) => {
+  const tier = priority.indexOf(t);
+  return tier >= 0 ? `<span class="tag on" title="Tier ${tier + 1}"><b>${tier + 1}</b>#${esc(t)}</span>` : `<span class="tag">#${esc(t)}</span>`;
+}, preloaded;
+var init_media = __esm(() => {
+  init_parse();
+  init_base();
+  mediaStyle = css(`
+  img, video { max-width: 100%; border-radius: 6px; object-fit: contain; }
+  img { cursor: zoom-in; }
+  audio { width: 100%; }
+  .lightbox { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
+              background: rgba(0,0,0,.88); padding: 64px; }
+  .lightbox[hidden] { display: none; }
+  .lightbox img { width: 100%; height: 100%; object-fit: contain; cursor: default; }
+  .lightbox .close { position: absolute; top: 18px; right: 22px; }
+  .lightbox .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 46px; height: 72px; font-size: 22px; }
+  .lightbox .prev { left: 14px; }
+  .lightbox .next { right: 14px; }
+  .lightbox .count { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: var(--pw-muted); font-size: 13px; }
+`);
+  preloaded = new Set;
+});
+
+// dist/element/compare.js
+var PER_PAGE = 4, SIDES, style3, PairwiseCompare;
+var init_compare = __esm(() => {
+  init_base();
+  init_media();
+  SIDES = ["a", "b"];
+  style3 = css(`
+  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .card { position: relative; background: var(--pw-panel); border: 2px solid var(--pw-border); border-radius: 12px;
+          padding: 48px 24px 24px; min-height: 180px; display: flex; flex-direction: column; align-items: center;
+          gap: 14px; text-align: center; }
+  .card:has(.choose:hover) { border-color: var(--pw-accent); }
+  .body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; width: 100%; }
+  .title { font-size: 20px; line-height: 1.4; overflow-wrap: anywhere; }
+  .desc { font-size: 13px; color: var(--pw-muted); overflow-wrap: anywhere; }
+  .media { display: grid; gap: 8px; width: 100%; justify-items: center; align-items: center; }
+  .media.many { grid-template-columns: 1fr 1fr; }
+  .media img, .media video { max-height: min(340px, 34vh); }
+  .media.many img, .media.many video { max-height: min(150px, 18vh); }
+  .pages { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 12px; color: var(--pw-muted); }
+  .pages button { padding: 1px 9px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .choose { width: 100%; font-weight: 600; }
+  .act { position: absolute; top: 10px; width: 30px; height: 30px; padding: 0; display: inline-flex; align-items: center;
+         justify-content: center; color: var(--pw-muted); text-decoration: none; opacity: .5;
+         border: 1px solid var(--pw-border); border-radius: var(--pw-radius); }
+  .card:hover .act, .act:focus-visible { opacity: 1; }
+  .act.open { left: 10px; }
+  .act.edit { right: 46px; }
+  .act.bench { right: 10px; }
+  .act.bench:hover { color: var(--pw-danger); border-color: var(--pw-danger); }
+  .equal { display: flex; justify-content: center; margin-top: 16px; }
+`);
+  PairwiseCompare = class PairwiseCompare extends PairwiseElement {
+    renderItem;
+    #pages = { a: 0, b: 0 };
+    #asked = "";
+    #lightbox;
+    constructor() {
+      super();
+      this.root.innerHTML = `
+      <p part="idle" class="muted">Nothing to compare right now.</p>
+      <div part="duel" class="duel"></div>
+      <div class="equal"><button part="equal">Equal <span class="muted">(↓ or =)</span></button></div>
+      ${Lightbox.html}`;
+      this.#lightbox = new Lightbox(this.root);
+      this.root.querySelector("[part=equal]").onclick = () => this.sorter?.answer(0);
+      this.root.querySelector("[part=duel]").onclick = (e) => this.#click(e);
+    }
+    styles() {
+      return [mediaStyle, style3];
+    }
+    listen(s, signal) {
+      s.addEventListener("upcoming", (e) => preload(s.list.items, e.detail), { signal });
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      addEventListener("keydown", this.#keys);
+    }
+    disconnectedCallback() {
+      removeEventListener("keydown", this.#keys);
+    }
+    render() {
+      const q = this.sorter?.question;
+      this.root.querySelector("[part=idle]").hidden = !!q;
+      this.root.querySelector(".equal").hidden = !q;
+      const duel = this.root.querySelector("[part=duel]");
+      if (!q) {
+        duel.innerHTML = "";
+        return;
+      }
+      const asked = `${q.a},${q.b}`;
+      if (asked !== this.#asked)
+        this.#pages = { a: 0, b: 0 };
+      this.#asked = asked;
+      duel.innerHTML = SIDES.map((side) => this.#card(side, q[side])).join("");
+      if (this.renderItem)
+        for (const side of SIDES)
+          this.renderItem(this.#item(side), duel.querySelector(`[part~=body-${side}]`));
+    }
+    #item(side) {
+      const s = this.sorter;
+      return s.list.items[s.question[side]];
+    }
+    #card(side, index) {
+      const s = this.sorter, it = s.list.items[index];
+      const pages = Math.max(1, Math.ceil(it.media.length / PER_PAGE));
+      const page = (this.#pages[side] % pages + pages) % pages;
+      const shown = it.media.slice(page * PER_PAGE, (page + 1) * PER_PAGE);
+      const body = this.renderItem ? "" : [
+        shown.length ? `<div class="media${shown.length > 1 ? " many" : ""}">${shown.map(mediaHTML).join("")}</div>` : "",
+        pages > 1 ? `<div part="pages" class="pages"><button data-side="${side}" data-step="-1" aria-label="Previous media">‹</button>
+        <span>${page + 1} / ${pages}</span><button data-side="${side}" data-step="1" aria-label="More media">›</button></div>` : "",
+        `<div part="title title-${side}" class="title">${esc(it.title)}</div>`,
+        it.desc ? `<div part="desc" class="desc">${esc(it.desc)}</div>` : "",
+        it.tags.length ? `<div class="tags">${it.tags.map((t) => tagChip(t, s.list.priority)).join("")}</div>` : ""
+      ].join("");
+      const name = esc(it.title);
+      return `<div part="card card-${side}" class="card">
+      <div part="body body-${side}" class="body">${body}</div>
+      <button part="choose choose-${side}" class="choose" data-choose="${side}" aria-label="Choose ${name}">${side === "a" ? "← Choose this" : "Choose this →"}</button>
+      <a part="open open-${side}" class="act open" href="${esc(it.url)}" target="_blank" rel="noopener" ${it.url ? "" : "hidden"} aria-label="Open ${name} in a new tab">↗</a>
+      <button part="edit edit-${side}" class="act edit" data-edit="${index}" aria-label="Edit ${name}">✎</button>
+      <button part="bench bench-${side}" class="act bench" data-bench="${side}" aria-label="Bench ${name}">✕</button>
+    </div>`;
+    }
+    #click(e) {
+      const t = e.target, s = this.sorter;
+      const img = t.closest("img");
+      if (img) {
+        this.#lightbox.show(img.getAttribute("src"), [...imagesOf(this.#item("a")), ...imagesOf(this.#item("b"))]);
+        return;
+      }
+      const d = t.closest("button")?.dataset;
+      if (!d)
+        return;
+      if (d.choose)
+        s.answer(d.choose === "a" ? -1 : 1);
+      else if (d.step) {
+        const side = d.side;
+        this.#pages[side] += Number(d.step);
+        this.render();
+      } else if (d.edit)
+        this.fire("pairwise-edit", { index: Number(d.edit) });
+      else if (d.bench)
+        s.bench([idOf(this.#item(d.bench))]);
+    }
+    #keys = (e) => {
+      if (this.#lightbox.isOpen)
+        return;
+      const s = this.sorter;
+      if (e.defaultPrevented || !s?.question || this.hasAttribute("no-keyboard") || !this.checkVisibility())
+        return;
+      const path = e.composedPath(), target = path[0];
+      if (target instanceof HTMLElement && target.matches("input, textarea, select, [contenteditable]"))
+        return;
+      if (path.some((n) => n instanceof HTMLDialogElement && n.open))
+        return;
+      const v = { ArrowLeft: -1, ArrowRight: 1, ArrowDown: 0, "=": 0 }[e.key];
+      if (v !== undefined) {
+        e.preventDefault();
+        s.answer(v);
+      } else if (e.key === "Backspace") {
+        e.preventDefault();
+        s.undo();
+      }
+    };
+  };
+});
+
+// dist/element/conflicts.js
+var style4, PairwiseConflicts;
+var init_conflicts = __esm(() => {
+  init_base();
+  style4 = css(`
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-bottom: 1px solid var(--pw-border); }
+  li [part=pair] { flex: 1; overflow-wrap: anywhere; }
+  li.conflict { border-left: 3px solid var(--pw-warn); padding-left: 9px; }
+  [part=why] { color: var(--pw-warn); font-size: 12px; }
+  li button { padding: 3px 10px; font-size: 12px; }
+  li button:hover { color: var(--pw-danger); border-color: var(--pw-danger); }
+`);
+  PairwiseConflicts = class PairwiseConflicts extends PairwiseElement {
+    #result = "";
+    constructor() {
+      super();
+      this.root.innerHTML = `
+      <p part="banner" class="banner" hidden><span></span><button part="resolve" title="Reorder to contradict as few of your answers as possible">Resolve</button></p>
+      <p part="result" class="banner info" hidden></p>
+      <p part="empty" class="muted" hidden>No comparisons recorded yet.</p>
+      <ul part="list"></ul>`;
+      this.root.querySelector("[part=resolve]").onclick = () => this.#resolve();
+      this.root.querySelector("[part=list]").onclick = (e) => {
+        const i = e.target.closest("button")?.dataset.delete;
+        if (i)
+          this.sorter.deleteAnswer(Number(i));
+      };
+    }
+    styles() {
+      return [style4];
+    }
+    listen(s, signal) {
+      s.addEventListener("change", () => {
+        this.#result = "";
+        this.render();
+      }, { signal });
+    }
+    render() {
+      const $ = (p) => this.root.querySelector(`[part=${p}]`);
+      const all = this.sorter?.comparisons() ?? [];
+      const bad = all.filter((c) => c.why).length;
+      $("banner").hidden = !bad;
+      $("banner").querySelector("span").textContent = `⚠ ${bad} answer${bad === 1 ? " contradicts" : "s contradict"} the ranking — your choices can't all be true at once.`;
+      $("result").hidden = !this.#result;
+      $("result").textContent = this.#result;
+      $("empty").hidden = !this.sorter || all.length > 0;
+      $("list").innerHTML = all.map((c) => {
+        const pair = c.verdict === 0 ? [c.a.title, "=", c.b.title] : c.verdict < 0 ? [c.a.title, "›", c.b.title] : [c.b.title, "›", c.a.title];
+        return `<li part="answer${c.why ? " conflict" : ""}" class="${c.why ? "conflict" : ""}">
+        <span part="pair">${pair.map(esc).join(" ")}</span>
+        ${c.why ? `<span part="why">${esc(c.why)}</span>` : ""}
+        <button part="delete" data-delete="${c.index}" title="Forget this answer — it will be asked again if the sort still needs it">delete</button>
+      </li>`;
+      }).join("");
+    }
+    #resolve() {
+      const { before, after } = this.sorter.resolve();
+      const s = (n) => n === 1 ? "" : "s";
+      this.#result = after < before ? `Reordered — now contradicts ${after} of your answers, down from ${before}. This is a best-effort search rather than a proof of the true minimum, and it lasts until the next change re-runs the sort.` : `Already as consistent as this search can make it — ${before} answer${s(before)} still contradicted. Those are genuine cycles: no order can satisfy them all, so the fix is to change an answer.`;
+      this.render();
+    }
+  };
+});
+
+// dist/element/editor.js
+var style5, PairwiseEditor;
+var init_editor = __esm(() => {
+  init_base();
+  style5 = css(`
+  dialog { border: 1px solid var(--pw-border); border-radius: 12px; background: var(--pw-bg); color: var(--pw-text);
+           padding: 0; width: min(620px, calc(100vw - 48px)); }
+  dialog::backdrop { background: rgba(0,0,0,.7); }
+  form { display: flex; flex-direction: column; gap: 14px; padding: 22px 24px; }
+  h2 { margin: 0; font-size: 17px; }
+  label { display: flex; flex-direction: column; gap: 5px; font-size: 13px; color: var(--pw-muted); }
+  .row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .row input { flex: 1; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .tag button { border: 0; background: none; padding: 0 2px; color: inherit; }
+  [part=error] { color: var(--pw-danger); margin: 0; }
+`);
+  PairwiseEditor = class PairwiseEditor extends PairwiseElement {
+    #index = -1;
+    #tags = [];
+    #media = [];
+    constructor() {
+      super();
+      this.root.innerHTML = `<dialog part="dialog"><form method="dialog" novalidate>
+      <h2>Edit item</h2>
+      <label>Title <input part="title" type="text" required></label>
+      <label>Link <input part="url" type="url" placeholder="https://…"></label>
+      <label>Description <textarea part="desc" rows="3"></textarea></label>
+      <div><span class="muted">Tags</span><div part="tags" class="tags"></div>
+        <div class="row"><input part="tag-input" type="text" list="tag-options" placeholder="Add a tag, then Enter">
+          <datalist id="tag-options"></datalist><button part="tag-add" type="button">Add</button></div></div>
+      <div><span class="muted">Media — images, audio and video, in order</span>
+        <div part="media-list"></div><button part="media-add" type="button">+ Add media</button></div>
+      <p part="error" hidden></p>
+      <div class="row"><button part="save" type="submit">Save</button><button part="cancel" type="button">Cancel</button></div>
+    </form></dialog>`;
+      const $ = (p) => this.root.querySelector(`[part=${p}]`);
+      $("tag-add").onclick = () => this.#addTags();
+      $("tag-input").onkeydown = (e) => {
+        if (e.key !== "Enter")
+          return;
+        e.preventDefault();
+        this.#addTags();
+      };
+      $("tags").onclick = (e) => {
+        const i = e.target.closest("button")?.dataset.i;
+        if (i) {
+          this.#tags.splice(Number(i), 1);
+          this.#draw();
+        }
+      };
+      $("media-add").onclick = () => {
+        this.#media.push("");
+        this.#draw();
+      };
+      $("media-list").oninput = (e) => {
+        const input = e.target;
+        this.#media[Number(input.dataset.i)] = input.value;
+      };
+      $("media-list").onclick = (e) => {
+        const d = e.target.closest("button")?.dataset;
+        if (!d)
+          return;
+        const i = Number(d.i), m = this.#media;
+        if (d.move) {
+          const j = i + Number(d.move);
+          [m[i], m[j]] = [m[j], m[i]];
+        } else
+          m.splice(i, 1);
+        this.#draw();
+      };
+      $("cancel").onclick = () => this.#dialog.close();
+      this.root.querySelector("form").onsubmit = (e) => {
+        e.preventDefault();
+        this.#save();
+      };
+    }
+    styles() {
+      return [style5];
+    }
+    get #dialog() {
+      return this.root.querySelector("dialog");
+    }
+    edit(index) {
+      const it = this.sorter?.list.items[index];
+      if (!it)
+        return;
+      const $ = (p) => this.root.querySelector(`[part=${p}]`);
+      this.#index = index;
+      this.#tags = [...it.tags];
+      this.#media = [...it.media];
+      $("title").value = it.title;
+      $("url").value = it.url;
+      $("desc").value = it.desc;
+      $("tag-input").value = "";
+      $("error").hidden = true;
+      this.root.querySelector("datalist").innerHTML = this.sorter.tags().map((t) => `<option value="${esc(t)}">`).join("");
+      this.#draw();
+      this.#dialog.showModal();
+    }
+    render() {}
+    #addTags() {
+      const input = this.root.querySelector("[part=tag-input]");
+      for (const t of input.value.split(",").map(tagOf))
+        if (t && !this.#tags.includes(t))
+          this.#tags.push(t);
+      input.value = "";
+      this.#draw();
+    }
+    #draw() {
+      const tags = this.root.querySelector("[part=tags]"), media = this.root.querySelector("[part=media-list]");
+      tags.innerHTML = this.#tags.map((t, i) => `<span class="tag">#${esc(t)} <button type="button" data-i="${i}" aria-label="Remove tag ${esc(t)}">×</button></span>`).join("") || `<span class="muted">No tags yet.</span>`;
+      const last = this.#media.length - 1;
+      media.innerHTML = this.#media.map((m, i) => `<div part="media" class="row">
+      <input part="media-url" type="url" data-i="${i}" value="${esc(m)}" aria-label="Media URL ${i + 1}">
+      <button type="button" data-i="${i}" data-move="-1" ${i === 0 ? "disabled" : ""} aria-label="Move media ${i + 1} up">↑</button>
+      <button type="button" data-i="${i}" data-move="1" ${i === last ? "disabled" : ""} aria-label="Move media ${i + 1} down">↓</button>
+      <button type="button" data-i="${i}" aria-label="Remove media ${i + 1}">✕</button></div>`).join("") || `<span class="muted">No media yet.</span>`;
+    }
+    async#save() {
+      const $ = (p) => this.root.querySelector(`[part=${p}]`);
+      this.#addTags();
+      try {
+        await this.sorter.editItem(this.#index, {
+          title: $("title").value,
+          url: $("url").value.trim(),
+          desc: $("desc").value.trim(),
+          tags: this.#tags,
+          media: this.#media.map((m) => m.trim()).filter(Boolean)
+        });
+        this.#dialog.close();
+      } catch (err) {
+        $("error").textContent = err.message;
+        $("error").hidden = false;
+      }
+    }
+  };
+});
+
+// dist/element/io.js
+var style6, FORMATS = `<details><summary>Input formats</summary><table>
+  <tr><td><code>Cold brew</code></td><td>plain text</td></tr>
+  <tr><td><code>[Title](https://…)</code></td><td>titled link</td></tr>
+  <tr><td><code>Title | https://… | https://….jpg | https://….mp3 | Description</code></td><td>full card</td></tr>
+  <tr><td><code>#gameplay #qol</code></td><td>tags (a field of <code>#</code>-tokens)</td></tr>
+  <tr><td><code>[{"title":"…","url":"…","media":["…"],"desc":"…","tags":["…"]}]</code></td><td>JSON array</td></tr>
+  </table><p>Pipe fields are matched by content, not order: an image, audio or video URL is media; the first other
+  URL is the link; the first text is the title and the rest the description.</p></details>`, PairwiseIo;
+var init_io = __esm(() => {
+  init_parse();
+  init_store();
+  init_base();
+  style6 = css(`
+  textarea { width: 100%; box-sizing: border-box; min-height: 240px; font: 14px/1.6 ui-monospace, monospace; resize: vertical; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+  details { margin: 12px 0; font-size: 13px; color: var(--pw-muted); }
+  code { background: var(--pw-panel); padding: 1px 5px; border-radius: 4px; }
+  td { padding: 4px 14px 4px 0; vertical-align: top; }
+`);
+  PairwiseIo = class PairwiseIo extends PairwiseElement {
+    #filled = false;
+    static get observedAttributes() {
+      return ["view"];
+    }
+    attributeChangedCallback() {
+      this.#build();
+    }
+    constructor() {
+      super();
+      this.#build();
+    }
+    styles() {
+      return [style6];
+    }
+    reset() {
+      this.#filled = false;
+      this.#hint("");
+      this.render();
+    }
+    show(text, note) {
+      this.#box().value = text;
+      this.#hint(note);
+    }
+    render() {
+      if (this.#filled || !this.sorter || this.getAttribute("view") === "import")
+        return;
+      this.#box().value = toText(this.sorter.list.items);
+      this.#filled = true;
+    }
+    #build() {
+      const importing = this.getAttribute("view") === "import";
+      this.root.innerHTML = importing ? `<p class="muted">Paste a full export — items and comparisons. It lands as a new list, so nothing you already have is touched.</p>
+        <textarea part="text" placeholder='{"format": "pairwise-sorter/3", "name": "…", "items": [...], "comparisons": [...]}'></textarea>
+        <div class="row"><button part="import">Import as new list</button><button part="cancel">Cancel</button><span part="hint" class="muted"></span></div>` : `<p class="muted">One item per line — plain text, markdown links, pipe-separated fields, or a JSON array.</p>
+        <textarea part="text" placeholder="Cold brew&#10;[Flat white](https://example.com/fw)"></textarea>${FORMATS}
+        <div class="row"><button part="save">Save &amp; sort</button><span part="hint" class="muted"></span></div>`;
+      const on = (p, f) => {
+        const b = this.root.querySelector(`[part=${p}]`);
+        if (b)
+          b.onclick = f;
+      };
+      on("save", () => this.#save());
+      on("import", () => this.#import());
+      on("cancel", () => this.fire("pairwise-cancel"));
+      this.#filled = false;
+      this.render();
+    }
+    #box = () => this.root.querySelector("[part=text]");
+    #hint = (text) => {
+      this.root.querySelector("[part=hint]").textContent = text;
+    };
+    #save() {
+      try {
+        const { dupes, dropped } = this.sorter.setItems(parseItems(this.#box().value));
+        const n = (k, one, many) => `${k} ${k === 1 ? one : many}`;
+        this.#hint([
+          dupes.length ? `Merged ${n(dupes.length, "duplicate", "duplicates")}: ${dupes.join(", ")}.` : "",
+          dropped ? `${n(dropped, "answer", "answers")} dropped with deleted items.` : ""
+        ].filter(Boolean).join(" "));
+        this.fire("pairwise-saved");
+      } catch (err) {
+        this.#hint(err.message);
+      }
+    }
+    #import() {
+      try {
+        const result = importList(JSON.parse(this.#box().value));
+        this.#box().value = "";
+        this.fire("pairwise-imported", result);
+      } catch (err) {
+        this.#hint("Could not import: " + err.message);
+      }
+    }
+  };
+});
+
+// dist/element/lists.js
+var style7, PairwiseLists;
+var init_lists = __esm(() => {
+  init_base();
+  style7 = css(`
+  :host { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  [part=name] { flex: 1; min-width: 140px; max-width: 380px; }
+  [part=delete].armed { border-color: var(--pw-danger); color: var(--pw-danger); }
+`);
+  PairwiseLists = class PairwiseLists extends PairwiseElement {
+    #library = null;
+    disarmAfter = 4000;
+    constructor() {
+      super();
+      this.root.innerHTML = `
+      <select part="pick" aria-label="Switch list"></select>
+      <input part="name" placeholder="List name" aria-label="Rename this list">
+      <button part="new">+ New list</button>
+      <button part="import">Import JSON</button>
+      <button part="delete">Delete</button>`;
+      const $ = (p) => this.root.querySelector(`[part=${p}]`);
+      $("pick").onchange = () => this.fire("pairwise-list-open", { id: $("pick").value });
+      $("name").oninput = () => this.fire("pairwise-list-rename", { name: $("name").value });
+      $("new").onclick = () => this.fire("pairwise-list-new");
+      $("import").onclick = () => this.fire("pairwise-import");
+      $("delete").onclick = () => {
+        const del = $("delete");
+        if (del.classList.toggle("armed")) {
+          del.textContent = "Really delete?";
+          setTimeout(() => this.#disarm(), this.disarmAfter);
+          return;
+        }
+        this.#disarm();
+        this.fire("pairwise-list-delete");
+      };
+    }
+    styles() {
+      return [style7];
+    }
+    set library(lib) {
+      this.#library = lib;
+      this.render();
+    }
+    render() {
+      const lib = this.#library, $ = (p) => this.root.querySelector(`[part=${p}]`);
+      $("pick").innerHTML = Object.entries(lib?.lists ?? {}).map(([id, l]) => `<option value="${esc(id)}">${esc(l.name || "Untitled")} (${l.items.length})</option>`).join("");
+      if (!lib?.current)
+        return;
+      $("pick").value = lib.current;
+      if (this.root.activeElement !== $("name"))
+        $("name").value = lib.lists[lib.current].name;
+    }
+    #disarm() {
+      const del = this.root.querySelector("[part=delete]");
+      del.classList.remove("armed");
+      del.textContent = "Delete";
+    }
+  };
+});
+
+// dist/element/progress.js
+var style8, PairwiseProgress;
+var init_progress = __esm(() => {
+  init_analysis();
+  init_base();
+  style8 = css(`
+  .bar { height: 8px; background: var(--pw-panel); border: 1px solid var(--pw-border); border-radius: 4px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--pw-accent); transition: width .25s; }
+  [part=status] { margin-top: 8px; font-variant-numeric: tabular-nums; }
+`);
+  PairwiseProgress = class PairwiseProgress extends PairwiseElement {
+    styles() {
+      return [style8];
+    }
+    render() {
+      const s = this.sorter;
+      if (!s) {
+        this.root.innerHTML = "";
+        return;
+      }
+      const answered = s.list.log.length, total = s.budget(), at = s.placement();
+      const canStop = !!s.question && at.pct >= STOP_AT && at.placed < at.total;
+      this.root.innerHTML = `
+      <div class="bar" part="bar"><i part="fill" style="width:${Math.min(100, answered / total * 100)}%"></i></div>
+      <div part="status" class="muted">${answered} of ~${total} comparisons · ${at.placed} of ${at.total} placed</div>
+      <p part="stop" class="banner info" ${canStop ? "" : "hidden"}>
+        ${at.placed} of ${at.total} items are placed, and placed items are already in their final order —
+        you can stop here and keep them. The rest simply have no position yet.
+        <button>See the list</button>
+      </p>`;
+      this.root.querySelector("button").onclick = () => this.fire("pairwise-stop");
+    }
+  };
+});
+
+// dist/element/ranking.js
+var style9, PairwiseRanking, detailed = (it) => it.media.length > 0 || !!it.desc;
+var init_ranking = __esm(() => {
+  init_engine();
+  init_base();
+  init_media();
+  style9 = css(`
+  .tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
+  .tools input { flex: 1; max-width: 340px; }
+  ol, ul { list-style: none; padding: 0; margin: 0; }
+  ol.filtering { border-left: 3px solid var(--pw-warn); padding-left: 11px; }
+  li { display: flex; flex-wrap: wrap; gap: 14px; align-items: baseline; padding: 9px 12px; border-bottom: 1px solid var(--pw-border); }
+  .rank { min-width: 2.2em; text-align: right; color: var(--pw-accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+  li.tied .rank { color: var(--pw-warn); }
+  .title { background: none; border: 0; padding: 0; color: var(--pw-text); text-align: left; font-size: inherit; }
+  button.title { cursor: pointer; }
+  button.title::before { content: "▸"; display: inline-block; width: 1em; color: var(--pw-muted); transition: transform .12s; }
+  button.title[aria-expanded=true]::before { transform: rotate(90deg); }
+  span.title::before { content: ""; display: inline-block; width: 1em; }
+  .tags { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+  .acts { margin-left: auto; display: inline-flex; gap: 8px; align-items: center; }
+  .acts button { padding: 1px 8px; font-size: 12px; opacity: .4; }
+  li:hover .acts button, .acts button:focus-visible { opacity: 1; }
+  .acts [part~=bench]:hover { color: var(--pw-danger); border-color: var(--pw-danger); }
+  .detail { flex-basis: 100%; padding: 6px 0 4px 3.4em; }
+  .strip { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  .strip img, .strip video { max-height: 130px; max-width: 220px; }
+  li.rule { border-bottom: 0; padding: 16px 12px 6px; color: var(--pw-muted); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+  li.rule::after { content: ""; flex: 1; height: 1px; background: var(--pw-border); }
+  .unplaced li { color: var(--pw-muted); }
+`);
+  PairwiseRanking = class PairwiseRanking extends PairwiseElement {
+    #open = new Set;
+    #query = "";
+    #lightbox;
+    constructor() {
+      super();
+      this.root.innerHTML = `
+      <p part="partial" class="banner info" hidden></p>
+      <div class="tools">
+        <input part="search" type="search" placeholder="Filter by title…" aria-label="Filter by title">
+        <span part="count" class="muted"></span>
+        <button part="clear" hidden>Clear</button>
+        <button part="expand-all">Expand all</button>
+        <button part="collapse-all">Collapse all</button>
+      </div>
+      <p part="note" class="muted" hidden></p>
+      <ol part="list"></ol>
+      <ul part="unplaced" class="unplaced"></ul>
+      ${Lightbox.html}`;
+      this.#lightbox = new Lightbox(this.root);
+      const $ = (p) => this.root.querySelector(`[part=${p}]`);
+      $("search").oninput = () => {
+        this.#query = $("search").value.trim().toLowerCase();
+        this.#filter();
+      };
+      $("clear").onclick = () => {
+        $("search").value = "";
+        this.#query = "";
+        this.#filter();
+      };
+      $("expand-all").onclick = () => {
+        this.#open = new Set(this.sorter?.ranking().filter((r) => detailed(r.item)).map((r) => idOf(r.item)));
+        this.render();
+      };
+      $("collapse-all").onclick = () => {
+        this.#open.clear();
+        this.render();
+      };
+      $("list").onclick = (e) => this.#click(e);
+    }
+    styles() {
+      return [mediaStyle, style9];
+    }
+    render() {
+      const s = this.sorter, $ = (p) => this.root.querySelector(`[part=${p}]`);
+      const rows = s?.ranking() ?? [];
+      const { priority = [], combine = "order" } = s?.list ?? {};
+      const partial = !!s && !s.complete;
+      const at = s?.placement();
+      $("partial").hidden = !partial;
+      if (at)
+        $("partial").textContent = `Sorting in progress — ${at.placed} of ${at.total} placed so far. ` + "This order is provisional; the rest slot in as you keep answering.";
+      $("unplaced").innerHTML = partial ? s.unplaced().map((it) => `<li>${esc(it.title)}</li>`).join("") : "";
+      $("note").hidden = !priority.length;
+      $("note").textContent = combine === "weights" ? "Tiers are on, so positions across tiers come from the weights you set, not from answers you gave. Within a tier the order is entirely yours." : "Tiers are on, so cross-tier positions come from the tier order you set, not from answers you gave. Within a tier the order is entirely yours.";
+      let lastTier = null;
+      $("list").innerHTML = rows.map(({ item: it, index, rank, tied }) => {
+        let rule = "";
+        if (priority.length && combine === "order") {
+          const tier = tierOf(it, priority);
+          if (tier !== lastTier)
+            rule = `<li part="rule" class="rule">${esc(tierName(tier, priority))}</li>`;
+          lastTier = tier;
+        }
+        const id = idOf(it), open = this.#open.has(id), name = esc(it.title);
+        const title = detailed(it) ? `<button part="title" class="title" data-toggle="${index}" aria-expanded="${open}">${name}</button>` : `<span part="title" class="title">${name}</span>`;
+        return `${rule}<li part="row" class="${tied ? "tied" : ""}" data-title="${esc(it.title.toLowerCase())}">
+        <span part="rank" class="rank">${tied ? "=" : rank}</span>${title}
+        ${it.tags.length ? `<span class="tags">${it.tags.map((t) => tagChip(t, priority)).join("")}</span>` : ""}
+        <span class="acts">
+          ${it.url ? `<a part="open" href="${esc(it.url)}" target="_blank" rel="noopener" aria-label="Open ${name} in a new tab">↗</a>` : ""}
+          <button part="edit" data-edit="${index}" aria-label="Edit ${name}">✎</button>
+          <button part="bench" data-bench="${index}" aria-label="Bench ${name}">Bench</button>
+        </span>
+        ${open ? `<div part="detail" class="detail" data-images="${esc(JSON.stringify(imagesOf(it)))}">
+          <div class="strip">${it.media.map(mediaHTML).join("")}</div>${it.desc ? `<p class="muted">${esc(it.desc)}</p>` : ""}</div>` : ""}
+      </li>`;
+      }).join("");
+      this.#filter();
+    }
+    #filter() {
+      const list = this.root.querySelector("[part=list]"), q = this.#query;
+      const rows = [...list.children];
+      for (const li of rows)
+        if (!li.matches(".rule"))
+          li.hidden = !!q && !li.dataset.title.includes(q);
+      rows.forEach((li, i) => {
+        if (!li.matches(".rule"))
+          return;
+        let j = i + 1, any = false;
+        for (;j < rows.length && !rows[j].matches(".rule"); j++)
+          any ||= !rows[j].hidden;
+        li.hidden = !any;
+      });
+      const items = rows.filter((li) => !li.matches(".rule"));
+      list.classList.toggle("filtering", !!q);
+      this.root.querySelector("[part=count]").textContent = q ? `showing ${items.filter((li) => !li.hidden).length} of ${items.length}` : "";
+      this.root.querySelector("[part=clear]").hidden = !q;
+    }
+    #click(e) {
+      const t = e.target;
+      const img = t.closest("img");
+      if (img) {
+        this.#lightbox.show(img.getAttribute("src"), JSON.parse(img.closest("[part=detail]").dataset.images));
+        return;
+      }
+      const d = t.closest("button")?.dataset;
+      if (!d)
+        return;
+      const it = (i) => idOf(this.sorter.list.items[Number(i)]);
+      if (d.toggle) {
+        if (!this.#open.delete(it(d.toggle)))
+          this.#open.add(it(d.toggle));
+        this.render();
+      } else if (d.edit)
+        this.fire("pairwise-edit", { index: Number(d.edit) });
+      else if (d.bench)
+        this.sorter.bench([it(d.bench)]);
+    }
+  };
+});
+
+// dist/element/tiers.js
+var style10, tiersOf = (p, w) => p.map((tag, i) => ({ tag, weight: w[i] })), PairwiseTiers, PairwiseWeights;
+var init_tiers = __esm(() => {
+  init_base();
+  style10 = css(`
+  ol { list-style: none; padding: 0; margin: 10px 0; }
+  li { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--pw-border); }
+  li .n { color: var(--pw-accent); min-width: 1.6em; font-variant-numeric: tabular-nums; }
+  li [part=name] { flex: 1; }
+  li button { padding: 2px 9px; font-size: 12px; }
+  .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  [part=summary] { color: var(--pw-text); }
+  input[type=number] { width: 5.5em; }
+`);
+  PairwiseTiers = class PairwiseTiers extends PairwiseElement {
+    constructor() {
+      super();
+      this.root.innerHTML = `
+      <p class="muted">Tier order — <span part="summary">off</span></p>
+      <p part="untagged" class="muted" hidden>Tag items to use tiers: a higher tier then outranks a lower one without being asked.</p>
+      <ol part="list"></ol>
+      <div class="row"><select part="add-tag" aria-label="Tag to add as a tier"></select><button part="add">Add tier</button></div>
+      <p part="overrides" class="banner" hidden><span></span><button title="Forget those answers and let the tier order decide those pairs">Drop them</button></p>`;
+      const $ = (p) => this.root.querySelector(`[part=${p}]`);
+      $("add").onclick = () => this.#set((t) => [...t, { tag: $("add-tag").value }]);
+      $("overrides").querySelector("button").onclick = () => this.sorter.dropOverrides();
+      $("list").onclick = (e) => {
+        const b = e.target.closest("button");
+        if (!b)
+          return;
+        const i = Number(b.dataset.i);
+        if (b.dataset.move)
+          this.#set((t) => {
+            const j = i + Number(b.dataset.move);
+            [t[i], t[j]] = [t[j], t[i]];
+            return t;
+          });
+        else
+          this.#set((t) => t.filter((_, k) => k !== i));
+      };
+    }
+    styles() {
+      return [style10];
+    }
+    render() {
+      const $ = (p) => this.root.querySelector(`[part=${p}]`);
+      const s = this.sorter, priority = s?.list.priority ?? [], tags = s?.tags() ?? [];
+      $("summary").textContent = priority.length ? priority.map((t) => "#" + t).join(" › ") : "off";
+      $("untagged").hidden = !s || tags.length > 0;
+      $("list").innerHTML = priority.map((t, i) => `<li part="tier">
+      <span class="n">${i + 1}</span><span part="name">#${esc(t)}</span>
+      <button part="up" data-i="${i}" data-move="-1" ${i === 0 ? "disabled" : ""} aria-label="Move ${esc(t)} up">↑</button>
+      <button part="down" data-i="${i}" data-move="1" ${i === priority.length - 1 ? "disabled" : ""} aria-label="Move ${esc(t)} down">↓</button>
+      <button part="remove" data-i="${i}" aria-label="Remove tier ${esc(t)}">✕</button></li>`).join("");
+      const free = tags.filter((t) => !priority.includes(t));
+      $("add-tag").innerHTML = free.map((t) => `<option value="${esc(t)}">#${esc(t)}</option>`).join("");
+      $("add").disabled = !free.length;
+      const over = s?.overrides().length ?? 0;
+      $("overrides").hidden = !over;
+      $("overrides").querySelector("span").textContent = `${over} answer${over === 1 ? " of yours overrides" : "s of yours override"} the tier order — yours win.`;
+    }
+    #set(edit) {
+      const l = this.sorter.list;
+      this.sorter.setPriority(edit(tiersOf(l.priority, l.weights)));
+    }
+  };
+  PairwiseWeights = class PairwiseWeights extends PairwiseElement {
+    constructor() {
+      super();
+      this.root.innerHTML = `
+      <div part="combine" class="row"><span class="muted">Combine tiers by</span>
+        <label><input part="order" type="radio" name="combine" value="order"> Strict order</label>
+        <label><input part="weights" type="radio" name="combine" value="weights"> Weights</label></div>
+      <p part="note" class="muted"></p>
+      <ol part="list"></ol>`;
+      this.root.querySelector("[part=combine]").onchange = (e) => this.sorter.setCombine(e.target.value);
+      this.root.querySelector("[part=list]").onchange = (e) => {
+        const input = e.target, l = this.sorter.list;
+        const tiers = tiersOf(l.priority, l.weights);
+        tiers[Number(input.dataset.i)] = { tag: l.priority[Number(input.dataset.i)], weight: Number(input.value) };
+        this.sorter.setPriority(tiers);
+      };
+    }
+    styles() {
+      return [style10];
+    }
+    render() {
+      const $ = (p) => this.root.querySelector(`[part=${p}]`);
+      const l = this.sorter?.list, priority = l?.priority ?? [], weighted = l?.combine === "weights";
+      $("combine").hidden = !priority.length;
+      $("order").checked = !weighted;
+      $("weights").checked = weighted;
+      $("note").textContent = !priority.length ? "Add tiers first — weights say how much each tier counts." : weighted ? "Every tier contributes in proportion to its weight, so a lower tier's best item can outrank a higher tier's worst. Position within a tier is scored by rank-order centroid, the fairest reading of an order when order is all you gave." : "A higher tier beats a lower one outright, whatever the items are.";
+      $("list").innerHTML = weighted ? priority.map((t, i) => `<li><span part="name">#${esc(t)}</span>
+      <input part="weight" type="number" min="0.1" step="0.1" data-i="${i}" value="${l.weights[i]}" aria-label="Weight for ${esc(t)}"></li>`).join("") : "";
+    }
+  };
+});
+
+// dist/element/console.js
+function installConsole(el, name = "pairwiseSorter") {
+  const s = () => el.sorter;
+  const items = () => s().list.items;
+  const find = (title) => {
+    const hits = items().flatMap((it, i) => it.title === title ? [i] : []);
+    if (hits.length === 1)
+      return hits[0];
+    if (!hits.length)
+      throw new Error(`no item titled ${JSON.stringify(title)}`);
+    throw new Error(`${hits.length} items are titled ${JSON.stringify(title)} — titles must be unique to address one`);
+  };
+  const state = () => {
+    const sorter2 = s(), q = sorter2.question, screen = el.screen;
+    const asking = q && screen === "compare";
+    return {
+      list: sorter2.list.name,
+      screen,
+      paused: el.paused,
+      items: items().length,
+      active: sorter2.live().length,
+      benched: sorter2.benchedItems().map((i) => i.title),
+      answered: sorter2.list.log.length,
+      estimatedTotal: sorter2.budget(),
+      placed: sorter2.ranking().length,
+      complete: sorter2.complete,
+      pending: asking ? { a: pub(items()[q.a]), b: pub(items()[q.b]) } : null,
+      conflicts: sorter2.comparisons().filter((c) => c.why).length,
+      priority: [...sorter2.list.priority],
+      weights: [...sorter2.list.weights],
+      combine: sorter2.list.combine,
+      tierOverrides: sorter2.overrides().length,
+      tags: sorter2.tags(),
+      ranking: sorter2.ranking().map((r) => r.item.title)
+    };
+  };
+  const settled = async (work) => {
+    await work;
+    await s().settled();
+    return state();
+  };
+  const setItems = (next) => {
+    s().setItems(next);
+    el.goto("compare");
+    return settled();
+  };
+  const api = {
+    version: "2",
+    help: () => HELP,
+    state,
+    ranking: () => s().ranking().map((r) => ({ rank: r.rank, tied: r.tied, ...pub(r.item) })),
+    comparisons: () => s().comparisons().map((c) => ({ index: c.index, a: c.a, b: c.b, verdict: c.verdict, conflicts: !!c.why, why: c.why })),
+    conflicts: () => api.comparisons().filter((c) => c.conflicts),
+    lists: () => Object.entries(el.library.lists).map(([id, l]) => ({
+      id,
+      name: l.name,
+      items: l.items.length,
+      answered: l.log.length,
+      current: id === el.library.current
+    })),
+    placement: () => s().placement(),
+    newList: (listName) => settled(el.newList(listName)),
+    openList: (ref) => settled(el.openList(resolveList(el.library, ref))),
+    renameList: (listName) => settled(el.renameList(String(listName))),
+    deleteList: (ref) => settled(el.deleteList(ref === undefined ? el.library.current : resolveList(el.library, ref))),
+    load(list, { name: listName, replace = true } = {}) {
+      const next = asItems(list);
+      if (!next.length)
+        throw new Error("no items given");
+      const all = replace ? next : [...items(), ...next];
+      if (all.length < 2)
+        throw new Error("need at least 2 items in the list");
+      if (listName)
+        el.renameList(listName);
+      return setItems(all);
+    },
+    addItems: (list) => api.load(list, { replace: false }),
+    setItemsText: (text) => setItems(parseItems(String(text))),
+    editItem: (title, patch) => settled(s().editItem(find(title), patch)),
+    tag: (title, tags) => api.editItem(title, { tags: [...items()[find(title)].tags, ...[tags].flat()] }),
+    untag(title, tags) {
+      const drop = new Set([tags].flat().map(tagOf));
+      return api.editItem(title, { tags: items()[find(title)].tags.filter((t) => !drop.has(t)) });
+    },
+    bench: (title) => api.benchMany([title]),
+    benchMany: (titles) => settled(s().bench(titles.map((t) => idOf(items()[find(t)])))),
+    subIn(title) {
+      const it = s().benchedItems().find((b) => b.title === title);
+      if (!it)
+        throw new Error(`${JSON.stringify(title)} is not benched`);
+      return settled(s().subIn(idOf(it)));
+    },
+    subAll: () => settled(s().subAll()),
+    priority: () => s().list.priority.map((tag, i) => ({ tag, weight: s().list.weights[i] })),
+    setPriority: (tiers) => settled(s().setPriority(tiers)),
+    combineBy: (mode) => settled(s().setCombine(mode)),
+    overrides: () => s().overrides(),
+    dropOverrides: () => settled(s().dropOverrides()),
+    answer(choice) {
+      const v = CHOICES[String(choice).toLowerCase()];
+      if (v === undefined)
+        throw new Error("answer expects 'a' | 'b' | 'equal'");
+      const screen = el.screen;
+      if (!s().question || screen === "setup" || screen === "import")
+        throw new Error("nothing is being asked right now — screen is " + screen);
+      return settled(s().answer(v));
+    },
+    undo: () => settled(s().undo()),
+    deleteComparison: (i) => settled(s().deleteAnswer(i)),
+    resetAnswers: () => settled(s().resetAnswers()),
+    resolve: () => s().resolve(),
+    pause() {
+      if (!el.pause())
+        throw new Error("nothing to pause — no question is open");
+      return settled();
+    },
+    resume() {
+      if (!el.resume())
+        throw new Error("nothing to resume");
+      return settled();
+    },
+    goto(screen) {
+      if (!["setup", "import", "compare", "done"].includes(screen))
+        throw new Error("unknown screen: " + screen);
+      el.goto(screen);
+      return settled();
+    },
+    tab(which) {
+      if (which !== "ranking" && which !== "comparisons")
+        throw new Error("tab expects 'ranking' or 'comparisons'");
+      el.tab(which);
+      return settled();
+    },
+    schema: () => SCHEMA,
+    exportJSON: () => el.exportJSON(),
+    async importJSON(data) {
+      const r = importList(typeof data === "string" ? JSON.parse(data) : data);
+      el.addList(r.list);
+      return { ...await settled(), imported: { items: r.count, comparisons: r.kept, skipped: r.skipped } };
+    }
+  };
+  globalThis[name] = api;
+  return api;
+}
+var HELP = `pairwiseSorter — rank a list by pairwise comparison. Every UI action has a method here.
+
+READ
+  help()               this text
+  state()              current list, screen, progress, the pair being asked, conflict count
+                       (readers are sync; every method that CHANGES something returns a
+                        Promise of the settled state — await it)
+  ranking()            [{rank, tied, title, url, media, desc, tags}] — final, or partial while sorting
+  comparisons()        [{index, a, b, verdict, conflicts, why}] every answer (verdict: -1 a, 1 b, 0 equal)
+  conflicts()          only the answers the ranking contradicts
+  lists()              [{id, name, items, answered, current}]
+  placement()          {placed, total, pct} — placed items are already final
+
+LISTS
+  newList(name?)  openList(ref)  renameList(name)  deleteList(ref?)   — ref is an id or a unique name
+
+ITEMS   item = string | {title, url?, media?: string[], desc?, tags?: string[]}
+  load(items, {name, replace=true})   set the list's items (the usual entry point)
+  addItems(items)      append; only new items get asked about (~log2(n) questions each)
+  setItemsText(text)   the same, in the text syntax (pipes / markdown links / #tags / JSON)
+  editItem(title, patch)   change {title, url, desc, media, tags}; a rename keeps its answers
+  tag(title, tags) / untag(title, tags)
+  bench(title) / benchMany(titles) / subIn(title) / subAll()
+
+TIERS
+  priority()  setPriority(tags | [{tag, weight}])  combineBy('order'|'weights')
+  overrides()  dropOverrides()
+
+ANSWERING
+  answer('a'|'b'|'equal')   also 'left' / 'right' / 'tie' / 'same'
+  undo()  deleteComparison(i)  resetAnswers()  resolve()
+
+VIEWS
+  pause() / resume()   goto('setup'|'import'|'compare'|'done')   tab('ranking'|'comparisons')
+
+DATA
+  schema()  exportJSON()  importJSON(data)
+
+NOTE: if an AI answers the questions, the ranking is the AI's preferences, not yours.`, CHOICES, pub = (it) => ({ title: it.title, url: it.url, media: it.media, desc: it.desc, tags: it.tags }), asItems = (list) => [list].flat().map(fromJSON).filter((x) => !!x);
+var init_console = __esm(() => {
+  init_parse();
+  init_store();
+  CHOICES = { a: -1, left: -1, b: 1, right: 1, equal: 0, tie: 0, same: 0 };
+});
+
+// dist/element/index.js
+var exports_element = {};
+__export(exports_element, {
+  theme: () => theme,
+  installConsole: () => installConsole,
+  PairwiseWeights: () => PairwiseWeights,
+  PairwiseTiers: () => PairwiseTiers,
+  PairwiseSorter: () => PairwiseSorter,
+  PairwiseRanking: () => PairwiseRanking,
+  PairwiseProgress: () => PairwiseProgress,
+  PairwiseLists: () => PairwiseLists,
+  PairwiseIo: () => PairwiseIo,
+  PairwiseElement: () => PairwiseElement,
+  PairwiseEditor: () => PairwiseEditor,
+  PairwiseConflicts: () => PairwiseConflicts,
+  PairwiseCompare: () => PairwiseCompare,
+  PairwiseBench: () => PairwiseBench
+});
+var define = (tag, cls) => customElements.get(tag) ?? customElements.define(tag, cls);
+var init_element = __esm(() => {
+  init_app();
+  init_bench();
+  init_compare();
+  init_conflicts();
+  init_editor();
+  init_io();
+  init_lists();
+  init_progress();
+  init_ranking();
+  init_tiers();
+  init_base();
+  init_console();
+  define("pairwise-bench", PairwiseBench);
+  define("pairwise-compare", PairwiseCompare);
+  define("pairwise-conflicts", PairwiseConflicts);
+  define("pairwise-editor", PairwiseEditor);
+  define("pairwise-io", PairwiseIo);
+  define("pairwise-lists", PairwiseLists);
+  define("pairwise-progress", PairwiseProgress);
+  define("pairwise-ranking", PairwiseRanking);
+  define("pairwise-tiers", PairwiseTiers);
+  define("pairwise-weights", PairwiseWeights);
+  define("pairwise-sorter", PairwiseSorter);
+});
+
+import { arrowMarkers, connect, labelBox, stepper, $, esc as esc2 } from "/_kit/viz.js";
+var pw = await Promise.resolve().then(() => (init_dist(), exports_dist));
+await Promise.resolve().then(() => (init_element(), exports_element));
+var COFFEES = [["Mocha", 4], ["Cold brew", 7], ["Latte", 3], ["Flat white", 8], ["Americano", 2], ["Cortado", 6], ["Drip", 1], ["Espresso", 5]];
+var better = (a, b) => COFFEES[a][1] > COFFEES[b][1] ? -1 : 1;
+var steps = [];
+var cur = null;
+await pw.sortIndices(COFFEES.map((_, i) => i), (a, b) => {
+  const v = better(a, b), ask = steps.at(-1);
+  const [lo, hi] = v < 0 ? [ask.lo, ask.mid] : [ask.mid + 1, ask.hi];
+  steps.push({ ...ask, kind: "answer", verdict: v, lo, hi, was: [ask.lo, ask.hi] });
+  return v;
+}, ({ placed, remaining }) => {
+  if (cur !== null)
+    steps.push({ kind: "place", placed, item: cur, at: placed.indexOf(cur) });
+  cur = remaining[0];
+  steps.push({ kind: "take", placed, item: cur });
+}, ({ out, lo, hi, mid }) => {
+  steps.push({ kind: "ask", placed: [...out], item: cur, lo, hi, mid });
+});
+var final = await pw.sortIndices(COFFEES.map((_, i) => i), better);
+steps.push({ kind: "place", placed: final, item: cur, at: final.indexOf(cur) });
+steps.push({ kind: "done", placed: final, item: null });
+var questions = steps.filter((s) => s.kind === "ask").length;
+var COL_X = 300;
+var COL_W = 230;
+var ROW = 58;
+var TOP = 40;
+var BOX_H = 44;
+var NEW_X = 640;
+var rowY = (k) => TOP + k * ROW;
+var svg = $("#howSvg");
+svg.innerHTML = `
+      <text x="${COL_X - 62}" y="${TOP + 27}" text-anchor="end" font-size="13" fill="var(--muted)">best</text>
+      <text x="${COL_X - 62}" y="${rowY(7) + 27}" text-anchor="end" font-size="13" fill="var(--muted)">worst</text>
+      <line x1="${COL_X - 50}" y1="${TOP + 8}" x2="${COL_X - 50}" y2="${rowY(7) + 36}" stroke="var(--border)" stroke-width="2" marker-end="url(#rk)"/>
+      <defs><marker id="rk" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,0 L5,10z" fill="var(--border)"/></marker></defs>
+      <rect class="band" id="band" x="${COL_X - 12}" y="0" width="${COL_W + 24}" height="10" rx="10"
+        fill="color-mix(in srgb, var(--warn) 16%, transparent)" stroke="var(--warn)" stroke-dasharray="5 4" data-viz-id="window" data-label="where the item could still go"/>
+      <line class="link" id="link" x1="${COL_X + COL_W}" x2="${NEW_X}" y1="0" y2="0" stroke="var(--warn)" stroke-width="2" stroke-dasharray="4 4"/>
+      ${COFFEES.map(([name], i) => `<g class="node" id="n${i}" data-viz-id="coffee-${i}" data-label="${esc2(name)}" style="opacity:0">
+        <rect width="${COL_W}" height="${BOX_H}" rx="9" stroke="var(--border)"/>
+        <text x="${COL_W / 2}" y="28" text-anchor="middle" font-size="16">${esc2(name)}</text>
+        <text class="rank" x="-18" y="28" text-anchor="end" font-size="13" fill="var(--muted)"></text></g>`).join("")}
+      <g class="badge" id="badge" style="opacity:0"><rect width="86" height="26" rx="13" fill="var(--good)"/>
+        <text x="43" y="18" text-anchor="middle" font-size="13" font-weight="700" fill="#04140a">✓ better</text></g>`;
+var node = (i) => svg.querySelector(`#n${i}`);
+var move = (el, x, y) => el.style.transform = `translate(${x}px, ${y}px)`;
+function drawHow(i) {
+  const st = steps[i];
+  const placed = st.placed, pos = new Map(placed.map((idx, k) => [idx, k]));
+  const inWindow = (k) => st.kind === "ask" || st.kind === "answer" ? k >= st.lo && k < st.hi : true;
+  COFFEES.forEach((_, c) => {
+    const el = node(c), rect = el.querySelector("rect"), label = el.querySelectorAll("text");
+    let x = NEW_X, y = rowY(0), op = 0, fill = "var(--panel-2)", ink = "var(--text)";
+    if (pos.has(c)) {
+      const k = pos.get(c);
+      x = COL_X;
+      y = rowY(k);
+      op = inWindow(k) || k === st.mid ? 1 : 0.35;
+      if ((st.kind === "ask" || st.kind === "answer") && k === st.mid) {
+        fill = "var(--warn)";
+        ink = "#1a1300";
+        op = 1;
+      }
+      label[1].textContent = `#${k + 1}`;
+    } else
+      label[1].textContent = "";
+    if (c === st.item && st.kind !== "place") {
+      x = NEW_X;
+      op = 1;
+      fill = "var(--accent)";
+      ink = "#06101d";
+      y = st.kind === "ask" || st.kind === "answer" ? rowY(st.mid) : rowY(0);
+    }
+    if (c === st.item && st.kind === "place") {
+      fill = "var(--accent)";
+      ink = "#06101d";
+    }
+    rect.style.fill = fill;
+    label[0].style.fill = ink;
+    el.style.opacity = op;
+    move(el, x, y);
+  });
+  const band = svg.querySelector("#band");
+  if (st.kind === "ask" || st.kind === "answer") {
+    const top = rowY(st.lo) - 7, h = Math.max(6, (st.hi - st.lo) * ROW - (ROW - BOX_H) + 14 - (st.hi === st.lo ? 14 : 0));
+    band.style.opacity = 1;
+    band.style.transform = `translateY(${st.hi === st.lo ? rowY(st.lo) - 10 : top}px) scaleY(1)`;
+    band.setAttribute("height", h);
+  } else
+    band.style.opacity = 0;
+  const link = svg.querySelector("#link"), badge = svg.querySelector("#badge");
+  const asking = st.kind === "ask" || st.kind === "answer";
+  link.style.opacity = asking ? 1 : 0;
+  link.style.transform = `translateY(${asking ? rowY(st.mid) + BOX_H / 2 : 0}px)`;
+  link.setAttribute("stroke", st.kind === "answer" ? "var(--good)" : "var(--warn)");
+  if (st.kind === "answer") {
+    const newWins = st.verdict < 0;
+    badge.style.opacity = 1;
+    move(badge, (newWins ? NEW_X + COL_W : COL_X + COL_W) + 10, rowY(st.mid) + 9);
+  } else
+    badge.style.opacity = 0;
+  const name = (k) => `<b>${esc2(COFFEES[k][0])}</b>`;
+  const slots = (lo, hi) => hi === lo ? `that settles it — its place is <b>#${lo + 1}</b>` : `it could still be anywhere from #${lo + 1} to #${hi + 1}, so it's asked again inside that range`;
+  $("#howSay").innerHTML = {
+    take: () => st.placed.length ? `Next up: ${name(st.item)}. It has to fit somewhere among the ${st.placed.length} already ranked.` : `${name(st.item)} goes first — there is nothing to compare it with yet.`,
+    ask: () => `Is ${name(st.item)} better than ${name(st.placed[st.mid])}? It's compared with the <b>middle</b> of the open range, so one answer halves it.`,
+    answer: () => st.verdict < 0 ? `<b>Yes</b> — ${name(st.item)} is better, so it goes <b>above</b> ${name(st.placed[st.mid])}: ${slots(st.lo, st.hi)}.` : `<b>No</b> — ${name(st.placed[st.mid])} is better, so ${name(st.item)} goes <b>below</b> it: ${slots(st.lo, st.hi)}.`,
+    place: () => `${name(st.item)} lands at <b>#${st.at + 1}</b>; everything under it moves down one.`,
+    done: () => `Done: 8 items ranked with <b>${questions}</b> questions. Asking about every pair would have taken 28.`
+  }[st.kind]();
+  $("#howAt").textContent = `step ${i + 1} / ${steps.length}`;
+}
+var how = stepper({ n: steps.length, onStep: drawHow, hashKey: "how", target: $("#howFig") });
+$("#howPrev").onclick = () => how.prev();
+$("#howNext").onclick = () => how.next();
+var playing = null;
+$("#howPlay").onclick = () => {
+  if (playing) {
+    clearInterval(playing);
+    playing = null;
+    $("#howPlay").textContent = "▶ Play";
+    return;
+  }
+  if (how.current === steps.length - 1)
+    how.go(0);
+  $("#howPlay").textContent = "❚❚ Pause";
+  playing = setInterval(() => {
+    if (how.current === steps.length - 1)
+      return $("#howPlay").click();
+    how.next();
+  }, 1300);
+};
+var cost = $("#costSvg");
+var CW = 1000;
+var CH = 360;
+var L = 70;
+var R = 20;
+var T = 20;
+var B = 40;
+var NMAX = 200;
+var xs = (n) => L + (n - 2) / (NMAX - 2) * (CW - L - R);
+var ys = (v) => CH - B - Math.log10(Math.max(v, 1)) / Math.log10(20000) * (CH - T - B);
+var series = [
+  { id: "pairs", color: "var(--danger)", f: (n) => n * (n - 1) / 2, label: "every pair" },
+  { id: "insert", color: "var(--accent)", f: (n) => pw.budgetFor(n), label: "binary insertion" },
+  { id: "add", color: "var(--good)", f: (n) => Math.ceil(Math.log2(n + 1)), label: "adding one item" }
+];
+function drawCost(n) {
+  let g = "";
+  for (const v of [1, 10, 100, 1000, 1e4])
+    g += `<line x1="${L}" x2="${CW - R}" y1="${ys(v)}" y2="${ys(v)}" stroke="var(--border)"/><text x="${L - 8}" y="${ys(v) + 4}" text-anchor="end" font-size="12" fill="var(--muted)">${v.toLocaleString()}</text>`;
+  for (const t of [2, 50, 100, 150, 200])
+    g += `<text x="${xs(t)}" y="${CH - B + 20}" text-anchor="middle" font-size="12" fill="var(--muted)">${t}</text>`;
+  g += `<text x="${(L + CW - R) / 2}" y="${CH - 4}" text-anchor="middle" font-size="12" fill="var(--muted)">items in the list (n)</text>`;
+  g += `<text transform="translate(16 ${(T + CH - B) / 2}) rotate(-90)" text-anchor="middle" font-size="12" fill="var(--muted)">questions asked</text>`;
+  for (const s of series) {
+    const d = Array.from({ length: NMAX - 1 }, (_, i) => i + 2).map((k, i) => `${i ? "L" : "M"}${xs(k).toFixed(1)},${ys(s.f(k)).toFixed(1)}`).join("");
+    g += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2.5" data-viz-id="line-${s.id}" data-label="${s.label}"/>`;
+    g += `<circle cx="${xs(n)}" cy="${ys(s.f(n))}" r="5" fill="${s.color}" data-viz-id="dot-${s.id}" data-label="${s.label} at n=${n}: ${s.f(n)}"/>`;
+  }
+  g += `<line x1="${xs(n)}" x2="${xs(n)}" y1="${T}" y2="${CH - B}" stroke="var(--muted)" stroke-dasharray="3 4"/>`;
+  cost.innerHTML = g;
+  const [p, ins, add] = series.map((s) => s.f(n));
+  $("#costOut").innerHTML = `n = <b>${n}</b>: every pair <b>${p.toLocaleString()}</b> · binary insertion at most <b>${ins}</b> (${Math.round(ins / p * 100)}%) · one more item <b>${add}</b>`;
+}
+$("#costN").oninput = (e) => drawCost(+e.target.value);
+drawCost(30);
+var CORE = [
+  ["item", "item · parse", "One item model — {title, url, media, desc, tags} — and every way to type it.", ["item()", "idOf()", "parseItems()", "toText()", "isMedia()"]],
+  ["engine", "engine", "The decision log, tiers and the binary-insertion sort. createEngine() is the minimal API viz uses.", ["createEngine()", "sortIndices()", "tieClasses()", "findConflicts()", "migrateId()"]],
+  ["analysis", "analysis", "Reads the log and derives things to show; never picks the next question.", ["weightedOrder()", "minimiseDisagreements()", "tierOverrides()", "tieredBudget()", "rankRows()"]],
+  ["store", "store", "Saved lists, migrations that keep old data loading, the export format, and an optional localStorage helper.", ["localStore()", "migrate()", "importList()", "exportList()", "addList()"]],
+  ["sorter", "Sorter", "The live session every element drives: the open question, answers, bench, edits, tiers, resolve — and events.", ["question", "answer()", "undo()", "bench()", "editItem()", "setPriority()", "resolve()"]]
+];
+var ELS = [
+  ["compare", "<pairwise-compare>", "The question: two cards with media, Choose and Equal, keyboard shortcuts, a lightbox. renderItem(item, box) draws items your way.", ["no-keyboard", "renderItem", "pairwise-edit"]],
+  ["progress", "<pairwise-progress>", "Answers against the worst case, items placed, and an offer to stop once half are placed.", ["pairwise-stop"]],
+  ["ranking", "<pairwise-ranking>", "The ranking with shared ranks for ties, tier rules, expandable rows and a title filter.", ["pairwise-edit"]],
+  ["conflicts", "<pairwise-conflicts>", "Every answer, deletable; contradicted ones flagged; Resolve reorders to contradict as few as possible.", []],
+  ["tiers", "<pairwise-tiers>", "Declare tags as tiers so cross-tier pairs are never asked.", []],
+  ["weights", "<pairwise-weights>", "Combine tiers strictly, or by weight so a lower tier's best can outrank a higher tier's worst.", []]
+];
+var APP = [
+  ["app", "<pairwise-sorter>", 'The whole app: several lists, items as text, the questions, the results, tiers, the bench and an editor. In memory, or storage-key="…" for localStorage.', ["storage-key", ".library", "pairwise-change"]],
+  ["console", "installConsole()", "Puts a scripting API on window, so DevTools or an agent can drive the app without clicking.", ["pairwiseSorter.help()"]]
+];
+var boxes = new Map;
+var col = (list, x, y0, w, h, gap) => list.forEach(([id, label], i) => boxes.set(id, { x, y: y0 + i * (h + gap), w, h, label }));
+col(CORE, 20, 50, 170, 56, 24);
+col(ELS, 265, 50, 190, 44, 22);
+col(APP, 510, 150, 170, 56, 40);
+var all = [...CORE, ...ELS, ...APP];
+var archOut = arrowMarkers({ ah: "var(--muted)" });
+archOut += `<text class="col" x="20" y="30">core · Node + browser</text><text class="col" x="265" y="30">elements</text><text class="col" x="510" y="130">whole app</text>`;
+var frame = { x: 250, y: 38, w: 220, h: 398 };
+archOut += `<rect class="frame" x="${frame.x}" y="${frame.y}" width="${frame.w}" height="${frame.h}"/>`;
+archOut += `<path class="edge" d="${connect(boxes.get("sorter"), frame)}" marker-end="url(#ah)"/>`;
+archOut += `<path class="edge" d="${connect(frame, boxes.get("app"))}" marker-end="url(#ah)"/>`;
+archOut += `<path class="edge" d="${connect(boxes.get("app"), boxes.get("console"))}" marker-end="url(#ah)"/>`;
+for (const [id] of all) {
+  const b = boxes.get(id);
+  archOut += `<g class="box" data-id="${id}" data-viz-id="arch-${id}" data-label="${esc2(b.label)}" tabindex="0" role="button"><rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}"/>${labelBox(b, esc2(b.label))}</g>`;
+}
+$("#archSvg").innerHTML = archOut;
+var showDetail = (id) => {
+  const [, label, what, api] = all.find((e) => e[0] === id);
+  $("#detail").innerHTML = `<h3>${esc2(label)}</h3><p>${esc2(what)}</p>${api.length ? `<p>${api.map((a) => `<code>${esc2(a)}</code>`).join(" ")}</p>` : ""}<p class="muted"><a href="../api/">Full reference →</a></p>`;
+  for (const g of document.querySelectorAll(".arch .box"))
+    g.classList.toggle("on", g.dataset.id === id);
+};
+$("#archSvg").addEventListener("click", (e) => {
+  const g = e.target.closest(".box");
+  if (g)
+    showDetail(g.dataset.id);
+});
+$("#archSvg").addEventListener("keydown", (e) => {
+  const g = e.target.closest(".box");
+  if (g && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault();
+    showDetail(g.dataset.id);
+  }
+});
+showDetail("sorter");
+var SAMPLE = ["Flat white", "Cold brew", "Mocha", "Cortado", "Espresso", "Chai"];
+var live;
+var start = () => {
+  live = new pw.Sorter({ ...pw.emptyList("Coffee"), items: SAMPLE.map((t) => pw.item(t)) });
+  for (const id of ["liveCompare", "liveProgress", "liveRanking"])
+    document.getElementById(id).sorter = live;
+};
+$("#liveReset").onclick = start;
+start();
+hljs.highlightAll();
+</script>
+<a id="__viz_dl" href="#" role="button" aria-label="Save a copy of this page"
+title="Save a copy" style="position:fixed;bottom:14px;right:14px;z-index:2147483646;
+width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+border-radius:8px;background:rgba(20,20,22,.55);color:#fff;opacity:.35;
+backdrop-filter:blur(4px);transition:opacity .15s;text-decoration:none"
+onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.35">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/>
+<line x1="12" y1="15" x2="12" y2="3"/></svg></a>
+<script>(function(){
+  var a=document.getElementById("__viz_dl");
+  var name=(document.title||"visualization").toLowerCase()
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"visualization";
+  var plain="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
+  function save(text){
+    var url=URL.createObjectURL(new Blob([text],{type:"text/html"}));
+    var t=document.createElement("a"); t.href=url; t.download=name+".html";
+    document.body.appendChild(t); t.click(); t.remove();
+    setTimeout(function(){URL.revokeObjectURL(url);},1000);
+  }
+  a.addEventListener("click",function(e){
+    e.preventDefault();
+    fetch(location.href).then(function(r){return r.text();})
+      .then(function(t){ save(t.indexOf("staticrypt"+"Config")>0?plain:t); })
+      .catch(function(){ save(plain); });
+  });
+})();</script>
+</body>
+</html>
