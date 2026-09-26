@@ -1,7 +1,7 @@
 {
   "name": "@rascaltwo/pairwise-sorter",
   "version": "0.1.0",
-  "description": "Rank anything by answering \"which is better?\" one pair at a time — a logic core and web components.",
+  "description": "Rank anything by answering \"which is better?\" one pair at a time \u2014 a logic core and web components.",
   "license": "MIT",
   "type": "module",
   "repository": "github:RascalTwo/pairwise-sorter",
@@ -11,10 +11,13 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "sideEffects": false,
   "scripts": {
-    "prepare": "tsc -p tsconfig.build.json",
+    "prepare": "if command -v tsc >/dev/null; then tsc -p tsconfig.build.json; else bunx -p typescript@7 tsc -p tsconfig.build.json; fi",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "bun test --coverage"
