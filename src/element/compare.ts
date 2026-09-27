@@ -8,14 +8,16 @@ const PER_PAGE = 4;
 const SIDES = ["a", "b"] as const;
 
 const style = css(`
-  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  /* minmax(0, …): a 1fr track never shrinks below its longest word, so one long URL a host draws
+     would take the other card's width. */
+  .duel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .card { position: relative; background: var(--pw-panel); border: 2px solid var(--pw-border); border-radius: 12px;
           padding: 48px 24px 24px; min-height: 180px; display: flex; flex-direction: column; align-items: center;
-          gap: 14px; text-align: center; }
+          gap: 14px; text-align: center; overflow-wrap: anywhere; }
   .card:has(.choose:hover) { border-color: var(--pw-accent); }
   .body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; width: 100%; }
-  .title { font-size: 20px; line-height: 1.4; overflow-wrap: anywhere; }
-  .desc { font-size: 13px; color: var(--pw-muted); overflow-wrap: anywhere; }
+  .title { font-size: 20px; line-height: 1.4; }
+  .desc { font-size: 13px; color: var(--pw-muted); }
   .media { display: grid; gap: 8px; width: 100%; justify-items: center; align-items: center; }
   .media.many { grid-template-columns: 1fr 1fr; }
   .media img, .media video { max-height: min(340px, 34vh); }

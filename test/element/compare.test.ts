@@ -250,6 +250,18 @@ describe("<pairwise-compare>", () => {
     await close(page);
   });
 
+  it("should keep the two cards the same width when a host draws a long unbroken word", async () => {
+    // GIVEN a host that draws one item with a long URL and no spaces
+    const page = await compare([["a"], ["b"]], `el.style.width = "600px";
+      el.renderItem = (it, box) => { box.innerHTML = it.title === "a" ? "<a href='#'>https://example.com/" + "x".repeat(120) + "</a>" : "short"; };`);
+    // WHEN the cards render
+    const sizes = await page.$$eval("pairwise-compare >>> [part~=card]", (cs) => cs.map((c) => [c.clientWidth, c.scrollWidth]));
+    // THEN they share the width evenly and nothing spills out of either
+    expect(sizes[0][0]).toBe(sizes[1][0]);
+    for (const [client, scroll] of sizes) expect(scroll).toBeLessThanOrEqual(client);
+    await close(page);
+  });
+
   it("should preload the images of pairs that may be asked next", async () => {
     // GIVEN items whose images are only fetched once needed
     const page = await compare([], "");
