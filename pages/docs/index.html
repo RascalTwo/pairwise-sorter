@@ -736,7 +736,7 @@ installConsole(document.querySelector("pairwise-sorter"));
     // ── 3. architecture ──────────────────────────────────────────────────
     const CORE = [
       ["item", "item · parse", "One item model — {title, url, media, desc, tags} — and every way to type it.", ["item()", "idOf()", "parseItems()", "toText()", "isMedia()"]],
-      ["engine", "engine", "The decision log, tiers and the binary-insertion sort. createEngine() is the minimal API viz uses.", ["createEngine()", "sortIndices()", "tieClasses()", "findConflicts()", "migrateId()"]],
+      ["engine", "engine", "The decision log, tiers and the binary-insertion sort. createEngine() is the minimal API viz uses; replay() and retireLog() are the synchronous, pure versions a scheduler can call.", ["createEngine()", "replay()", "retireLog()", "sortIndices()", "tieClasses()", "findConflicts()", "migrateId()"]],
       ["analysis", "analysis", "Reads the log and derives things to show; never picks the next question.", ["weightedOrder()", "minimiseDisagreements()", "tierOverrides()", "tieredBudget()", "rankRows()"]],
       ["store", "store", "Saved lists, migrations that keep old data loading, the export format, and an optional localStorage helper.", ["localStore()", "migrate()", "importList()", "exportList()", "addList()"]],
       ["sorter", "Sorter", "The live session every element drives: the open question, answers, bench, edits, tiers, resolve — and retire(), which removes finished items without re-asking anything. Plus events.", ["question", "answer()", "undo()", "bench()", "retire()", "editItem()", "setPriority()", "resolve()"]],
@@ -822,4 +822,4 @@ stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="tru
 </body>
 </html>
 
-<!-- docs-source-sha256: 5aefeff1f50d13a3b643488cfe407edbc0c759a317b23839fc925b76005f8ab5 -->
+<!-- docs-source-sha256: 0b448e17db87012cacb9df28d77ac9152e308606085fec9cb35688a7ea959e25 -->

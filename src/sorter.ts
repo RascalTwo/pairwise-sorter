@@ -11,7 +11,7 @@ import {
   type RankRow,
 } from "./analysis.ts";
 import {
-  findConflicts, flipOfIds, migrateId, orient, pairKeyOf, sortIndices, tieClasses, tierVerdict, type Combine, type LogEntry,
+  findConflicts, flipOfIds, migrateId, orient, pairKeyOf, retireLog, sortIndices, tierVerdict, type Combine, type LogEntry,
   type Verdict,
 } from "./engine.ts";
 import { idOf, idParts, item, SEP, tagOf, type Item } from "./item.ts";
@@ -53,8 +53,6 @@ export class Sorter extends EventTarget {
   #finished = false;
   #quiet = false;
   #waiters: (() => void)[] = [];
-  /** The order before a `retire`, used to answer pairs it already settles. Cleared on any other change. */
-  #fill: { pos: Map<string, number>; tie: (id: string) => string } | null = null;
 
   constructor(list: List = emptyList("Untitled")) {
     super();
@@ -133,15 +131,14 @@ export class Sorter extends EventTarget {
     const l = this.list, have = new Set(l.items.map(idOf));
     const missing = ids.find((id) => !have.has(id));
     if (missing !== undefined) throw new Error(`no item with id ${missing}`);
-    const pos = new Map(this.#partial.placed.map((i, n) => [idOf(l.items[i]), n]));
-    const tie = tieClasses(l.items, l.log);
     const gone = new Set(ids);
     return this.#change(() => {
+      // Over the items being sorted: a benched item is out of the order, so it settles nothing.
+      l.log = retireLog(this.live().map((i) => l.items[i]!), l.log, ids, l.priority);
       l.items = l.items.filter((it) => !gone.has(idOf(it)));
       l.log = l.log.filter(([k]) => !k.split(SEP).some((id) => gone.has(id)));
       l.benched = l.benched.filter((id) => !gone.has(id));
       this.#pruneTiers();
-      this.#fill = { pos, tie };
     });
   }
 
@@ -302,7 +299,6 @@ export class Sorter extends EventTarget {
   }
 
   #change(mutate: () => void): Promise<void> {
-    this.#fill = null;
     mutate();
     // Run first: it clears the old question synchronously, so a listener rendering on
     // `change` never sees indices into items that have just gone.
@@ -369,13 +365,6 @@ export class Sorter extends EventTarget {
     if (known !== undefined) return orient(known, flip);
     const tier = tierVerdict(items[a]!, items[b]!, this.list.priority);
     if (tier !== null) return tier;
-    const fill = this.#fill, pa = fill?.pos.get(ia), pb = fill?.pos.get(ib);
-    if (fill && pa !== undefined && pb !== undefined) {
-      const v: Verdict = fill.tie(ia) === fill.tie(ib) ? 0 : pa < pb ? -1 : 1;
-      this.#answers.set(k, orient(v, flip));
-      this.list.log.push([k, orient(v, flip), true]);
-      return v;
-    }
     return new Promise((resolve) => {
       this.#pending = (v) => {
         const stored = orient(v, flip);

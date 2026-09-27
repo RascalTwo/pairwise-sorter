@@ -216,3 +216,57 @@ export function createEngine(input: EngineInput = {}) {
   };
 }
 export type Engine = ReturnType<typeof createEngine>;
+
+/**
+ * The order a set of answers already settles — synchronously, asking nobody. Binary insertion
+ * replays the log (and the tiers) and stops at the first pair neither settles: `order` is what
+ * got placed, `unplaced` the rest, `next` the pair that would be asked. For code that must be
+ * pure and synchronous, like a scheduler, rather than waiting on a person.
+ */
+export function replay(items: readonly Item[], log: readonly LogEntry[], priority: readonly string[] = []) {
+  const answers = new Map(log.map(([k, v]) => [k, v]));
+  const settled = (a: number, b: number): Verdict | null => {
+    const ia = idOf(items[a]), ib = idOf(items[b]);
+    const known = answers.get(pairKeyOf(ia, ib));
+    if (known !== undefined) return orient(known, flipOfIds(ia, ib));
+    return tierVerdict(items[a]!, items[b]!, priority);
+  };
+  const order: number[] = [];
+  for (let n = 0; n < items.length; n++) {
+    let lo = 0, hi = order.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1, v = settled(n, order[mid]!);
+      if (v === null) return { order, unplaced: items.map((_, i) => i).slice(n), next: [n, order[mid]!] as [number, number] };
+      if (v < 0) hi = mid; else lo = mid + 1;
+    }
+    order.splice(lo, 0, n);
+  }
+  return { order, unplaced: [] as number[], next: null as [number, number] | null };
+}
+
+/**
+ * The log after `ids` leave for good (finished work, say), without anything to re-ask: their
+ * answers are dropped, and every pair the order before the removal already settles is filled in
+ * as an implied answer, so replaying the rest gives the same order. Ties stay ties. Pairs the old
+ * order had not settled (items it had not placed) are left to be asked.
+ */
+export function retireLog(items: readonly Item[], log: readonly LogEntry[], ids: readonly string[], priority: readonly string[] = []): LogEntry[] {
+  if (!ids.length) return [...log];
+  const before = replay(items, log, priority);
+  const pos = new Map(before.order.map((i, n) => [idOf(items[i]), n]));
+  const tie = tieClasses(items, log);
+  const gone = new Set(ids);
+  const rest = items.filter((it) => !gone.has(idOf(it)));
+  const out = log.filter(([k]) => !k.split(SEP).some((id) => gone.has(id)));
+  // Replay the survivors, answering each unsettled pair from the old order while it can.
+  let next = replay(rest, out, priority).next;
+  while (next) {
+    const ia = idOf(rest[next[0]]), ib = idOf(rest[next[1]]);
+    const pa = pos.get(ia), pb = pos.get(ib);
+    if (pa === undefined || pb === undefined) break;
+    const v: Verdict = tie(ia) === tie(ib) ? 0 : pa < pb ? -1 : 1;
+    out.push([pairKeyOf(ia, ib), orient(v, flipOfIds(ia, ib)), true]);
+    next = replay(rest, out, priority).next;
+  }
+  return out;
+}

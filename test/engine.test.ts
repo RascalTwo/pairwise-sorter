@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { budgetFor, createEngine, findConflicts, flipOfIds, idOf, item, migrateId, pairKeyOf, SEP, tieClasses, tierName, tierOf, tierVerdict, type Verdict } from "../src/index.ts";
+import { budgetFor, createEngine, findConflicts, replay, retireLog, flipOfIds, idOf, item, migrateId, pairKeyOf, SEP, tieClasses, tierName, tierOf, tierVerdict, type Verdict } from "../src/index.ts";
 
 const alphabetical = ["e", "c", "a", "d", "b"].map((t) => item(t, "u" + t));
 // An `ask` that records how often it was called.
@@ -249,5 +249,67 @@ describe("engine bookkeeping", () => {
     const out = migrateId(log, undefined, "a", "a");
     // THEN nothing changes
     expect(out).toEqual([[pairKeyOf("a", "b"), 1]]);
+  });
+});
+
+describe("replay (synchronous)", () => {
+  const ids = (xs: { title: string }[]) => xs.map((x) => x.title);
+
+  it("should give the order the answers already settle, and the first pair they do not", async () => {
+    // GIVEN c, b, d, a sorted alphabetically by an engine
+    const items = ["c", "b", "d", "a"].map((t) => item(t));
+    const eng = createEngine({ items });
+    await eng.run(byTitle(items));
+    // WHEN the full log is replayed
+    const full = replay(items, eng.state.log);
+    // THEN every item is placed in the same order, with nothing left to ask
+    expect(ids(full.order.map((i) => items[i]!))).toEqual(["a", "b", "c", "d"]);
+    expect([full.unplaced, full.next]).toEqual([[], null]);
+    // WHEN only the first two answers are replayed
+    const part = replay(items, eng.state.log.slice(0, 2));
+    // THEN it stops at the first unanswered pair, naming it
+    expect(part.unplaced.length).toBeGreaterThan(0);
+    expect(part.next).not.toBeNull();
+    expect(part.order.length + part.unplaced.length).toBe(4);
+  });
+
+  it("should settle cross-tier pairs from tiers without any answer", () => {
+    // GIVEN one top and one low item and no answers
+    const items = [item("lo", "", [], "", ["low"]), item("hi", "", [], "", ["top"])];
+    // WHEN replayed with tiers
+    // THEN the tier order is the order
+    expect(ids(replay(items, [], ["top", "low"]).order.map((i) => items[i]!))).toEqual(["hi", "lo"]);
+  });
+});
+
+describe("retireLog (synchronous)", () => {
+  it("should drop retired items' answers and fill in, as implied, every pair the old order settles", async () => {
+    // GIVEN c, b, d, a, e sorted — c was everyone's stepping stone
+    const items = ["c", "b", "d", "a", "e"].map((t) => item(t));
+    const eng = createEngine({ items });
+    await eng.run(byTitle(items));
+    const c = idOf(items[0]);
+    // WHEN c is retired from the log
+    const rest = items.slice(1);
+    const log = retireLog(items, eng.state.log, [c]);
+    // THEN no answer mentions c, some answers are implied, and the rest replay in the old order with nothing to ask
+    expect(log.some(([k]) => k.includes(c))).toBe(false);
+    expect(log.some((e) => e[2] === true)).toBe(true);
+    const r = replay(rest, log);
+    expect(r.order.map((i) => rest[i]!.title)).toEqual(["a", "b", "d", "e"]);
+    expect(r.next).toBeNull();
+  });
+
+  it("should leave answers alone when nothing needs filling, and keep ties tied", () => {
+    // GIVEN a = b = c through b, and an unrelated retire of nothing
+    const items = ["a", "b", "c"].map((t) => item(t));
+    const [a, b, c] = items.map(idOf) as [string, string, string];
+    const log: [string, Verdict][] = [[pairKeyOf(a, b), 0], [pairKeyOf(b, c), 0]];
+    // WHEN nothing is retired
+    // THEN the log is unchanged
+    expect(retireLog(items, log, [])).toEqual(log);
+    // WHEN b is retired
+    // THEN a and c are tied by an implied answer
+    expect(retireLog(items, log, [b])).toEqual([[pairKeyOf(a, c), 0, true]]);
   });
 });
