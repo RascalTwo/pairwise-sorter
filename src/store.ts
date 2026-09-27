@@ -134,7 +134,8 @@ export interface ExportPayload {
   weights: number[];
   combine: Combine;
   benched: ItemRef[];
-  comparisons: { a: ItemRef; b: ItemRef; verdict: Verdict }[];
+  /** `implied` marks an answer filled in from an earlier order, not given (see `Sorter.retire`). */
+  comparisons: { a: ItemRef; b: ItemRef; verdict: Verdict; implied?: true }[];
   /** Titles best first — a convenience for humans, ignored on import. */
   ranking: string[];
 }
@@ -154,9 +155,9 @@ export function exportList(list: List, ranking: string[] = []): ExportPayload {
     weights: list.weights,
     combine: list.combine,
     benched: list.benched.map(ref),
-    comparisons: list.log.map(([k, verdict]) => {
+    comparisons: list.log.map(([k, verdict, implied]) => {
       const [a = "", b = ""] = k.split(SEP);
-      return { a: ref(a), b: ref(b), verdict };
+      return { a: ref(a), b: ref(b), verdict, ...(implied ? { implied } : {}) };
     }),
     ranking,
   };
@@ -182,8 +183,9 @@ export function importList(data: unknown): { list: List; count: number; kept: nu
     const x = idOf(c?.a), y = idOf(c?.b);
     if (x === y || !kept.has(x) || !kept.has(y)) { skipped++; continue; }
     const v: Verdict = c.verdict > 0 ? 1 : c.verdict < 0 ? -1 : 0;
+    const implied: [] | [true] = c.implied === true ? [true] : [];
     // Re-normalise to the key's sorted order; the verdict flips with the operands.
-    log.push(x < y ? [x + SEP + y, v] : [y + SEP + x, orient(v, -1)]);
+    log.push(x < y ? [x + SEP + y, v, ...implied] : [y + SEP + x, orient(v, -1), ...implied]);
   }
   // `benched` since /2, `removed` in /1.
   const benched = [d.benched, d.removed].flatMap((a) => (Array.isArray(a) ? a : [])).map(idOf).filter((id) => kept.has(id));

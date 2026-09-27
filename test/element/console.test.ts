@@ -230,6 +230,19 @@ describe("installConsole", () => {
     await close(page);
   });
 
+  it("should retire finished items by title without asking anything", async () => {
+    // GIVEN a sorted list
+    const page = await withConsole();
+    await P(page, `P.load(["c", "b", "d", "a", "e"])`);
+    await answerAll(page);
+    // WHEN c is retired
+    const st = await P(page, `P.retire(["c"])`);
+    // THEN it is gone, nothing is pending, and the order holds
+    expect(st).toMatchObject({ items: 4, pending: null, ranking: ["a", "b", "d", "e"] });
+    expect((await P(page, "P.comparisons()")).some((c: any) => c.implied)).toBe(true);
+    await close(page);
+  });
+
   it("should install under pairwiseSorter by default", async () => {
     // GIVEN the API installed without a name
     const page = await open(`<pairwise-sorter></pairwise-sorter>`, `pwel.installConsole(document.querySelector("pairwise-sorter"));`);

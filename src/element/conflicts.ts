@@ -7,12 +7,14 @@ const style = css(`
   li [part=pair] { flex: 1; overflow-wrap: anywhere; }
   li.conflict { border-left: 3px solid var(--pw-warn); padding-left: 9px; }
   [part=why] { color: var(--pw-warn); font-size: 12px; }
+  [part=implied] { color: var(--pw-muted); font-size: 12px; border: 1px dashed var(--pw-border); border-radius: 999px; padding: 0 8px; }
   li button { padding: 3px 10px; font-size: 12px; }
   li button:hover { color: var(--pw-danger); border-color: var(--pw-danger); }
 `);
 
 /**
- * `<pairwise-conflicts>` — every answer you gave, newest last, each deletable. Answers the
+ * `<pairwise-conflicts>` — every answer you gave, newest last, each deletable; answers filled in
+ * by `retire` are labelled "implied". Answers the
  * ranking contradicts are flagged; Resolve reorders to contradict as few as possible.
  */
 export class PairwiseConflicts extends PairwiseElement {
@@ -62,6 +64,7 @@ export class PairwiseConflicts extends PairwiseElement {
       const pair = c.verdict === 0 ? [c.a.title, "=", c.b.title] : c.verdict < 0 ? [c.a.title, "›", c.b.title] : [c.b.title, "›", c.a.title];
       return `<li part="answer${c.why ? " conflict" : ""}" class="${c.why ? "conflict" : ""}" ${hit(c.a.title) || hit(c.b.title) ? "" : "hidden"}>
         <span part="pair">${pair.map(esc).join(" ")}</span>
+        ${c.implied ? `<span part="implied" title="Filled in from the earlier order when an item was retired — not something you answered">implied</span>` : ""}
         ${c.why ? `<span part="why">${esc(c.why)}</span>` : ""}
         <button part="delete" data-delete="${c.index}" title="Forget this answer — it will be asked again if the sort still needs it">delete</button>
       </li>`;

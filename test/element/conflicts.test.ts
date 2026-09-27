@@ -105,4 +105,20 @@ describe("<pairwise-conflicts>", () => {
     expect(await text(page, "pairwise-conflicts >>> [part=count]")).toBe("");
     await close(page);
   });
+
+  it("should label answers that were filled in rather than given", async () => {
+    // GIVEN c, b, d, a, e answered, then c retired
+    const page = await conflicts(["c", "b", "d", "a", "e"], []);
+    await page.evaluate(async () => {
+      const s = (window as any).s;
+      while (s.question) { const { a, b } = s.question; await s.answer(s.list.items[a].title < s.list.items[b].title ? -1 : 1); }
+      await s.retire([(window as any).pw.idOf(s.list.items[0])]);
+    });
+    // WHEN the answers render
+    const implied = await page.$$eval("pairwise-conflicts >>> [part~=answer]", (els) => els.map((e) => !!e.querySelector("[part=implied]")));
+    // THEN the filled-in ones carry the label, and the given ones do not
+    expect(implied.some(Boolean)).toBe(true);
+    expect(implied.every(Boolean)).toBe(false);
+    await close(page);
+  });
 });

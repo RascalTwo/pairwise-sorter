@@ -393,7 +393,7 @@ installConsole(document.querySelector("pairwise-sorter"));
       ["engine", "engine", "The decision log, tiers and the binary-insertion sort. createEngine() is the minimal API viz uses.", ["createEngine()", "sortIndices()", "tieClasses()", "findConflicts()", "migrateId()"]],
       ["analysis", "analysis", "Reads the log and derives things to show; never picks the next question.", ["weightedOrder()", "minimiseDisagreements()", "tierOverrides()", "tieredBudget()", "rankRows()"]],
       ["store", "store", "Saved lists, migrations that keep old data loading, the export format, and an optional localStorage helper.", ["localStore()", "migrate()", "importList()", "exportList()", "addList()"]],
-      ["sorter", "Sorter", "The live session every element drives: the open question, answers, bench, edits, tiers, resolve — and events.", ["question", "answer()", "undo()", "bench()", "editItem()", "setPriority()", "resolve()"]],
+      ["sorter", "Sorter", "The live session every element drives: the open question, answers, bench, edits, tiers, resolve — and retire(), which removes finished items without re-asking anything. Plus events.", ["question", "answer()", "undo()", "bench()", "retire()", "editItem()", "setPriority()", "resolve()"]],
     ];
     const ELS = [
       ["compare", "<pairwise-compare>", "The question: two cards with media, Choose and Equal, keyboard shortcuts, a lightbox. renderItem(item, box) draws items your way.", ["no-keyboard", "renderItem", "pairwise-edit"]],

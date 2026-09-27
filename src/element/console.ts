@@ -18,7 +18,7 @@ READ
                        (readers are sync; every method that CHANGES something returns a
                         Promise of the settled state — await it)
   ranking()            [{rank, tied, title, url, media, desc, tags}] — final, or partial while sorting
-  comparisons()        [{index, a, b, verdict, conflicts, why}] every answer (verdict: -1 a, 1 b, 0 equal)
+  comparisons()        [{index, a, b, verdict, implied, conflicts, why}] every answer (verdict: -1 a, 1 b, 0 equal)
   conflicts()          only the answers the ranking contradicts
   lists()              [{id, name, items, answered, current}]
   placement()          {placed, total, pct} — placed items are already final
@@ -34,6 +34,8 @@ ITEMS   item = string | {title, url?, media?: string[], desc?, tags?: string[]}
   tag(title, tags) / untag(title, tags)
   bench(title) / benchMany(titles) / subIn(title) / subAll()
   removeItem(title) / restoreItem(title)   the old names for bench / subIn
+  retire(titles)       remove finished items for good WITHOUT re-asking: answers they carried are
+                       filled in from the current order and marked implied
 
 TIERS
   priority()  setPriority(tags | [{tag, weight}])  combineBy('order'|'weights')
@@ -93,7 +95,7 @@ export function installConsole(el: PairwiseSorter, name = "pairwiseSorter") {
     help: () => HELP,
     state,
     ranking: () => s().ranking().map((r) => ({ rank: r.rank, tied: r.tied, ...pub(r.item) })),
-    comparisons: () => s().comparisons().map((c) => ({ index: c.index, a: c.a, b: c.b, verdict: c.verdict, conflicts: !!c.why, why: c.why })),
+    comparisons: () => s().comparisons().map((c) => ({ index: c.index, a: c.a, b: c.b, verdict: c.verdict, implied: c.implied, conflicts: !!c.why, why: c.why })),
     conflicts: () => api.comparisons().filter((c) => c.conflicts),
     lists: () => Object.entries(el.library.lists).map(([id, l]) => ({
       id, name: l.name, items: l.items.length, answered: l.log.length, current: id === el.library.current,
@@ -132,6 +134,7 @@ export function installConsole(el: PairwiseSorter, name = "pairwiseSorter") {
     },
     subAll: () => settled(s().subAll()),
     // The pre-"bench" names, so scripts written against the original page keep working.
+    retire: (titles: string[]) => settled(s().retire([titles].flat().map((t) => idOf(items()[find(t)])))),
     removeItem: (title: string) => api.bench(title),
     restoreItem: (title: string) => api.subIn(title),
 

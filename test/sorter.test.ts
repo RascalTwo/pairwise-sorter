@@ -374,3 +374,93 @@ describe("Sorter: opening lists", () => {
     expect(s.list.log).toEqual([]);
   });
 });
+
+describe("Sorter: retiring finished items", () => {
+  /** A finished sort of `names` whose arrival order is `names`, answered alphabetically. */
+  const sorted = async (...names: string[]) => {
+    const s = sorterOf(...names);
+    await answerAll(s);
+    return s;
+  };
+  const id = (s: Sorter, title: string) => idOf(s.list.items.find((i) => i.title === title));
+
+  it("should drop a retired item and its answers, fill the gap from the old order, and ask nothing", async () => {
+    // GIVEN c, b, d, a, e sorted — c arrived first, so every other item was compared with it
+    const s = await sorted("c", "b", "d", "a", "e");
+    const cId = id(s, "c");
+    expect(s.list.log.filter(([k]) => k.includes(cId)).length).toBeGreaterThan(0);
+
+    // WHEN c is retired
+    const asked = { n: 0 };
+    s.addEventListener("question", () => asked.n++);
+    await s.retire([cId]);
+
+    // THEN nothing is asked and the rest keep their order
+    expect(asked.n).toBe(0);
+    expect(s.question).toBeNull();
+    expect(titles(s)).toEqual(["a", "b", "d", "e"]);
+    // THEN c and every answer about it are gone
+    expect(s.list.items.map((i) => i.title)).not.toContain("c");
+    expect(s.list.log.some(([k]) => k.includes(cId))).toBe(false);
+    // THEN the answers it carried were filled in, and marked as implied
+    const implied = s.comparisons().filter((c) => c.implied);
+    expect(implied.length).toBeGreaterThan(0);
+    expect(s.comparisons().filter((c) => !c.implied).every((c) => c.a.title !== "c" && c.b.title !== "c")).toBe(true);
+  });
+
+  it("should keep tied items tied when the item linking them retires", async () => {
+    // GIVEN a = b and b = c, with b retired
+    const items = ["a", "b", "c"].map((t) => item(t));
+    const [a, b, c] = items.map(idOf) as [string, string, string];
+    const s = new Sorter({ ...emptyList("t"), items, log: [said(a, b, 0), said(b, c, 0)] });
+    await s.settled();
+    // WHEN b is retired
+    await s.retire([b]);
+    // THEN a and c still share a rank, through an implied tie
+    expect(s.ranking().map((r) => r.rank)).toEqual([1, 1]);
+    expect(s.comparisons()).toEqual([expect.objectContaining({ verdict: 0, implied: true })]);
+  });
+
+  it("should still ask about items the old order never placed", async () => {
+    // GIVEN a sort stopped with c and d still unplaced
+    const s = sorterOf("b", "a", "c", "d");
+    await s.settled();
+    await s.answer(alphabetically(s));
+    expect(s.unplaced().map((i) => i.title)).toEqual(["c", "d"]);
+    // WHEN a placed item retires
+    await s.retire([id(s, "a")]);
+    // THEN the unplaced items are still asked about for real
+    expect(s.question).not.toBeNull();
+    expect(s.comparisons().every((c) => !c.implied)).toBe(true);
+  });
+
+  it("should forget the old order after the next change, so a deleted implied answer is asked for real", async () => {
+    // GIVEN a retire that filled in answers
+    const s = await sorted("c", "b", "d", "a", "e");
+    await s.retire([id(s, "c")]);
+    const i = s.comparisons().findIndex((c) => c.implied);
+    // WHEN an implied answer is deleted
+    await s.deleteAnswer(i);
+    // THEN that pair is asked for real
+    expect(s.question).not.toBeNull();
+  });
+
+  it("should take a retired item off the bench too", async () => {
+    // GIVEN a benched item
+    const s = await sorted("a", "b", "c");
+    await s.bench([id(s, "b")]);
+    await answerAll(s);
+    // WHEN it is retired
+    await s.retire([id(s, "b")]);
+    // THEN the bench no longer mentions it
+    expect(s.list.benched).toEqual([]);
+  });
+
+  it("should refuse to retire an item it does not have", async () => {
+    // GIVEN a sorter
+    const s = await sorted("a", "b");
+    // WHEN an unknown id is retired
+    // THEN it says so
+    expect(() => s.retire(["nope"])).toThrow("no item with id nope");
+  });
+});

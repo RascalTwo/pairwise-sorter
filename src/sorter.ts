@@ -11,7 +11,8 @@ import {
   type RankRow,
 } from "./analysis.ts";
 import {
-  findConflicts, flipOfIds, migrateId, orient, pairKeyOf, sortIndices, tierVerdict, type Combine, type LogEntry, type Verdict,
+  findConflicts, flipOfIds, migrateId, orient, pairKeyOf, sortIndices, tieClasses, tierVerdict, type Combine, type LogEntry,
+  type Verdict,
 } from "./engine.ts";
 import { idOf, idParts, item, SEP, tagOf, type Item } from "./item.ts";
 import { emptyList, type List } from "./store.ts";
@@ -23,6 +24,8 @@ export interface Comparison {
   a: { title: string; url: string };
   b: { title: string; url: string };
   verdict: Verdict;
+  /** Filled in from an earlier order by `retire`, not given by a person. */
+  implied: boolean;
   /** Why the ranking contradicts this answer, or null when it does not. */
   why: string | null;
 }
@@ -50,6 +53,8 @@ export class Sorter extends EventTarget {
   #finished = false;
   #quiet = false;
   #waiters: (() => void)[] = [];
+  /** The order before a `retire`, used to answer pairs it already settles. Cleared on any other change. */
+  #fill: { pos: Map<string, number>; tie: (id: string) => string } | null = null;
 
   constructor(list: List = emptyList("Untitled")) {
     super();
@@ -59,7 +64,8 @@ export class Sorter extends EventTarget {
   /** Switch to a list, abandoning any sort in progress. Malformed saved answers are dropped. */
   open(list: List): void {
     list.log = (Array.isArray(list.log) ? list.log : []).filter(
-      (e) => Array.isArray(e) && e.length === 2 && typeof e[0] === "string" && e[0].includes(SEP) && VERDICTS.has(e[1]),
+      (e) => Array.isArray(e) && (e.length === 2 || (e.length === 3 && e[2] === true))
+        && typeof e[0] === "string" && e[0].includes(SEP) && VERDICTS.has(e[1]),
     );
     this.list = list;
     this.#run();
@@ -114,6 +120,29 @@ export class Sorter extends EventTarget {
 
   subAll(): Promise<void> {
     return this.#change(() => { this.list.benched = []; });
+  }
+
+  /**
+   * Remove items for good — finished work, say — WITHOUT re-asking anything. An item that others
+   * were compared against instead of each other takes those links with it, so replaying would
+   * need new questions; but the order before the removal already settles every pair among the
+   * items it had placed. Those questions are answered from it and logged as implied (ties stay
+   * ties). Items it had not placed yet are still asked about for real.
+   */
+  retire(ids: readonly string[]): Promise<void> {
+    const l = this.list, have = new Set(l.items.map(idOf));
+    const missing = ids.find((id) => !have.has(id));
+    if (missing !== undefined) throw new Error(`no item with id ${missing}`);
+    const pos = new Map(this.#partial.placed.map((i, n) => [idOf(l.items[i]), n]));
+    const tie = tieClasses(l.items, l.log);
+    const gone = new Set(ids);
+    return this.#change(() => {
+      l.items = l.items.filter((it) => !gone.has(idOf(it)));
+      l.log = l.log.filter(([k]) => !k.split(SEP).some((id) => gone.has(id)));
+      l.benched = l.benched.filter((id) => !gone.has(id));
+      this.#pruneTiers();
+      this.#fill = { pos, tie };
+    });
   }
 
   /** Benched items that still exist. */
@@ -250,9 +279,9 @@ export class Sorter extends EventTarget {
       const it = byId.get(id);
       return it ? { title: it.title, url: it.url } : idParts(id);
     };
-    return this.list.log.map(([k, verdict], index) => {
+    return this.list.log.map(([k, verdict, implied], index) => {
       const [x = "", y = ""] = k.split(SEP);
-      return { index, a: ref(x), b: ref(y), verdict, why: this.#conflicts.get(index) ?? null };
+      return { index, a: ref(x), b: ref(y), verdict, implied: implied === true, why: this.#conflicts.get(index) ?? null };
     });
   }
 
@@ -273,6 +302,7 @@ export class Sorter extends EventTarget {
   }
 
   #change(mutate: () => void): Promise<void> {
+    this.#fill = null;
     mutate();
     // Run first: it clears the old question synchronously, so a listener rendering on
     // `change` never sees indices into items that have just gone.
@@ -305,7 +335,7 @@ export class Sorter extends EventTarget {
     this.#order = [];
     this.#partial = { placed: [], remaining: [] };
     this.#conflicts = new Map();
-    this.#answers = new Map(this.list.log);
+    this.#answers = new Map(this.list.log.map(([k, v]) => [k, v]));
     // A microtask first, so a host that attaches listeners right after construction or a
     // change still hears the first question.
     await null;
@@ -339,6 +369,13 @@ export class Sorter extends EventTarget {
     if (known !== undefined) return orient(known, flip);
     const tier = tierVerdict(items[a]!, items[b]!, this.list.priority);
     if (tier !== null) return tier;
+    const fill = this.#fill, pa = fill?.pos.get(ia), pb = fill?.pos.get(ib);
+    if (fill && pa !== undefined && pb !== undefined) {
+      const v: Verdict = fill.tie(ia) === fill.tie(ib) ? 0 : pa < pb ? -1 : 1;
+      this.#answers.set(k, orient(v, flip));
+      this.list.log.push([k, orient(v, flip), true]);
+      return v;
+    }
     return new Promise((resolve) => {
       this.#pending = (v) => {
         const stored = orient(v, flip);

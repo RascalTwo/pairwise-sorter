@@ -14,8 +14,12 @@ import { idOf, SEP, type Item } from "./item.ts";
 
 /** -1: the first item wins · 1: the second wins · 0: equal. */
 export type Verdict = -1 | 0 | 1;
-/** One answer: a canonical pair key and the verdict relative to the key's sorted order. */
-export type LogEntry = [key: string, verdict: Verdict];
+/**
+ * One answer: a canonical pair key, the verdict relative to the key's sorted order, and —
+ * when the answer was filled in from an earlier order rather than given (see `Sorter.retire`) —
+ * `true`, so "what you actually said" stays distinguishable.
+ */
+export type LogEntry = [key: string, verdict: Verdict, implied?: true];
 /** How tiers combine: strictly by order, or scored by weight. */
 export type Combine = "order" | "weights";
 
@@ -140,11 +144,11 @@ export function findConflicts(log: readonly LogEntry[], rankById: ReadonlyMap<st
  */
 export function migrateId(log: LogEntry[], benched: Set<string> | undefined, oldId: string, newId: string): LogEntry[] {
   if (oldId === newId) return log;
-  const out = log.map(([k, v]): LogEntry => {
+  const out = log.map(([k, v, ...implied]): LogEntry => {
     const [x = "", y = ""] = k.split(SEP);
-    if (x !== oldId && y !== oldId) return [k, v];
+    if (x !== oldId && y !== oldId) return [k, v, ...implied];
     const nx = x === oldId ? newId : x, ny = y === oldId ? newId : y;
-    return nx < ny ? [nx + SEP + ny, v] : [ny + SEP + nx, orient(v, -1)];
+    return nx < ny ? [nx + SEP + ny, v, ...implied] : [ny + SEP + nx, orient(v, -1), ...implied];
   });
   log.length = 0;
   log.push(...out);
@@ -172,7 +176,7 @@ export function createEngine(input: EngineInput = {}) {
     items: input.items ?? [], log: input.log ?? [], benched: new Set(input.benched ?? []),
     priority: input.priority ?? [], weights: input.weights ?? [], combine: input.combine ?? "order",
   };
-  const answers = new Map(s.log);
+  const answers = new Map(s.log.map(([k, v]) => [k, v]));
   const live = () => s.items.map((_, i) => i).filter((i) => !s.benched.has(idOf(s.items[i])));
 
   async function cmp(a: number, b: number, ask: (a: number, b: number) => Promise<Verdict> | Verdict, onRecord?: (log: LogEntry[]) => void): Promise<Verdict> {

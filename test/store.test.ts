@@ -263,3 +263,17 @@ describe("export and import", () => {
     expect(() => importList({ items: ["a", "a"] })).toThrow("needs at least 2 distinct items");
   });
 });
+
+describe("implied answers in exports", () => {
+  it("should carry the implied flag through export and import, and read it back from saved logs", () => {
+    // GIVEN a list with one real and one implied answer
+    const [a, b, c] = ["a", "b", "c"].map((t) => idOf(item(t))) as [string, string, string];
+    const list = { ...emptyList("I"), items: ["a", "b", "c"].map((t) => item(t)), log: [[pairKeyOf(a, b), -1], [pairKeyOf(b, c), -1, true]] as any };
+    // WHEN exported and imported
+    const payload = exportList(list);
+    const back = importList(JSON.parse(JSON.stringify(payload)));
+    // THEN only the implied answer is flagged, both ways
+    expect(payload.comparisons.map((x) => x.implied ?? false)).toEqual([false, true]);
+    expect(back.list.log).toEqual(list.log);
+  });
+});
