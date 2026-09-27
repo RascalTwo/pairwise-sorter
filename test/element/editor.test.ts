@@ -45,6 +45,17 @@ describe("<pairwise-bench>", () => {
     await close(page);
   });
 
+  it("should filter the bench by title", async () => {
+    // GIVEN a and b benched
+    const page = await withList("pairwise-bench", `await s.bench([pw.idOf(s.list.items[0]), pw.idOf(s.list.items[1])]);`);
+    // WHEN filtered by "B"
+    await page.$eval("pairwise-bench", (el: any) => { el.query = "B"; });
+    // THEN only b shows
+    expect(await texts(page, "pairwise-bench >>> [part~=benched]:not([hidden]) [part=name]")).toEqual(["b"]);
+    expect(await page.$eval("pairwise-bench", (el: any) => el.query)).toBe("B");
+    await close(page);
+  });
+
   it("should render nothing without a sorter", async () => {
     // GIVEN no sorter
     const page = await open(`<pairwise-bench></pairwise-bench>`);

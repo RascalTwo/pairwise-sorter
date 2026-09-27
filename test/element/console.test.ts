@@ -200,6 +200,36 @@ describe("installConsole", () => {
     await close(page);
   });
 
+  it("should search, expand rows, and keep the old bench names", async () => {
+    // GIVEN a sorted list where one item has a description
+    const page = await withConsole();
+    await P(page, `P.load([{ title: "apple", desc: "red" }, { title: "banana", desc: "yellow" }, "cherry"])`);
+    await answerAll(page);
+    // WHEN searching
+    const st = await P(page, `P.search("an")`);
+    // THEN the state carries the query
+    expect(st.query).toBe("an");
+    await P(page, `P.search()`);
+    // WHEN a row is expanded, then all, then none
+    await P(page, `P.expand("apple")`);
+    const one = await page.$$eval("pairwise-sorter >>> pairwise-ranking >>> [part=detail]", (e) => e.length);
+    await P(page, `P.expandAll()`);
+    const all = await page.$$eval("pairwise-sorter >>> pairwise-ranking >>> [part=detail]", (e) => e.length);
+    await P(page, `P.expand("apple", false)`);
+    await P(page, `P.collapseAll()`);
+    // THEN the rows opened and closed
+    expect([one, all]).toEqual([1, 2]);
+    expect(await page.$$eval("pairwise-sorter >>> pairwise-ranking >>> [part=detail]", (e) => e.length)).toBe(0);
+    // THEN an item with nothing to show cannot be expanded
+    expect(await fails(page, `expand("cherry")`)).toBe('"cherry" has no media or description to show');
+    // WHEN the old names are used
+    const removed = await P(page, `P.removeItem("cherry")`);
+    const restored = await P(page, `P.restoreItem("cherry")`);
+    // THEN they bench and sub in
+    expect([removed.benched, restored.benched]).toEqual([["cherry"], []]);
+    await close(page);
+  });
+
   it("should install under pairwiseSorter by default", async () => {
     // GIVEN the API installed without a name
     const page = await open(`<pairwise-sorter></pairwise-sorter>`, `pwel.installConsole(document.querySelector("pairwise-sorter"));`);

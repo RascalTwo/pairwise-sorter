@@ -32,7 +32,9 @@ const style = css(`
 /**
  * `<pairwise-ranking>` — the ranking, best first: shared ranks for ties, tier rules, rows that
  * expand to show media and description, a title filter, and bench / edit / open actions per row.
- * Mid-sort it shows the placed part as provisional and lists the rest. Fires `pairwise-edit`.
+ * Mid-sort it shows the placed part as provisional and lists the rest. Set `query`, or call
+ * `expand()` / `expandAll()` / `collapseAll()`, from code; `no-search` hides its own search box.
+ * Fires `pairwise-edit` and `pairwise-benched`.
  */
 export class PairwiseRanking extends PairwiseElement {
   #open = new Set<string>();
@@ -56,17 +58,43 @@ export class PairwiseRanking extends PairwiseElement {
       ${Lightbox.html}`;
     this.#lightbox = new Lightbox(this.root);
     const $ = (p: string) => this.root.querySelector<HTMLInputElement>(`[part=${p}]`)!;
-    $("search").oninput = () => { this.#query = $("search").value.trim().toLowerCase(); this.#filter(); };
-    $("clear").onclick = () => { $("search").value = ""; this.#query = ""; this.#filter(); };
-    $("expand-all").onclick = () => {
-      this.#open = new Set(this.sorter?.ranking().filter((r) => detailed(r.item)).map((r) => idOf(r.item)));
-      this.render();
-    };
-    $("collapse-all").onclick = () => { this.#open.clear(); this.render(); };
+    $("search").oninput = () => { this.query = $("search").value; };
+    $("clear").onclick = () => { this.query = ""; };
+    $("expand-all").onclick = () => this.expandAll();
+    $("collapse-all").onclick = () => this.collapseAll();
     $("list").onclick = (e) => this.#click(e);
   }
 
   protected styles() { return [mediaStyle, style]; }
+
+  static get observedAttributes() { return ["no-search"]; }
+  attributeChangedCallback(): void { this.render(); }
+
+  /** The title filter. Display only: it hides rows, never changes a rank. */
+  get query(): string { return this.root.querySelector<HTMLInputElement>("[part=search]")!.value; }
+  set query(q: string) {
+    this.root.querySelector<HTMLInputElement>("[part=search]")!.value = q;
+    this.#query = q.trim().toLowerCase();
+    this.#filter();
+  }
+
+  /** Open (or close) the detail row of `list.items[index]`. */
+  expand(index: number, on = true): void {
+    const id = idOf(this.sorter!.list.items[index]);
+    if (on) this.#open.add(id); else this.#open.delete(id);
+    this.render();
+  }
+
+  /** Open every row that has media or a description. */
+  expandAll(): void {
+    this.#open = new Set(this.sorter!.ranking().filter((r) => detailed(r.item)).map((r) => idOf(r.item)));
+    this.render();
+  }
+
+  collapseAll(): void {
+    this.#open.clear();
+    this.render();
+  }
 
   render(): void {
     const s = this.sorter, $ = (p: string) => this.root.querySelector<HTMLElement>(`[part=${p}]`)!;
@@ -74,6 +102,8 @@ export class PairwiseRanking extends PairwiseElement {
     const { priority = [], combine = "order" } = s?.list ?? {};
     const partial = !!s && !s.complete;
     const at = s?.placement();
+    // A host with its own search box (the whole app, say) sets no-search.
+    for (const p of ["search", "count"]) $(p).hidden = this.hasAttribute("no-search");
     $("partial").hidden = !partial;
     if (at) $("partial").textContent = `Sorting in progress — ${at.placed} of ${at.total} placed so far. `
       + "This order is provisional; the rest slot in as you keep answering.";
@@ -125,7 +155,7 @@ export class PairwiseRanking extends PairwiseElement {
     const items = rows.filter((li) => !li.matches(".rule"));
     list.classList.toggle("filtering", !!q);
     this.root.querySelector("[part=count]")!.textContent = q ? `showing ${items.filter((li) => !li.hidden).length} of ${items.length}` : "";
-    this.root.querySelector<HTMLElement>("[part=clear]")!.hidden = !q;
+    this.root.querySelector<HTMLElement>("[part=clear]")!.hidden = !q || this.hasAttribute("no-search");
   }
 
   #click(e: MouseEvent): void {
@@ -139,11 +169,13 @@ export class PairwiseRanking extends PairwiseElement {
     if (!d) return;
     // Attributes carry item INDICES: an id holds a NUL separator, which HTML parsing rewrites.
     const it = (i: string) => idOf(this.sorter!.list.items[Number(i)]);
-    if (d.toggle) {
-      if (!this.#open.delete(it(d.toggle))) this.#open.add(it(d.toggle));
-      this.render();
-    } else if (d.edit) this.fire("pairwise-edit", { index: Number(d.edit) });
-    else if (d.bench) this.sorter!.bench([it(d.bench)]);
+    if (d.toggle) this.expand(Number(d.toggle), !this.#open.has(it(d.toggle)));
+    else if (d.edit) this.fire("pairwise-edit", { index: Number(d.edit) });
+    else if (d.bench) {
+      this.sorter!.bench([it(d.bench)]);
+      // Tells the whole app to keep the list on screen if benching raises a new question.
+      this.fire("pairwise-benched");
+    }
   }
 }
 

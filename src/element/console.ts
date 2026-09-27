@@ -8,6 +8,7 @@ import { fromJSON, parseItems } from "../parse.ts";
 import type { Tier } from "../sorter.ts";
 import { importList, resolveList, SCHEMA } from "../store.ts";
 import type { PairwiseSorter, Screen } from "./app.ts";
+import type { PairwiseRanking } from "./ranking.ts";
 
 const HELP = `pairwiseSorter — rank a list by pairwise comparison. Every UI action has a method here.
 
@@ -32,6 +33,7 @@ ITEMS   item = string | {title, url?, media?: string[], desc?, tags?: string[]}
   editItem(title, patch)   change {title, url, desc, media, tags}; a rename keeps its answers
   tag(title, tags) / untag(title, tags)
   bench(title) / benchMany(titles) / subIn(title) / subAll()
+  removeItem(title) / restoreItem(title)   the old names for bench / subIn
 
 TIERS
   priority()  setPriority(tags | [{tag, weight}])  combineBy('order'|'weights')
@@ -41,8 +43,13 @@ ANSWERING
   answer('a'|'b'|'equal')   also 'left' / 'right' / 'tie' / 'same'
   undo()  deleteComparison(i)  resetAnswers()  resolve()
 
+SEARCH  display only — never changes what is compared, stored or saved
+  search(text)         filter every list view by title. search('') clears it
+
 VIEWS
   pause() / resume()   goto('setup'|'import'|'compare'|'done')   tab('ranking'|'comparisons')
+  expand(title, on?)   open a ranked row to show its media and description
+  expandAll() / collapseAll()
 
 DATA
   schema()  exportJSON()  importJSON(data)
@@ -74,9 +81,10 @@ export function installConsole(el: PairwiseSorter, name = "pairwiseSorter") {
       pending: asking ? { a: pub(items()[q.a]!), b: pub(items()[q.b]!) } : null,
       conflicts: sorter.comparisons().filter((c) => c.why).length,
       priority: [...sorter.list.priority], weights: [...sorter.list.weights], combine: sorter.list.combine,
-      tierOverrides: sorter.overrides().length, tags: sorter.tags(), ranking: sorter.ranking().map((r) => r.item.title),
+      tierOverrides: sorter.overrides().length, tags: sorter.tags(), query: el.query, ranking: sorter.ranking().map((r) => r.item.title),
     };
   };
+  const ranking = () => el.shadowRoot!.querySelector<PairwiseRanking>("pairwise-ranking")!;
   const settled = async (work?: unknown) => { await work; await s().settled(); return state(); };
   const setItems = (next: Item[]) => { s().setItems(next); el.goto("compare"); return settled(); };
 
@@ -123,6 +131,9 @@ export function installConsole(el: PairwiseSorter, name = "pairwiseSorter") {
       return settled(s().subIn(idOf(it)));
     },
     subAll: () => settled(s().subAll()),
+    // The pre-"bench" names, so scripts written against the original page keep working.
+    removeItem: (title: string) => api.bench(title),
+    restoreItem: (title: string) => api.subIn(title),
 
     priority: () => s().list.priority.map((tag, i) => ({ tag, weight: s().list.weights[i] })),
     setPriority: (tiers: Tier[]) => settled(s().setPriority(tiers)),
@@ -154,6 +165,16 @@ export function installConsole(el: PairwiseSorter, name = "pairwiseSorter") {
       el.tab(which);
       return settled();
     },
+
+    search: (text?: string) => { el.search(String(text ?? "")); return settled(); },
+    expand(title: string, on = true) {
+      const i = find(title), it = items()[i]!;
+      if (!it.media.length && !it.desc) throw new Error(`${JSON.stringify(title)} has no media or description to show`);
+      ranking().expand(i, on);
+      return settled();
+    },
+    expandAll: () => { ranking().expandAll(); return settled(); },
+    collapseAll: () => { ranking().collapseAll(); return settled(); },
 
     schema: () => SCHEMA,
     exportJSON: () => el.exportJSON(),

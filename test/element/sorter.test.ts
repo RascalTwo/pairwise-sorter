@@ -274,4 +274,97 @@ describe("<pairwise-sorter>", () => {
     expect(await page.evaluate(() => [(window as any).el.pause(), (window as any).el.resume()])).toEqual([false, false]);
     await close(page);
   });
+
+  /** Hand the app one list with the given items and saved answers ([winner, loser] titles). */
+  const hosted = (page: Page, titles: string[], said: string[][]) => page.evaluate(async (t, a) => {
+    const w = window as any, pw = w.pw, lib = pw.emptyLibrary(), id = pw.addList(lib, "Seeded");
+    const key = (x: string) => pw.idOf(pw.item(x));
+    lib.lists[id].items = t.map((x: string) => pw.item(x));
+    lib.lists[id].log = a.map(([x, y]: any) => [pw.pairKeyOf(key(x), key(y)), -1 * pw.flipOfIds(key(x), key(y))]);
+    w.el.library = lib;
+    await w.el.sorter.settled();
+  }, titles, said);
+
+  it("should warn above the results when answers contradict the ranking, and resolve from there", async () => {
+    // GIVEN a > b and b > c, plus "c beats a" said twice
+    const page = await app();
+    await hosted(page, ["a", "b", "c"], [["a", "b"], ["b", "c"], ["c", "a"], ["c", "a"]]);
+    // WHEN the results show
+    // THEN the warning counts the contradicted answers
+    expect(await text(page, S + "[part=conflict-banner] span")).toBe("⚠ 2 answers contradict the ranking — your choices can't all be true at once.");
+    // WHEN Resolve is pressed there
+    await page.click(S + "[part=conflict-banner] [part=resolve]");
+    // THEN the result is reported on the results, and one contradiction remains
+    expect(await text(page, S + "[part=resolve-note]")).toStartWith("Reordered — now contradicts 1 of your answers, down from 2.");
+    expect(await text(page, S + "[part=conflict-banner] span")).toBe("⚠ 1 answer contradicts the ranking — your choices can't all be true at once.");
+    // WHEN Show them is pressed
+    await page.click(S + "[part=conflict-banner] [part=show-conflicts]");
+    // THEN the comparisons tab opens, without the banner
+    expect(await text(page, S + "[part=heading]")).toBe("Comparisons you made");
+    expect(await page.$eval(S + "[part=conflict-banner]", (e) => (e as HTMLElement).hidden)).toBe(true);
+    // WHEN an answer is deleted there
+    await page.click(S + "pairwise-conflicts >>> [part=delete]");
+    await settle(page);
+    // THEN the stale resolve note is gone
+    expect(await page.$eval(S + "[part=resolve-note]", (e) => (e as HTMLElement).hidden)).toBe(true);
+    await close(page);
+  });
+
+  it("should stay on the results when benching raises a new question, offering to resume", async () => {
+    // GIVEN a finished sort where b stood between a and c
+    const page = await app();
+    await hosted(page, ["a", "b", "c"], [["a", "b"], ["b", "c"]]);
+    expect(await screen(page)).toBe("done");
+    // WHEN b is benched from the ranking
+    const b = await page.$$(S + "pairwise-ranking >>> [part~=bench]");
+    await b[1]!.click();
+    await settle(page);
+    // THEN a vs c must now be asked, but the results stay up with Resume
+    expect(await page.evaluate(() => !!(window as any).el.sorter.question)).toBe(true);
+    expect(await screen(page)).toBe("done");
+    expect(await page.$eval(S + "[part=resume]", (e) => (e as HTMLElement).hidden)).toBe(false);
+    await close(page);
+  });
+
+  it("should filter the ranking, the answers, the bench and the items text from one search", async () => {
+    // GIVEN a finished sort with one item benched
+    const page = await app();
+    await hosted(page, ["apple", "banana", "cherry", "apricot"], [["apple", "banana"], ["banana", "cherry"], ["apricot", "apple"]]);
+    await sortAll(page);
+    await page.evaluate(async () => { const w = window as any, s = w.el.sorter; await s.bench([w.pw.idOf(s.list.items.find((i: any) => i.title === "banana"))]); });
+    await sortAll(page);
+    // WHEN "ap" is typed into the results search
+    await page.type(S + "[part=search]", "ap");
+    // THEN the ranking, the answers and the bench all filter
+    expect(await ranked(page).then((r) => r)).toEqual(expect.arrayContaining(["apricot", "apple"]));
+    expect(await texts(page, S + "pairwise-ranking >>> [part~=row]:not([hidden]) [part~=title]")).toHaveLength(2);
+    expect(await page.$eval(S + "pairwise-conflicts", (el: any) => el.query)).toBe("ap");
+    expect(await page.$eval(S + "pairwise-bench", (el: any) => el.query)).toBe("ap");
+    // WHEN the search is cleared with its button, then typed again
+    await page.click(S + "[part=clear-search]");
+    expect(await page.evaluate(() => (window as any).el.query)).toBe("");
+    await page.type(S + "[part=search]", "ap");
+    // WHEN the list is edited
+    await page.click(S + "[part=edit-list]");
+    // THEN the items text is filtered the same way
+    expect(await page.$eval(S + "pairwise-io", (el: any) => el.query)).toBe("ap");
+    // WHEN the filter is changed from the items screen
+    await page.$eval(S + "pairwise-io >>> [part=filter]", (i) => { (i as HTMLInputElement).value = ""; i.dispatchEvent(new Event("input")); });
+    // THEN the results search follows it
+    expect(await page.$eval(S + "[part=search]", (i) => (i as HTMLInputElement).value)).toBe("");
+    await close(page);
+  });
+
+  it("should clear the search when switching lists", async () => {
+    // GIVEN a search typed on one list
+    const page = await app();
+    await enter(page, "a\nb");
+    await sortAll(page);
+    await page.type(S + "[part=search]", "a");
+    // WHEN a new list is created
+    await page.click(S + "pairwise-lists >>> [part=new]");
+    // THEN the search is empty
+    expect(await page.evaluate(() => (window as any).el.query)).toBe("");
+    await close(page);
+  });
 });

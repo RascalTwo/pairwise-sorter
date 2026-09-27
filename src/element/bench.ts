@@ -13,6 +13,12 @@ const style = css(`
  * answers and is one click from coming back. Fires `pairwise-edit` with `{index}`.
  */
 export class PairwiseBench extends PairwiseElement {
+  #query = "";
+
+  /** Show only benched items whose title contains this. Display only. */
+  get query(): string { return this.#query; }
+  set query(q: string) { this.#query = q; this.render(); }
+
   constructor() {
     super();
     this.root.innerHTML = `
@@ -36,7 +42,8 @@ export class PairwiseBench extends PairwiseElement {
     this.root.querySelector("[part=count]")!.textContent = String(benched.length);
     this.root.querySelector("[part=list]")!.innerHTML = benched.map((it) => {
       const i = s!.list.items.indexOf(it), name = esc(it.title);
-      return `<li part="benched"><span part="name">${name}</span>
+      const q = this.#query.trim().toLowerCase();
+      return `<li part="benched" ${!q || it.title.toLowerCase().includes(q) ? "" : "hidden"}><span part="name">${name}</span>
         <button part="edit" data-i="${i}" data-edit="1" aria-label="Edit ${name}">✎</button>
         <button part="sub-in" data-i="${i}">Sub in</button></li>`;
     }).join("");

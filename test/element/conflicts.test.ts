@@ -88,4 +88,21 @@ describe("<pairwise-conflicts>", () => {
     expect(await page.$$eval("pairwise-conflicts >>> [part~=answer]", (e) => e.length)).toBe(0);
     await close(page);
   });
+
+  it("should filter answers to those naming a matching item on either side", async () => {
+    // GIVEN three answers
+    const page = await conflicts(["apple", "banana", "cherry"], [["apple", "banana"], ["banana", "cherry"], ["apple", "cherry"]]);
+    // WHEN filtered by "cher"
+    await page.$eval("pairwise-conflicts", (el: any) => { el.query = "CHER"; });
+    // THEN the two answers involving cherry show, counted
+    expect(await texts(page, "pairwise-conflicts >>> [part~=answer]:not([hidden]) [part=pair]")).toEqual(["banana › cherry", "apple › cherry"]);
+    expect(await text(page, "pairwise-conflicts >>> [part=count]")).toBe("showing 2 of 3");
+    expect(await page.$eval("pairwise-conflicts", (el: any) => el.query)).toBe("CHER");
+    // WHEN the filter is cleared
+    await page.$eval("pairwise-conflicts", (el: any) => { el.query = ""; });
+    // THEN all show and the count clears
+    expect(await texts(page, "pairwise-conflicts >>> [part~=answer]:not([hidden]) [part=pair]")).toHaveLength(3);
+    expect(await text(page, "pairwise-conflicts >>> [part=count]")).toBe("");
+    await close(page);
+  });
 });

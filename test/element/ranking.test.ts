@@ -161,4 +161,30 @@ describe("<pairwise-ranking>", () => {
     expect(await page.$$eval("pairwise-ranking >>> [part~=row]", (e) => e.length)).toBe(0);
     await close(page);
   });
+
+  it("should take its filter and its open rows from code, and hide its own search box on request", async () => {
+    // GIVEN a finished ranking of items with descriptions
+    const page = await ranking([["apple", "", [], "red"], ["banana", "", [], "yellow"], ["cherry"]]);
+    // WHEN the host sets a query
+    await page.$eval("pairwise-ranking", (el: any) => { el.query = "AN"; });
+    // THEN rows filter and the box shows the query
+    expect(await rows(page)).toEqual(["banana"]);
+    expect(await page.$eval("pairwise-ranking >>> [part=search]", (i) => (i as HTMLInputElement).value)).toBe("AN");
+    expect(await page.$eval("pairwise-ranking", (el: any) => el.query)).toBe("AN");
+    // WHEN the query is cleared and rows are opened and closed from code
+    await page.$eval("pairwise-ranking", (el: any) => { el.query = ""; el.expand(0); el.expand(1); el.expand(1, false); });
+    // THEN only the first row is open
+    expect(await texts(page, "pairwise-ranking >>> [part=detail]")).toEqual(["red"]);
+    // WHEN everything is opened, then closed, from code
+    const all = await page.$eval("pairwise-ranking", (el: any) => { el.expandAll(); return el.shadowRoot.querySelectorAll("[part=detail]").length; });
+    await page.$eval("pairwise-ranking", (el: any) => el.collapseAll());
+    // THEN both expandable rows opened, and then none
+    expect(all).toBe(2);
+    expect(await page.$$eval("pairwise-ranking >>> [part=detail]", (e) => e.length)).toBe(0);
+    // WHEN no-search is set
+    await page.$eval("pairwise-ranking", (el) => el.setAttribute("no-search", ""));
+    // THEN its own search box is hidden
+    expect(await page.$eval("pairwise-ranking >>> [part=search]", (e) => (e as HTMLElement).hidden)).toBe(true);
+    await close(page);
+  });
 });

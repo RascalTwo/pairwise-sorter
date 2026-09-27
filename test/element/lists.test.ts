@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import type { Page } from "puppeteer-core";
-import { close, open, text } from "./harness.ts";
+import { close, open, text, texts } from "./harness.ts";
 
 /** Resolve with the detail of the next `type` event from `selector`. */
 const next = (page: Page, selector: string, type: string) => page.evaluate((sel, t) => new Promise((r) =>
@@ -147,6 +147,31 @@ describe("<pairwise-io>", () => {
     await page.click("pairwise-io >>> [part=save]");
     // THEN both are reported, pluralised
     expect(await text(page, "pairwise-io >>> [part=hint]")).toMatch(/^Merged 2 duplicates: x, y\. \d answers dropped with deleted items\.$/);
+    await close(page);
+  });
+
+  it("should filter the items by title read-only, and refuse to save while filtered", async () => {
+    // GIVEN the items as text
+    const page = await io();
+    const searched = next(page, "pairwise-io", "pairwise-search");
+    // WHEN "b" is typed into the filter
+    await page.type("pairwise-io >>> [part=filter]", "B");
+    // THEN the host hears the query, and matching lines show read-only instead of the box
+    expect(await searched).toEqual({ query: "B" });
+    expect(await texts(page, "pairwise-io >>> [part=filtered] li")).toEqual(["b"]);
+    expect(await page.$eval(box, (t) => (t as HTMLElement).hidden)).toBe(true);
+    expect(await text(page, "pairwise-io >>> [part=filter-count]")).toBe("showing 1 of 2");
+    // THEN saving is locked, since a filtered save would drop the hidden lines
+    expect(await page.$eval("pairwise-io >>> [part=save]", (b) => [(b as HTMLButtonElement).disabled, b.textContent])).toEqual([true, "Clear the filter to save"]);
+    // WHEN nothing matches
+    await page.$eval("pairwise-io", (el: any) => { el.query = "zzz"; });
+    expect(await texts(page, "pairwise-io >>> [part=filtered] li")).toEqual(["No titles match."]);
+    expect(await page.$eval("pairwise-io", (el: any) => el.query)).toBe("zzz");
+    // WHEN the filter is cleared with its button
+    await page.click("pairwise-io >>> [part=filter-clear]");
+    // THEN the box and saving are back
+    expect(await page.$eval(box, (t) => (t as HTMLElement).hidden)).toBe(false);
+    expect(await page.$eval("pairwise-io >>> [part=save]", (b) => [(b as HTMLButtonElement).disabled, b.textContent])).toEqual([false, "Save & sort"]);
     await close(page);
   });
 

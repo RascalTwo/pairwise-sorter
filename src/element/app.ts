@@ -1,9 +1,12 @@
 import { Sorter } from "../sorter.ts";
 import { addList, deleteList, emptyLibrary, exportList, localStore, type ExportPayload, type Library, type List } from "../store.ts";
 import { css, PairwiseElement } from "./base.ts";
+import type { PairwiseBench } from "./bench.ts";
+import type { PairwiseConflicts } from "./conflicts.ts";
 import type { PairwiseEditor } from "./editor.ts";
 import type { PairwiseIo } from "./io.ts";
 import type { PairwiseLists } from "./lists.ts";
+import type { PairwiseRanking } from "./ranking.ts";
 
 /** What the app is showing. */
 export type Screen = "setup" | "import" | "compare" | "done";
@@ -16,6 +19,8 @@ const style = css(`
   details { margin: 12px 0; }
   summary { cursor: pointer; color: var(--pw-muted); font-size: 13px; }
   .tabs button.on { border-color: var(--pw-accent); }
+  .search { display: flex; gap: 10px; align-items: center; margin: 8px 0; }
+  .search input { flex: 1; max-width: 340px; }
 `);
 
 /**
@@ -29,6 +34,8 @@ export class PairwiseSorter extends PairwiseElement {
   #view: "sort" | "setup" | "import" = "sort";
   #paused = false;
   #tab: "ranking" | "comparisons" = "ranking";
+  #note = "";
+  #query = "";
   #started = false;
 
   constructor() {
@@ -41,8 +48,13 @@ export class PairwiseSorter extends PairwiseElement {
       <section part="done">
         <div class="row"><strong part="heading"></strong>
           <span class="tabs"><button part="tab-ranking"></button><button part="tab-comparisons"></button></span></div>
+        <p part="conflict-banner" class="banner"><span></span><button part="show-conflicts">Show them</button>
+          <button part="resolve" title="Reorder to contradict as few of your answers as possible">Resolve</button></p>
+        <p part="resolve-note" class="banner info" hidden></p>
         <details part="tiers-panel"><summary>Tiers and weights</summary><pairwise-tiers></pairwise-tiers><pairwise-weights></pairwise-weights></details>
-        <pairwise-ranking></pairwise-ranking><pairwise-conflicts></pairwise-conflicts>
+        <div class="search"><input part="search" type="search" placeholder="Filter by title…" aria-label="Filter by title">
+          <button part="clear-search" hidden>Clear</button></div>
+        <pairwise-ranking no-search></pairwise-ranking><pairwise-conflicts></pairwise-conflicts>
       </section>
       <div class="row" part="controls">
         <span><button part="undo">↩ Undo</button><button part="resume">↩ Resume sorting</button></span>
@@ -61,6 +73,14 @@ export class PairwiseSorter extends PairwiseElement {
     $("export").onclick = () => this.#copy();
     $("tab-ranking").onclick = () => this.tab("ranking");
     $("tab-comparisons").onclick = () => this.tab("comparisons");
+    $("show-conflicts").onclick = () => this.tab("comparisons");
+    $("resolve").onclick = () => { this.#note = this.#child<PairwiseConflicts>("pairwise-conflicts").resolve(); this.render(); };
+    $("search").oninput = () => this.search(($("search") as HTMLInputElement).value);
+    $("clear-search").onclick = () => this.search("");
+    on("pairwise-search", (d) => this.search(d.query));
+    // Benching from the results can raise a new question (the item was the only link between
+    // two others). Keep the list on screen and offer Resume, rather than jumping to the question.
+    on("pairwise-benched", () => { if (this.screen === "done") this.#paused = true; this.render(); });
     on("pairwise-edit", (d) => this.root.querySelector<PairwiseEditor>("pairwise-editor")!.edit(d.index));
     on("pairwise-stop", () => this.pause());
     on("pairwise-list-open", (d) => this.openList(d.id));
@@ -72,7 +92,7 @@ export class PairwiseSorter extends PairwiseElement {
     on("pairwise-cancel", () => this.goto("compare"));
     on("pairwise-saved", () => { this.#view = "sort"; this.#paused = false; this.render(); });
     this.sorter = new Sorter();
-    this.sorter.addEventListener("change", () => this.#save());
+    this.sorter.addEventListener("change", () => { this.#note = ""; this.#save(); });
     this.sorter.addEventListener("done", () => { this.#paused = false; this.render(); });
   }
 
@@ -106,12 +126,25 @@ export class PairwiseSorter extends PairwiseElement {
 
   get paused(): boolean { return this.#paused && !!this.sorter!.question; }
 
+  /** The title filter across the ranking, the answers, the bench and the items text. Display only. */
+  get query(): string { return this.#query; }
+
+  search(query: string): void {
+    this.#query = query;
+    (this.root.querySelector<HTMLInputElement>("[part=search]")!).value = query;
+    for (const el of this.root.querySelectorAll<PairwiseRanking | PairwiseConflicts | PairwiseBench | PairwiseIo>(
+      "pairwise-ranking, pairwise-conflicts, pairwise-bench, pairwise-io")) el.query = query;
+    this.render();
+  }
+
   openList(id: string): void {
     this.#library.current = id;
     this.#view = "sort";
     this.#paused = false;
     this.sorter!.open(this.#library.lists[id]!);
     this.root.querySelector<PairwiseIo>("pairwise-io")!.reset();
+    // A filter carried over from another list would read as data loss.
+    this.search("");
     this.#save();
   }
 
@@ -189,8 +222,17 @@ export class PairwiseSorter extends PairwiseElement {
     this.root.querySelector<HTMLElement>("pairwise-ranking")!.hidden = cmp;
     this.root.querySelector<HTMLElement>("pairwise-conflicts")!.hidden = !cmp;
     $("tiers-panel").hidden = !s.tags().length;
+    const bad = s.comparisons().filter((c) => c.why).length;
+    $("conflict-banner").hidden = cmp || !s.complete || !bad;
+    $("conflict-banner").querySelector("span")!.textContent =
+      `⚠ ${bad} answer${bad === 1 ? " contradicts" : "s contradict"} the ranking — your choices can't all be true at once.`;
+    $("resolve-note").hidden = cmp || !this.#note;
+    $("resolve-note").textContent = this.#note;
+    $("clear-search").hidden = !this.#query;
     $("bench-panel").hidden = !s.list.benched.length;
   }
+
+  #child<T extends Element>(tag: string): T { return this.root.querySelector<T>(tag)!; }
 
   #save(): void {
     this.#store?.save(this.#library);

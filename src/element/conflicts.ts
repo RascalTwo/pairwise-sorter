@@ -17,6 +17,11 @@ const style = css(`
  */
 export class PairwiseConflicts extends PairwiseElement {
   #result = "";
+  #query = "";
+
+  /** Show only answers naming an item whose title contains this. Display only. */
+  get query(): string { return this.#query; }
+  set query(q: string) { this.#query = q; this.render(); }
 
   constructor() {
     super();
@@ -24,8 +29,9 @@ export class PairwiseConflicts extends PairwiseElement {
       <p part="banner" class="banner" hidden><span></span><button part="resolve" title="Reorder to contradict as few of your answers as possible">Resolve</button></p>
       <p part="result" class="banner info" hidden></p>
       <p part="empty" class="muted" hidden>No comparisons recorded yet.</p>
+      <p part="count" class="muted"></p>
       <ul part="list"></ul>`;
-    this.root.querySelector<HTMLElement>("[part=resolve]")!.onclick = () => this.#resolve();
+    this.root.querySelector<HTMLElement>("[part=resolve]")!.onclick = () => this.resolve();
     this.root.querySelector<HTMLElement>("[part=list]")!.onclick = (e) => {
       const i = (e.target as HTMLElement).closest("button")?.dataset.delete;
       if (i) this.sorter!.deleteAnswer(Number(i));
@@ -49,9 +55,12 @@ export class PairwiseConflicts extends PairwiseElement {
     $("result").hidden = !this.#result;
     $("result").textContent = this.#result;
     $("empty").hidden = !this.sorter || all.length > 0;
+    const q = this.#query.trim().toLowerCase(), hit = (t: string) => !q || t.toLowerCase().includes(q);
+    const shown = all.filter((c) => hit(c.a.title) || hit(c.b.title)).length;
+    $("count").textContent = q ? `showing ${shown} of ${all.length}` : "";
     $("list").innerHTML = all.map((c) => {
       const pair = c.verdict === 0 ? [c.a.title, "=", c.b.title] : c.verdict < 0 ? [c.a.title, "›", c.b.title] : [c.b.title, "›", c.a.title];
-      return `<li part="answer${c.why ? " conflict" : ""}" class="${c.why ? "conflict" : ""}">
+      return `<li part="answer${c.why ? " conflict" : ""}" class="${c.why ? "conflict" : ""}" ${hit(c.a.title) || hit(c.b.title) ? "" : "hidden"}>
         <span part="pair">${pair.map(esc).join(" ")}</span>
         ${c.why ? `<span part="why">${esc(c.why)}</span>` : ""}
         <button part="delete" data-delete="${c.index}" title="Forget this answer — it will be asked again if the sort still needs it">delete</button>
@@ -59,12 +68,14 @@ export class PairwiseConflicts extends PairwiseElement {
     }).join("");
   }
 
-  #resolve(): void {
+  /** Reorder to contradict as few answers as possible; returns (and shows) what happened. */
+  resolve(): string {
     const { before, after } = this.sorter!.resolve();
     const s = (n: number) => (n === 1 ? "" : "s");
     this.#result = after < before
       ? `Reordered — now contradicts ${after} of your answers, down from ${before}. This is a best-effort search rather than a proof of the true minimum, and it lasts until the next change re-runs the sort.`
       : `Already as consistent as this search can make it — ${before} answer${s(before)} still contradicted. Those are genuine cycles: no order can satisfy them all, so the fix is to change an answer.`;
     this.render();
+    return this.#result;
   }
 }

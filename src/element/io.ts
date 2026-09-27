@@ -1,6 +1,6 @@
-import { parseItems, toText } from "../parse.ts";
+import { parseItems, parseLine, toText } from "../parse.ts";
 import { importList } from "../store.ts";
-import { css, PairwiseElement } from "./base.ts";
+import { css, esc, PairwiseElement } from "./base.ts";
 
 const style = css(`
   textarea { width: 100%; box-sizing: border-box; min-height: 240px; font: 14px/1.6 ui-monospace, monospace; resize: vertical; }
@@ -8,6 +8,11 @@ const style = css(`
   details { margin: 12px 0; font-size: 13px; color: var(--pw-muted); }
   code { background: var(--pw-panel); padding: 1px 5px; border-radius: 4px; }
   td { padding: 4px 14px 4px 0; vertical-align: top; }
+  .search { display: flex; gap: 10px; align-items: center; margin: 8px 0; }
+  .search input { flex: 1; max-width: 340px; }
+  ul[part=filtered] { list-style: none; margin: 0; padding: 0; max-height: 420px; overflow: auto; border: 1px solid var(--pw-border);
+    border-radius: var(--pw-radius); background: var(--pw-panel); }
+  ul[part=filtered] li { padding: 7px 12px; border-bottom: 1px solid var(--pw-border); font: 13px/1.5 ui-monospace, monospace; overflow-wrap: anywhere; }
 `);
 
 const FORMATS = `<details><summary>Input formats</summary><table>
@@ -26,6 +31,7 @@ const FORMATS = `<details><summary>Input formats</summary><table>
  */
 export class PairwiseIo extends PairwiseElement {
   #filled = false;
+  #query = "";
 
   static get observedAttributes() { return ["view"]; }
   attributeChangedCallback(): void { this.#build(); }
@@ -36,6 +42,31 @@ export class PairwiseIo extends PairwiseElement {
   }
 
   protected styles() { return [style]; }
+
+  /**
+   * Filter the item lines by title. The box is the input to Save, so it is never filtered in
+   * place — a filtered box that got saved would drop every line it hid. Matches show read-only
+   * beside it instead, and saving is locked until the filter is cleared.
+   */
+  get query(): string { return this.#query; }
+  set query(q: string) {
+    this.#query = q;
+    const $ = (p: string) => this.root.querySelector<HTMLElement>(`[part=${p}]`);
+    const filter = $("filter") as HTMLInputElement | null;
+    if (!filter) return;
+    filter.value = q;
+    const on = !!q.trim(), needle = q.trim().toLowerCase();
+    const lines = this.#box().value.split("\n").map((l) => l.trim()).filter(Boolean);
+    const hits = lines.filter((l) => parseLine(l).title.toLowerCase().includes(needle));
+    $("filtered")!.innerHTML = hits.map((l) => `<li>${esc(l)}</li>`).join("") || `<li class="muted">No titles match.</li>`;
+    $("filtered")!.hidden = !on;
+    this.#box().hidden = on;
+    $("filter-count")!.textContent = on ? `showing ${hits.length} of ${lines.length}` : "";
+    $("filter-clear")!.hidden = !on;
+    const save = $("save") as HTMLButtonElement;
+    save.disabled = on;
+    save.textContent = on ? "Clear the filter to save" : "Save & sort";
+  }
 
   /** Refill the text from the list, discarding unsaved edits. */
   reset(): void {
@@ -54,6 +85,7 @@ export class PairwiseIo extends PairwiseElement {
     if (this.#filled || !this.sorter || this.getAttribute("view") === "import") return;
     this.#box().value = toText(this.sorter.list.items);
     this.#filled = true;
+    this.query = this.#query;
   }
 
   #build(): void {
@@ -63,12 +95,18 @@ export class PairwiseIo extends PairwiseElement {
         <textarea part="text" placeholder='{"format": "pairwise-sorter/3", "name": "…", "items": [...], "comparisons": [...]}'></textarea>
         <div class="row"><button part="import">Import as new list</button><button part="cancel">Cancel</button><span part="hint" class="muted"></span></div>`
       : `<p class="muted">One item per line — plain text, markdown links, pipe-separated fields, or a JSON array.</p>
-        <textarea part="text" placeholder="Cold brew&#10;[Flat white](https://example.com/fw)"></textarea>${FORMATS}
+        <div class="search"><input part="filter" type="search" placeholder="Filter by title…" aria-label="Filter items by title">
+          <span part="filter-count" class="muted"></span><button part="filter-clear" hidden>Clear</button></div>
+        <textarea part="text" placeholder="Cold brew&#10;[Flat white](https://example.com/fw)"></textarea>
+        <ul part="filtered" hidden></ul>${FORMATS}
         <div class="row"><button part="save">Save &amp; sort</button><span part="hint" class="muted"></span></div>`;
     const on = (p: string, f: () => void) => { const b = this.root.querySelector<HTMLElement>(`[part=${p}]`); if (b) b.onclick = f; };
     on("save", () => this.#save());
     on("import", () => this.#import());
     on("cancel", () => this.fire("pairwise-cancel"));
+    on("filter-clear", () => { this.query = ""; this.fire("pairwise-search", { query: "" }); });
+    const filter = this.root.querySelector<HTMLInputElement>("[part=filter]");
+    if (filter) filter.oninput = () => { this.query = filter.value; this.fire("pairwise-search", { query: filter.value }); };
     this.#filled = false;
     this.render();
   }
