@@ -36,7 +36,9 @@ bun run typecheck
 bun run site      # build what GitHub Pages serves into site/: the app, docs/, api/ (TypeDoc)
 ```
 
-The docs home page is a [/viz](https://github.com/RascalTwo/ai-setup) page in `viz-pages/pairwise-sorter/`.
-After editing it, `bun run docs:publish` (needs the viz skill) regenerates the committed `pages/docs/index.html`.
+The docs page is a [/viz](https://github.com/RascalTwo/ai-setup) page in `viz-pages/docs/` (`bun run docs:dev` builds the
+library beside it for the local viz server). After editing it or its `hero.html`, `bun run docs:publish` (needs the viz
+skill) regenerates the committed `pages/docs/`; a test fails until you do. The page loads the library at runtime, so
+library changes reach the docs demo on the next deploy without re-publishing.
 
 MIT licensed.

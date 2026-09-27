@@ -200,10 +200,14 @@ installConsole(document.querySelector("pairwise-sorter"));
 
   <script type="module">
     import { arrowMarkers, connect, labelBox, stepper, $, esc } from "/_kit/viz.js";
-    // The library itself, from ./dist/ beside this page: `bun run docs:dev` builds it here for
-    // the local viz server, and the Pages workflow puts the build beside the published page.
-    const pw = await import("./dist/index.js");
-    await import("./dist/element/index.js");
+    // The library is loaded at RUNTIME, never bundled into the published page: a bundled copy
+    // would silently keep demoing old code whenever the library changed without a re-publish.
+    // Locally (`bun run docs:dev`) it sits in ./dist/ beside this page; on the site this page is
+    // /docs/ and CI builds the library into /dist/. A computed specifier is also what stops
+    // `viz publish` from bundling it.
+    const lib = location.pathname.includes("/viz-pages/") ? "./dist/" : "../dist/";
+    const pw = await import(lib + "index.js");
+    await import(lib + "element/index.js");
 
     // ── 1. binary insertion, recorded from the real sortIndices ─────────
     // Every node is created once and only MOVED between steps, so a CSS transition animates

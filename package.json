@@ -28,8 +28,8 @@
     "typecheck": "tsc --noEmit",
     "test": "bun test --timeout 60000",
     "docs": "typedoc",
-    "docs:dev": "tsc -p tsconfig.build.json --outDir viz-pages/pairwise-sorter/dist",
-    "docs:publish": "bun run docs:dev && bun \"${VIZ_SKILL_DIR:-$HOME/.claude/skills/viz}/viz.ts\" publish viz-pages --out .viz-publish --no-index --no-og --no-deploy-notice && cp .viz-publish/pairwise-sorter/index.html pages/docs/index.html",
+    "docs:dev": "tsc -p tsconfig.build.json --outDir viz-pages/docs/dist",
+    "docs:publish": "bun scripts/publish-docs.ts",
     "site": "bun run build && bun run docs && cp -R pages/. site/ && cp -R dist site/dist"
   },
   "devDependencies": {
