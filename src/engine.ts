@@ -60,6 +60,25 @@ export function budgetFor(n: number): number {
   return Math.max(1, t);
 }
 
+/**
+ * The slots in `out` an item can still land in, from what is already known about it. Every
+ * known answer against a placed item is a bound: "after out[k]" (or equal — ties fall after)
+ * means lo ≥ k+1, "before out[k]" means hi ≤ k. Binary search only probes midpoints, so
+ * without this a known answer is used only when it happens to be the midpoint, and the person
+ * is asked pairs with one possible answer. Answers that contradict each other leave no slot;
+ * then the whole range is searched, as before, rather than guessing which answer to drop.
+ * ponytail: O(placed) lookups per insertion, O(n²) overall — fine at hundreds of items.
+ */
+export function slotsFor(n: number, out: readonly number[], known: (a: number, b: number) => Verdict | null): [lo: number, hi: number] {
+  let lo = 0, hi = out.length;
+  out.forEach((o, k) => {
+    const v = known(n, o);
+    if (v === null) return;
+    if (v < 0) hi = Math.min(hi, k); else lo = Math.max(lo, k + 1);
+  });
+  return lo <= hi ? [lo, hi] : [0, out.length];
+}
+
 export interface Progress { placed: number[]; remaining: number[]; next: number | undefined }
 export interface Probe { out: readonly number[]; lo: number; hi: number; mid: number }
 
@@ -72,17 +91,20 @@ export interface Probe { out: readonly number[]; lo: number; hi: number; mid: nu
  *
  * `onProbe` exposes the search state before each comparison: from any probe only TWO
  * slots can be asked next, so a host can warm exactly those.
+ *
+ * `known` answers a pair without asking, or null; it narrows the search first (`slotsFor`).
  */
 export async function sortIndices(
   arr: readonly number[],
   cmp: (a: number, b: number) => Verdict | Promise<Verdict>,
   onProgress?: (p: Progress) => void,
   onProbe?: (p: Probe) => void,
+  known: (a: number, b: number) => Verdict | null = () => null,
 ): Promise<number[]> {
   const out: number[] = [];
   for (let n = 0; n < arr.length; n++) {
     onProgress?.({ placed: [...out], remaining: arr.slice(n), next: arr[n + 1] });
-    let lo = 0, hi = out.length;
+    let [lo, hi] = slotsFor(arr[n]!, out, known);
     while (lo < hi) {
       const mid = (lo + hi) >> 1;
       onProbe?.({ out, lo, hi, mid });
@@ -179,13 +201,18 @@ export function createEngine(input: EngineInput = {}) {
   const answers = new Map(s.log.map(([k, v]) => [k, v]));
   const live = () => s.items.map((_, i) => i).filter((i) => !s.benched.has(idOf(s.items[i])));
 
+  /** A pair's answer from the log, else the tiers, else null — no one is asked. */
+  const known = (a: number, b: number): Verdict | null => {
+    const ia = idOf(s.items[a]), ib = idOf(s.items[b]);
+    const v = answers.get(pairKeyOf(ia, ib));
+    return v !== undefined ? orient(v, flipOfIds(ia, ib)) : tierVerdict(s.items[a]!, s.items[b]!, s.priority);
+  };
+
   async function cmp(a: number, b: number, ask: (a: number, b: number) => Promise<Verdict> | Verdict, onRecord?: (log: LogEntry[]) => void): Promise<Verdict> {
+    const settled = known(a, b);
+    if (settled !== null) return settled;
     const ia = idOf(s.items[a]), ib = idOf(s.items[b]);
     const k = pairKeyOf(ia, ib), flip = flipOfIds(ia, ib);
-    const known = answers.get(k);
-    if (known !== undefined) return orient(known, flip);
-    const tier = tierVerdict(s.items[a]!, s.items[b]!, s.priority);
-    if (tier !== null) return tier;
     const v = await ask(a, b);
     answers.set(k, orient(v, flip));
     s.log.push([k, orient(v, flip)]);
@@ -202,7 +229,7 @@ export function createEngine(input: EngineInput = {}) {
     run: (
       ask: (a: number, b: number) => Promise<Verdict> | Verdict,
       { onProgress, onRecord, onProbe }: { onProgress?: (p: Progress) => void; onRecord?: (log: LogEntry[]) => void; onProbe?: (p: Probe) => void } = {},
-    ) => sortIndices(live(), (a, b) => cmp(a, b, ask, onRecord), onProgress, onProbe),
+    ) => sortIndices(live(), (a, b) => cmp(a, b, ask, onRecord), onProgress, onProbe, known),
     ranking: (order: readonly number[]) => order.map((i) => s.items[i]!),
     ties: () => tieClasses(s.items, s.log),
     conflicts: (rankById: ReadonlyMap<string, number>) => findConflicts(s.log, rankById),
@@ -233,7 +260,7 @@ export function replay(items: readonly Item[], log: readonly LogEntry[], priorit
   };
   const order: number[] = [];
   for (let n = 0; n < items.length; n++) {
-    let lo = 0, hi = order.length;
+    let [lo, hi] = slotsFor(n, order, settled);
     while (lo < hi) {
       const mid = (lo + hi) >> 1, v = settled(n, order[mid]!);
       if (v === null) return { order, unplaced: items.map((_, i) => i).slice(n), next: [n, order[mid]!] as [number, number] };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { budgetFor, createEngine, findConflicts, replay, retireLog, flipOfIds, idOf, item, migrateId, pairKeyOf, SEP, tieClasses, tierName, tierOf, tierVerdict, type Verdict } from "../src/index.ts";
+import { budgetFor, createEngine, findConflicts, replay, retireLog, flipOfIds, idOf, item, migrateId, orient, pairKeyOf, SEP, tieClasses, tierName, tierOf, tierVerdict, type LogEntry, type Verdict } from "../src/index.ts";
 
 const alphabetical = ["e", "c", "a", "d", "b"].map((t) => item(t, "u" + t));
 // An `ask` that records how often it was called.
@@ -311,5 +311,56 @@ describe("retireLog (synchronous)", () => {
     // WHEN b is retired
     // THEN a and c are tied by an implied answer
     expect(retireLog(items, log, [b])).toEqual([[pairKeyOf(a, c), 0, true]]);
+  });
+});
+
+describe("known answers narrow the search", () => {
+  // Seven items ranked a..g, then "x" arrives already known to come after "e" (a dependency,
+  // say). The only slots left are after e, so a question about a, b, c or d is one with a
+  // single possible answer — and answering it the other way would contradict what is known.
+  const ranked = ["a", "b", "c", "d", "e", "f", "g"].map((t) => item(t));
+  const x = item("x");
+  const items = [...ranked, x];
+  const id = (t: string) => idOf(item(t));
+  // "a comes after b": b wins, recorded the way the engine records it.
+  const after = (a: string, b: string): LogEntry => [pairKeyOf(id(b), id(a)), orient(-1, flipOfIds(id(b), id(a))), true];
+  const chain = async () => { const eng = createEngine({ items: ranked }); await eng.run(byTitle(ranked)); return eng.state.log; };
+
+  it("should ask replay's next question only inside the slots the known answers leave", async () => {
+    // GIVEN a..g ranked and x known to come after e
+    const log = [...(await chain()), after("x", "e")];
+    // WHEN replayed
+    const { next } = replay(items, log);
+    // THEN the next question pits x against f or g, never against something above e
+    expect(["f", "g"]).toContain(items[next![1]]!.title);
+  });
+
+  it("should place an item with no question when the known answers pin it to one slot", async () => {
+    // GIVEN x known to come after e and before f
+    const log = [...(await chain()), after("x", "e"), after("f", "x")];
+    // WHEN replayed
+    const r = replay(items, log);
+    // THEN x lands between e and f with nothing left to ask
+    expect(r.next).toBeNull();
+    expect(r.order.map((i) => items[i]!.title).join("")).toBe("abcdexfg");
+  });
+
+  it("should never ask the person a pair outside the narrowed slots during a run", async () => {
+    // GIVEN an engine seeded with a..g and "x after e"
+    const eng = createEngine({ items, log: [...(await chain()), after("x", "e")] });
+    const seen: string[] = [];
+    // WHEN a run asks about x, answering "x first" every time
+    await eng.run(async (a, b) => { seen.push(items[b]!.title); return -1 as const; });
+    // THEN it only ever asked against f or g, and x still landed after e
+    expect(seen.every((t) => t === "f" || t === "g")).toBe(true);
+    expect(seen.length).toBeGreaterThan(0);
+  });
+
+  it("should fall back to the whole list when the known answers contradict each other", async () => {
+    // GIVEN x known to come after e AND before b — impossible
+    const log = [...(await chain()), after("x", "e"), after("b", "x")];
+    // WHEN replayed
+    // THEN it still produces a next question instead of throwing or looping
+    expect(replay(items, log).next).not.toBeNull();
   });
 });

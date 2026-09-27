@@ -345,6 +345,7 @@ export class Sorter extends EventTarget {
         if (next !== undefined) this.#emit("upcoming", [next]);
       },
       ({ out, lo, hi, mid }) => this.#emit("upcoming", [out[(lo + mid) >> 1], out[(mid + 1 + hi) >> 1]].filter((i) => i !== undefined)),
+      (a, b) => this.#known(a, b),
     );
     // A superseded run never gets here: its pending question is dropped, not answered.
     this.#order = weightedOrder(sorted, items, this.list.priority, this.list.weights, this.list.combine);
@@ -355,16 +356,23 @@ export class Sorter extends EventTarget {
     this.#settle();
   }
 
+  /** A pair's answer without asking anyone, or null. Also what narrows the search (`slotsFor`). */
+  #known(a: number, b: number): Verdict | null {
+    const { items } = this.list;
+    const ia = idOf(items[a]), ib = idOf(items[b]);
+    // Your own answer first, so a direct answer beats the tier order — the escape hatch for
+    // promoting one item across the divide.
+    const known = this.#answers.get(pairKeyOf(ia, ib));
+    if (known !== undefined) return orient(known, flipOfIds(ia, ib));
+    return tierVerdict(items[a]!, items[b]!, this.list.priority);
+  }
+
   #cmp(a: number, b: number, my: number): Verdict | Promise<Verdict> {
+    const settled = this.#known(a, b);
+    if (settled !== null) return settled;
     const { items } = this.list;
     const ia = idOf(items[a]), ib = idOf(items[b]);
     const k = pairKeyOf(ia, ib), flip = flipOfIds(ia, ib);
-    // Your own answer first, so a direct answer beats the tier order — the escape hatch for
-    // promoting one item across the divide.
-    const known = this.#answers.get(k);
-    if (known !== undefined) return orient(known, flip);
-    const tier = tierVerdict(items[a]!, items[b]!, this.list.priority);
-    if (tier !== null) return tier;
     return new Promise((resolve) => {
       this.#pending = (v) => {
         const stored = orient(v, flip);
