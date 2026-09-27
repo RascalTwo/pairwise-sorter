@@ -370,7 +370,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-
   .ctl output { font-variant-numeric: tabular-nums; color: var(--muted); }
   .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin: 8px 0 0; }
   .legend i { display: inline-block; width: 14px; height: 10px; border-radius: 3px; vertical-align: middle; margin-right: 6px; }
-  #howSvg .node, #howSvg .band, #howSvg .slot, #howSvg .count { transition: transform .55s cubic-bezier(.3,.7,.3,1), opacity .4s; }
+  #howSvg .node, #howSvg .slot, #howSvg .count { transition: transform .55s cubic-bezier(.3,.7,.3,1), opacity .4s; }
   #howSvg .node rect, #howSvg .slot line, #howSvg .slot circle { transition: fill .3s, stroke .3s; }
   #howSvg .better { transition: opacity .3s .15s; }
   /* The connector GROWS out of the compared item towards the new one. */
@@ -433,8 +433,8 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-
       <div class="legend">
         <span><i style="background:var(--accent)"></i>item being placed</span>
         <span><i style="background:var(--warn)"></i>the item it is compared with</span>
-        <span><i style="background:color-mix(in srgb,var(--warn) 22%,transparent);border:1px solid var(--warn)"></i>items it could still land among</span>
         <span><i style="height:0;border-top:3px dashed var(--warn);border-radius:0"></i>a place it could still go</span>
+        <span><i style="height:0;border-top:3px dashed var(--good);border-radius:0"></i>the one place left</span>
         <span><i style="background:var(--good)"></i>the better of the pair</span>
         <span><i style="background:var(--panel-2);border:1px solid var(--border);opacity:.4"></i>ruled out — no need to ask</span>
       </div>
@@ -2831,8 +2831,6 @@ svg.innerHTML = `
       <text x="${COL_X - 70}" y="${rowY(N - 1) + 27}" text-anchor="end" font-size="13" fill="var(--muted)">worst</text>
       <defs><marker id="rk" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,0 L5,10z" fill="var(--border)"/></marker></defs>
       <line x1="${COL_X - 58}" y1="${TOP + 8}" x2="${COL_X - 58}" y2="${rowY(N - 1) + 36}" stroke="var(--border)" stroke-width="2" marker-end="url(#rk)"/>
-      <rect class="band" id="band" x="${COL_X - 12}" y="0" width="${COL_W + 24}" height="10" rx="10" style="opacity:0"
-        fill="color-mix(in srgb, var(--warn) 12%, transparent)" stroke="var(--warn)" stroke-dasharray="5 4" data-viz-id="window" data-label="items it could still land among"/>
       ${Array.from({ length: N + 1 }, (_, k) => `<g class="slot" id="s${k}" style="opacity:0" data-viz-id="slot-${k}" data-label="possible place #${k + 1}">
         <line x1="0" x2="${COL_W}" y1="0" y2="0" stroke="var(--warn)" stroke-width="3" stroke-dasharray="7 6"/>
         <circle cx="-10" cy="0" r="5" fill="var(--warn)"/></g>`).join("")}
@@ -2899,18 +2897,13 @@ function drawHow(i) {
     const slot = svg.querySelector(`#s${k}`), exists = k <= placed.length - (st.kind === "place" ? 1 : 0);
     const open2 = k >= lo && k <= hi;
     const op = !inPlay || !exists || st.kind === "place" ? 0 : open2 ? 1 : 0.18;
+    const colour = !open2 ? "var(--muted)" : lo === hi ? "var(--good)" : "var(--warn)";
     slot.querySelectorAll("line, circle").forEach((m) => {
-      m.style.stroke = m.style.fill = open2 ? "var(--warn)" : "var(--muted)";
+      m.style.stroke = m.style.fill = colour;
     });
     slot.querySelector("line").style.fill = "none";
     put(slot, COL_X, slotY(k), op);
   }
-  const band = svg.querySelector("#band");
-  if (asking && hi > lo) {
-    band.setAttribute("height", (hi - lo) * ROW - (ROW - BOX_H) + 14);
-    put(band, 0, rowY(lo) - 7, 1);
-  } else
-    band.style.opacity = 0;
   const link = svg.querySelector("#link"), grow = link.querySelector("line");
   if (asking) {
     put(link, COL_X + COL_W, rowY(st.mid) + BOX_H / 2, 1);
@@ -2927,6 +2920,7 @@ function drawHow(i) {
   const count = svg.querySelector("#count"), open = hi - lo + 1;
   if (newPos && st.kind !== "done") {
     count.textContent = places(open);
+    count.style.fill = open === 1 ? "var(--good)" : "var(--warn)";
     put(count, newPos[0], newPos[1], 1);
   } else
     count.style.opacity = 0;
