@@ -24,7 +24,7 @@
     // /docs/ and CI builds the library into /dist/. A computed specifier is also what stops
     // `viz publish` from bundling it.
     const lib = location.pathname.includes("/viz-pages/") ? "./dist/" : "../dist/";
-    const pw: Pairwise = await import(lib + "index.js");
+    const pw = await import(lib + "index.js").then((m: Pairwise) => m);
     await import(lib + "element/index.js");
 
     // ── 1. binary insertion, recorded from the real sortIndices ─────────
@@ -48,8 +48,7 @@
       steps.push({ kind: "ask", placed: [...out], item: cur, lo, hi, mid });
     });
     const final = await pw.sortIndices(COFFEES.map((_, i) => i), better);
-    steps.push({ kind: "place", placed: final, item: cur, at: final.indexOf(cur!) });
-    steps.push({ kind: "done", placed: final, item: null });
+    steps.push({ kind: "place", placed: final, item: cur, at: final.indexOf(cur!) }, { kind: "done", placed: final, item: null });
     const questions = steps.filter((s) => s.kind === "ask").length;
 
     const COL_X = 300, COL_W = 250, ROW = 74, TOP = 40, BOX_H = 44, NEW_X = 660, N = COFFEES.length;
@@ -90,17 +89,13 @@
     }
     const places = (n: number) => (n === 1 ? "1 possible place" : `${n} possible places`);
 
-    function drawHow(i: number) {
-      const st = steps[i]!;
+    /** Park every coffee: ranked ones in the column, the item being placed out to the right. Returns where the item sits. */
+    function drawNodes(st: Step, lo: number, hi: number, winner: number | null | undefined): [number, number] | null {
       const asking = st.kind === "ask" || st.kind === "answer";
-      const placed = st.placed, pos = new Map(placed.map((idx, k) => [idx, k]));
-      // Rows the item could still land among (lo..hi-1) and places it could still go (lo..hi).
-      const [lo, hi] = asking ? [st.lo!, st.hi!] : st.kind === "take" ? [0, placed.length] : [st.at ?? 0, st.at ?? 0];
-      const winner = st.kind === "answer" ? (st.verdict! < 0 ? st.item : placed[st.mid!]) : null;
+      const pos = new Map(st.placed.map((idx, k) => [idx, k]));
       let newPos: [number, number] | null = null;
-
-      COFFEES.forEach((_, c) => {
-        const el = node(c), rect = el.querySelector("rect")!, [title, rank] = el.querySelectorAll<SVGTextElement>(":scope > text") as unknown as [SVGTextElement, SVGTextElement];
+      for (const c of COFFEES.keys()) {
+        const el = node(c), rect = el.querySelector("rect")!, title = el.querySelector<SVGTextElement>("text")!, rank = el.querySelector<SVGTextElement>(".rank")!;
         let x = NEW_X, y = rowY(0), op = 0, fill = "var(--panel-2)", ink = "var(--text)";
         if (pos.has(c)) {
           const k = pos.get(c)!;
@@ -117,12 +112,15 @@
         title.style.fill = ink;
         el.querySelector<SVGGElement>(".better")!.style.opacity = String(c === winner ? 1 : 0);
         put(el, x, y, op);
-      });
+      }
+      return newPos;
+    }
 
-      // Possible places: lit inside the open range, faded once ruled out, gone when not in play.
-      const inPlay = st.kind === "take" || asking || st.kind === "place";
+    /** Possible places: lit inside the open range, faded once ruled out, gone when not in play. */
+    function drawSlots(st: Step, lo: number, hi: number) {
+      const inPlay = st.kind === "take" || st.kind === "ask" || st.kind === "answer" || st.kind === "place";
       for (let k = 0; k <= N; k++) {
-        const slot = svg.querySelector<SVGGElement>(`#s${k}`)!, exists = k <= placed.length - (st.kind === "place" ? 1 : 0);
+        const slot = svg.querySelector<SVGGElement>(`#s${k}`)!, exists = k <= st.placed.length - (st.kind === "place" ? 1 : 0);
         const open = k >= lo && k <= hi;
         const op = !inPlay || !exists || st.kind === "place" ? 0 : open ? 1 : 0.18;
         const colour = !open ? "var(--muted)" : lo === hi ? "var(--good)" : "var(--warn)";
@@ -130,6 +128,36 @@
         slot.querySelector("line")!.style.fill = "none";
         put(slot, COL_X, slotY(k), op);
       }
+    }
+
+    function sayHow(st: Step, lo: number, hi: number): string {
+      const placed = st.placed, open = hi - lo + 1;
+      const name = (k: number) => `<b>${esc(COFFEES[k]![0])}</b>`;
+      const range = open === 1 ? `that leaves <b>1 possible place</b>: #${lo + 1}` : `that leaves <b>${places(open)}</b>, #${lo + 1}–#${hi + 1}`;
+      return {
+        take: () => placed.length > 0
+          ? `Next up: ${name(st.item!)}. With ${placed.length} already ranked it has <b>${places(placed.length + 1)}</b> — `
+            + (placed.length === 1 ? `above or below ${name(placed[0]!)}.` : "above them, between any two, or below them.")
+          : `${name(st.item!)} goes first: with nothing ranked yet there is only <b>1 possible place</b>.`,
+        ask: () => `Is ${name(st.item!)} better than ${name(placed[st.mid!]!)}? It is compared with the <b>middle</b> of what's still open, so either answer rules out about half the places.`,
+        answer: () => st.verdict! < 0
+          ? `<b>Yes</b> — ${name(st.item!)} is better, so it goes above ${name(placed[st.mid!]!)}; ${range}.`
+          : `<b>No</b> — ${name(placed[st.mid!]!)} is better, so ${name(st.item!)} goes below it; ${range}.`,
+        place: () => `One place left — ${name(st.item!)} lands at <b>#${st.at! + 1}</b>`
+          + (st.at! < placed.length - 1 ? " and everything under it moves down." : "."),
+        done: () => `Done: 8 items ranked with <b>${questions}</b> questions. Asking about every pair would have taken 28.`,
+      }[st.kind]();
+    }
+
+    function drawHow(i: number) {
+      const st = steps[i]!;
+      const asking = st.kind === "ask" || st.kind === "answer";
+      const placed = st.placed;
+      // Rows the item could still land among (lo..hi-1) and places it could still go (lo..hi).
+      const [lo, hi] = asking ? [st.lo!, st.hi!] : st.kind === "take" ? [0, placed.length] : [st.at ?? 0, st.at ?? 0];
+      const winner = st.kind === "answer" ? (st.verdict! < 0 ? st.item : placed[st.mid!]) : null;
+      const newPos = drawNodes(st, lo, hi, winner);
+      drawSlots(st, lo, hi);
 
       const link = svg.querySelector<SVGGElement>("#link")!, grow = link.querySelector("line")!;
       if (asking) {
@@ -146,28 +174,14 @@
         put(count, newPos[0], newPos[1], 1);
       } else count.style.opacity = "0";
 
-      const name = (k: number) => `<b>${esc(COFFEES[k]![0])}</b>`;
-      const range = open === 1 ? `that leaves <b>1 possible place</b>: #${lo + 1}` : `that leaves <b>${places(open)}</b>, #${lo + 1}–#${hi + 1}`;
-      $("#howSay")!.innerHTML = {
-        take: () => placed.length
-          ? `Next up: ${name(st.item!)}. With ${placed.length} already ranked it has <b>${places(placed.length + 1)}</b> — `
-            + (placed.length === 1 ? `above or below ${name(placed[0]!)}.` : "above them, between any two, or below them.")
-          : `${name(st.item!)} goes first: with nothing ranked yet there is only <b>1 possible place</b>.`,
-        ask: () => `Is ${name(st.item!)} better than ${name(placed[st.mid!]!)}? It is compared with the <b>middle</b> of what's still open, so either answer rules out about half the places.`,
-        answer: () => st.verdict! < 0
-          ? `<b>Yes</b> — ${name(st.item!)} is better, so it goes above ${name(placed[st.mid!]!)}; ${range}.`
-          : `<b>No</b> — ${name(placed[st.mid!]!)} is better, so ${name(st.item!)} goes below it; ${range}.`,
-        place: () => `One place left — ${name(st.item!)} lands at <b>#${st.at! + 1}</b>`
-          + (st.at! < placed.length - 1 ? " and everything under it moves down." : "."),
-        done: () => `Done: 8 items ranked with <b>${questions}</b> questions. Asking about every pair would have taken 28.`,
-      }[st.kind]();
+      $("#howSay")!.innerHTML = sayHow(st, lo, hi);
       $("#howAt")!.textContent = `step ${i + 1} / ${steps.length}`;
     }
     const how = stepper({ n: steps.length, onStep: drawHow, hashKey: "how", target: $("#howFig")! });
-    $("#howPrev")!.onclick = () => how.prev();
-    $("#howNext")!.onclick = () => how.next();
+    $("#howPrev")!.addEventListener("click", () => how.prev());
+    $("#howNext")!.addEventListener("click", () => how.next());
     let playing: ReturnType<typeof setInterval> | null = null;
-    $("#howPlay")!.onclick = () => {
+    $("#howPlay")!.addEventListener("click", () => {
       if (playing) { clearInterval(playing); playing = null; $("#howPlay")!.textContent = "▶ Play"; return; }
       if (how.current === steps.length - 1) how.go(0);
       $("#howPlay")!.textContent = "❚❚ Pause";
@@ -175,7 +189,7 @@
         if (how.current === steps.length - 1) return $("#howPlay")!.click();
         how.next();
       }, 1300);
-    };
+    });
 
     // ── 2. questions against n ───────────────────────────────────────────
     const cost = $<SVGSVGElement>("#costSvg")!, CW = 1000, CH = 360, L = 70, R = 20, T = 20, B = 40, NMAX = 200;
@@ -199,10 +213,12 @@
       }
       g += `<line x1="${xs(n)}" x2="${xs(n)}" y1="${T}" y2="${CH - B}" stroke="var(--muted)" stroke-dasharray="3 4"/>`;
       cost.innerHTML = g;
-      const [p, ins, add] = series.map((s) => s.f(n)) as [number, number, number];
+      const at = (i: number) => series[i]!.f(n);
+      const p = at(0), ins = at(1), add = at(2);
       $("#costOut")!.innerHTML = `n = <b>${n}</b>: every pair <b>${p.toLocaleString()}</b> · binary insertion at most <b>${ins}</b> (${Math.round((ins / p) * 100)}%) · one more item <b>${add}</b>`;
     }
-    $("#costN")!.oninput = (e) => drawCost(+(e.target as HTMLInputElement).value);
+    const costN = $<HTMLInputElement>("#costN")!;
+    costN.addEventListener("input", () => drawCost(+costN.value));
     drawCost(30);
 
     // ── 3. architecture ──────────────────────────────────────────────────
@@ -226,7 +242,7 @@
       ["console", "installConsole()", "Puts a scripting API on window, so DevTools or an agent can drive the app without clicking.", ["pairwiseSorter.help()"]],
     ];
     const boxes = new Map<string, Box & { label: string }>();
-    const col = (list: Entry[], x: number, y0: number, w: number, h: number, gap: number) => list.forEach(([id, label], i) => boxes.set(id, { x, y: y0 + i * (h + gap), w, h, label }));
+    const col = (list: Entry[], x: number, y0: number, w: number, h: number, gap: number) => list.forEach(([id, label], i) => { boxes.set(id, { x, y: y0 + i * (h + gap), w, h, label }); });
     col(CORE, 20, 50, 170, 56, 24);
     col(ELS, 265, 50, 190, 44, 22);
     col(APP, 510, 150, 170, 56, 40);
@@ -245,11 +261,12 @@
     $("#archSvg")!.innerHTML = archOut;
     const showDetail = (id: string | undefined) => {
       const [, label, what, api] = all.find((e) => e[0] === id)!;
-      $("#detail")!.innerHTML = `<h3>${esc(label)}</h3><p>${esc(what)}</p>${api.length ? `<p>${api.map((a) => `<code>${esc(a)}</code>`).join(" ")}</p>` : ""}<p class="muted"><a href="../api/">Full reference →</a></p>`;
+      $("#detail")!.innerHTML = `<h3>${esc(label)}</h3><p>${esc(what)}</p>${api.length > 0 ? `<p>${api.map((a) => `<code>${esc(a)}</code>`).join(" ")}</p>` : ""}<p class="muted"><a href="../api/">Full reference →</a></p>`;
       for (const g of document.querySelectorAll<SVGGElement>(".arch .box")) g.classList.toggle("on", g.dataset["id"] === id);
     };
-    $("#archSvg")!.addEventListener("click", (e) => { const g = (e.target as Element).closest<SVGGElement>(".box"); if (g) showDetail(g.dataset["id"]); });
-    $("#archSvg")!.addEventListener("keydown", (e) => { const g = (e.target as Element).closest<SVGGElement>(".box"); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); showDetail(g.dataset["id"]); } });
+    const boxOf = (e: Event) => (e.target instanceof Element ? e.target.closest<SVGGElement>(".box") : null);
+    $("#archSvg")!.addEventListener("click", (e) => { const g = boxOf(e); if (g) showDetail(g.dataset["id"]); });
+    $("#archSvg")!.addEventListener("keydown", (e) => { const g = boxOf(e); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); showDetail(g.dataset["id"]); } });
     showDetail("sorter");
 
     // ── 4. live elements sharing one Sorter ─────────────────────────────
@@ -257,8 +274,8 @@
     let live: unknown;
     const start = () => {
       live = new pw.Sorter({ ...pw.emptyList("Coffee"), items: SAMPLE.map((t) => pw.item(t)) });
-      for (const id of ["liveCompare", "liveProgress", "liveRanking"]) (document.getElementById(id) as HTMLElement & { sorter: unknown }).sorter = live;
+      for (const id of ["liveCompare", "liveProgress", "liveRanking"]) Object.assign(document.querySelector(`#${id}`)!, { sorter: live });
     };
-    $("#liveReset")!.onclick = start;
+    $("#liveReset")!.addEventListener("click", start);
     start();
     hljs.highlightAll();
