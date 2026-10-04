@@ -8,12 +8,21 @@ import { open, text, question, ranking, progress, nextQuestion, inside } from ".
 
 /** Drag the cost chart's size slider to `n`. */
 const setSize = async (page: Page, n: number): Promise<void> => {
-  await page.$eval("input#costN", (e, v) => { e.value = v; e.dispatchEvent(new Event("input", { bubbles: true })); }, String(n));
+  await page.$eval(
+    "input#costN",
+    (e, v) => {
+      e.value = v;
+      e.dispatchEvent(new Event("input", { bubbles: true }));
+    },
+    String(n),
+  );
 };
 /** Click the "a" or "b" card's Choose button inside the comparison's shadow root. */
 const choose = async (page: Page, side: string): Promise<void> => {
   await page.evaluate((s) => {
-    const b = document.querySelector("pairwise-compare")!.shadowRoot!.querySelector(`[data-choose=${s}]`);
+    const b = document
+      .querySelector("pairwise-compare")!
+      .shadowRoot!.querySelector(`[data-choose=${s}]`);
     if (b instanceof HTMLElement) b.click();
   }, side);
 };
@@ -29,24 +38,32 @@ describe("why it's cheap (the cost chart)", () => {
     const page = await open();
 
     // THEN it says 435 pairs, at most 119 questions by binary insertion (27%), and 5 to add one item
-    expect(await text(page, "#costOut")).toBe("n = 30: every pair 435 · binary insertion at most 119 (27%) · one more item 5");
+    expect(await text(page, "#costOut")).toBe(
+      "n = 30: every pair 435 · binary insertion at most 119 (27%) · one more item 5",
+    );
 
     // WHEN the reader drags the size to 200
     await setSize(page, 200);
     // THEN it says 19,900 pairs, at most 1345 (7%), and 8 to add one item
-    expect(await text(page, "#costOut")).toBe("n = 200: every pair 19,900 · binary insertion at most 1345 (7%) · one more item 8");
+    expect(await text(page, "#costOut")).toBe(
+      "n = 200: every pair 19,900 · binary insertion at most 1345 (7%) · one more item 8",
+    );
 
     // WHEN they drag it to the smallest, 2
     await setSize(page, 2);
     // THEN one pair, one question, two to add one (never below 1)
-    expect(await text(page, "#costOut")).toBe("n = 2: every pair 1 · binary insertion at most 1 (100%) · one more item 2");
+    expect(await text(page, "#costOut")).toBe(
+      "n = 2: every pair 1 · binary insertion at most 1 (100%) · one more item 2",
+    );
   });
 
   it.concurrent("should draw one dot per line at the chosen size, moving with the slider", async () => {
     // GIVEN the chart
     const page = await open();
     const dotX = async (): Promise<number[]> => {
-      const xs = await page.$$eval('#costSvg circle[data-viz-id^="dot-"]', (c) => c.map((e) => +e.getAttribute("cx")!));
+      const xs = await page.$$eval('#costSvg circle[data-viz-id^="dot-"]', (c) =>
+        c.map((e) => +e.getAttribute("cx")!),
+      );
       return xs;
     };
     const before = await dotX();
@@ -65,7 +82,9 @@ describe("how it asks (the recorded trace)", () => {
   it.concurrent("should walk eight coffees to the right ranking, asking only the questions it needs", async () => {
     // GIVEN the walkthrough on its first step
     const page = await open();
-    expect(await text(page, "#howSay")).toBe("Mocha goes first: with nothing ranked yet there is only 1 possible place.");
+    expect(await text(page, "#howSay")).toBe(
+      "Mocha goes first: with nothing ranked yet there is only 1 possible place.",
+    );
     const at = await text(page, "#howAt");
     const total = +/\/ (\d+)/u.exec(at)![1]!;
     expect(at).toMatch(/^step 1 \/ \d+$/u);
@@ -83,13 +102,32 @@ describe("how it asks (the recorded trace)", () => {
     // THEN the last step says done, with as many questions as were asked, no more than the 17 worst case for 8 items, and fewer than the 28 pairs
     expect(await text(page, "#howAt")).toBe(`step ${total} / ${total}`);
     const done = await text(page, "#howSay");
-    expect(done).toBe(`Done: 8 items ranked with ${asked.length} questions. Asking about every pair would have taken 28.`);
+    expect(done).toBe(
+      `Done: 8 items ranked with ${asked.length} questions. Asking about every pair would have taken 28.`,
+    );
     expect(asked.length).toBeGreaterThanOrEqual(7);
     expect(asked.length).toBeLessThanOrEqual(17);
 
     // THEN the coffees stand best to worst by the scores the page gives them (8 Flat white … 1 Drip)
-    const order = await page.$$eval("#howSvg g.node", (ns) => ns.map((n) => ({ name: n.querySelector("text")!.textContent, rank: n.querySelector(".rank")!.textContent, y: +/translate\([^,]+,\s*([\d.-]+)px/u.exec(n.style.transform)![1]! })).toSorted((a, b) => a.y - b.y));
-    expect(order.map((o) => o.name)).toEqual(["Flat white", "Cold brew", "Cortado", "Espresso", "Mocha", "Latte", "Americano", "Drip"]);
+    const order = await page.$$eval("#howSvg g.node", (ns) =>
+      ns
+        .map((n) => ({
+          name: n.querySelector("text")!.textContent,
+          rank: n.querySelector(".rank")!.textContent,
+          y: +/translate\([^,]+,\s*([\d.-]+)px/u.exec(n.style.transform)![1]!,
+        }))
+        .toSorted((a, b) => a.y - b.y),
+    );
+    expect(order.map((o) => o.name)).toEqual([
+      "Flat white",
+      "Cold brew",
+      "Cortado",
+      "Espresso",
+      "Mocha",
+      "Latte",
+      "Americano",
+      "Drip",
+    ]);
     expect(order.map((o) => o.rank)).toEqual(["#1", "#2", "#3", "#4", "#5", "#6", "#7", "#8"]);
   });
 
@@ -133,13 +171,17 @@ describe("how it asks (the recorded trace)", () => {
     const page = await open();
     await page.click("#howNext"); // place Mocha
     await page.click("#howNext"); // take Cold brew
-    expect(await text(page, "#howSay")).toMatch(/^Next up: Cold brew\. With 1 already ranked it has 2 possible places — above or below Mocha\.$/u);
+    expect(await text(page, "#howSay")).toMatch(
+      /^Next up: Cold brew\. With 1 already ranked it has 2 possible places — above or below Mocha\.$/u,
+    );
     await page.click("#howNext"); // ask
     expect(await text(page, "#howSay")).toMatch(/^Is Cold brew better than Mocha\?/u);
     // WHEN the answer arrives (the page answers by the coffees' scores: Cold brew 7 beats Mocha 4)
     await page.click("#howNext");
     // THEN it says yes, and that one place is left: #1
-    expect(await text(page, "#howSay")).toBe("Yes — Cold brew is better, so it goes above Mocha; that leaves 1 possible place: #1.");
+    expect(await text(page, "#howSay")).toBe(
+      "Yes — Cold brew is better, so it goes above Mocha; that leaves 1 possible place: #1.",
+    );
   });
 });
 
@@ -154,22 +196,31 @@ describe("what's in the box (the architecture browser)", () => {
     await page.click('#archSvg .box[data-id="engine"]');
     // THEN its description shows, and only it is marked
     expect(await text(page, "#detail h3")).toBe("engine");
-    expect(await text(page, "#detail")).toContain("The decision log, tiers and the binary-insertion sort.");
-    expect(await page.$$eval("#archSvg g.box.on", (b) => b.map((e) => e.dataset["id"]))).toEqual(["engine"]);
+    expect(await text(page, "#detail")).toContain(
+      "The decision log, tiers and the binary-insertion sort.",
+    );
+    expect(await page.$$eval("#archSvg g.box.on", (b) => b.map((e) => e.dataset["id"]))).toEqual([
+      "engine",
+    ]);
 
     // WHEN they focus another box and press Enter
-    await page.$eval('#archSvg .box[data-id="tiers"]', (e) => { if (e instanceof SVGElement) e.focus(); });
+    await page.$eval('#archSvg .box[data-id="tiers"]', (e) => {
+      if (e instanceof SVGElement) e.focus();
+    });
     await page.keyboard.press("Enter");
     // THEN that one shows instead
     expect(await text(page, "#detail h3")).toBe("<pairwise-tiers>");
-    expect(await page.$$eval("#archSvg g.box.on", (b) => b.map((e) => e.dataset["id"]))).toEqual(["tiers"]);
+    expect(await page.$$eval("#archSvg g.box.on", (b) => b.map((e) => e.dataset["id"]))).toEqual([
+      "tiers",
+    ]);
   });
 });
 
 describe("three elements, one Sorter (the live demo)", () => {
   /** Answer by a fixed taste: the alphabetically earlier title always wins. */
   async function answerAlphabetically(page: Awaited<ReturnType<typeof open>>, until = 100) {
-    let q = await question(page), n = 0;
+    let q = await question(page),
+      n = 0;
     while (q && n++ < until) {
       const side = q.a < q.b ? "a" : "b";
       // oxlint-disable-next-line no-await-in-loop -- answers are given one at a time
@@ -185,7 +236,11 @@ describe("three elements, one Sorter (the live demo)", () => {
     const page = await open();
     // THEN two of them are up for comparison, and progress has counted no answers against the worst case of 11
     const q = (await question(page))!;
-    expect([q.a, q.b].every((t) => ["Flat white", "Cold brew", "Mocha", "Cortado", "Espresso", "Chai"].includes(t))).toBe(true);
+    expect(
+      [q.a, q.b].every((t) =>
+        ["Flat white", "Cold brew", "Mocha", "Cortado", "Espresso", "Chai"].includes(t),
+      ),
+    ).toBe(true);
     expect(q.a).not.toBe(q.b);
     expect(await progress(page)).toMatch(/^0 of ~11 comparisons · \d of 6 placed$/u);
   });
@@ -199,7 +254,14 @@ describe("three elements, one Sorter (the live demo)", () => {
 
     // THEN the comparison goes idle, and the ranking lists them alphabetically, ranked 1 to 6
     expect(await question(page)).toBeNull();
-    expect(await ranking(page)).toEqual([["1", "Chai"], ["2", "Cold brew"], ["3", "Cortado"], ["4", "Espresso"], ["5", "Flat white"], ["6", "Mocha"]]);
+    expect(await ranking(page)).toEqual([
+      ["1", "Chai"],
+      ["2", "Cold brew"],
+      ["3", "Cortado"],
+      ["4", "Espresso"],
+      ["5", "Flat white"],
+      ["6", "Mocha"],
+    ]);
     // THEN progress counts the answers given, against the worst case of 11, with everything placed
     expect(answers).toBeGreaterThanOrEqual(5);
     expect(answers).toBeLessThanOrEqual(11);
@@ -218,7 +280,14 @@ describe("three elements, one Sorter (the live demo)", () => {
       q = await nextQuestion(page, q);
     }
     // THEN the ranking is reverse-alphabetical
-    expect((await ranking(page)).map(([, t]) => t)).toEqual(["Mocha", "Flat white", "Espresso", "Cortado", "Cold brew", "Chai"]);
+    expect((await ranking(page)).map(([, t]) => t)).toEqual([
+      "Mocha",
+      "Flat white",
+      "Espresso",
+      "Cortado",
+      "Cold brew",
+      "Chai",
+    ]);
 
     // WHEN they press Start over
     await page.click("#liveReset");
@@ -226,7 +295,11 @@ describe("three elements, one Sorter (the live demo)", () => {
     expect(await question(page)).not.toBeNull();
     expect(await progress(page)).toMatch(/^0 of ~11 comparisons/u);
     expect(await ranking(page)).toEqual([["1", "Flat white"]]);
-    expect(await inside(page, "pairwise-ranking", (r) => [...r.querySelectorAll("[part=unplaced] li")].map((li) => li.textContent).toSorted())).toEqual(["Chai", "Cold brew", "Cortado", "Espresso", "Mocha"]);
+    expect(
+      await inside(page, "pairwise-ranking", (r) =>
+        [...r.querySelectorAll("[part=unplaced] li")].map((li) => li.textContent).toSorted(),
+      ),
+    ).toEqual(["Chai", "Cold brew", "Cortado", "Espresso", "Mocha"]);
   });
 
   it.concurrent("should answer with the arrow keys: left chooses the left card, and down says equal", async () => {

@@ -1,152 +1,412 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Already dark: stop Dark Reader re-theming it (it also breaks the highlight.js theme). -->
-<meta name="darkreader-lock">
-<title>pairwise-sorter — rank anything one pair at a time</title>
-<!-- Publish posture: public — this page is the library's documentation home on GitHub Pages. -->
-<meta name="viz:uid" content="v-daec3bc3b495">
-<meta name="viz:posture" content="public">
-<meta name="viz:listed" content="listed">
-<meta name="viz:title" content="pairwise-sorter">
-<meta name="viz:description" content="Rank anything by answering &quot;which is better?&quot; one pair at a time. A TypeScript logic core and web components — how it works, what's in it, and how to use it.">
-<link rel="stylesheet" href="/_kit/viz-kit.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<style>
-  body { max-width: 1180px; margin: 0 auto; padding: 24px 32px 80px; }
-  nav.links { display: flex; gap: 12px; flex-wrap: wrap; margin: 14px 0 6px; }
-  nav.links a { padding: 7px 14px; border: 1px solid var(--border); border-radius: var(--r); text-decoration: none; }
-  nav.links a.primary { background: var(--accent); color: #06101d; border-color: var(--accent); font-weight: 600; }
-  section { margin: 56px 0; }
-  section > h2 { margin-bottom: 4px; }
-  .lede { color: var(--muted); max-width: 80ch; margin: 0 0 16px; }
-  figure { margin: 0; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-  figure:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  figcaption { color: var(--muted); font-size: 13px; margin-top: 10px; }
-  svg { width: 100%; height: auto; display: block; }
-  .ctl { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; font-size: 14px; }
-  .ctl button { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: var(--r); padding: 5px 12px; cursor: pointer; }
-  .ctl output { font-variant-numeric: tabular-nums; color: var(--muted); }
-  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin: 8px 0 0; }
-  .legend i { display: inline-block; width: 14px; height: 10px; border-radius: 3px; vertical-align: middle; margin-right: 6px; }
-  #howSvg .node, #howSvg .slot, #howSvg .count { transition: transform .55s cubic-bezier(.3,.7,.3,1), opacity .4s; }
-  #howSvg .node rect, #howSvg .slot line, #howSvg .slot circle { transition: fill .3s, stroke .3s; }
-  #howSvg .better { transition: opacity .3s .15s; }
-  /* The connector GROWS out of the compared item towards the new one. */
-  #howSvg .grow { transform-box: fill-box; transform-origin: left center; transition: transform .45s cubic-bezier(.3,.7,.3,1), stroke .3s; }
-  @media (prefers-reduced-motion: reduce) { #howSvg * { transition: none !important; } }
-  .say { font-size: 17px; min-height: 1.5em; margin: 10px 0 0; }
-  .two { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: start; }
-  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
-  #detail { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; font-size: 14px; }
-  #detail h3 { margin: 0 0 6px; }
-  #detail code, .lede code, li code { background: var(--panel-2); padding: 1px 5px; border-radius: 4px; }
-  .arch .box rect { rx: 8; fill: var(--panel-2); stroke: var(--border); stroke-width: 1.5; cursor: pointer; }
-  .arch .box:hover rect, .arch .box.on rect { stroke: var(--accent); }
-  .arch .frame { fill: none; stroke: var(--border); stroke-dasharray: 4 4; rx: 12; }
-  .arch .edge { stroke: var(--muted); stroke-width: 1.5; fill: none; }
-  .arch .vsvg-label { font-size: 15px; }
-  .arch .col { fill: var(--muted); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
-  .live { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; }
-  @media (max-width: 860px) { .live { grid-template-columns: 1fr; } }
-  .live > div { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-  .live h3 { margin: 0 0 10px; font-size: 14px; color: var(--muted); font-weight: 500; }
-  pre code.hljs { background: transparent; padding: 0; }
-  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px; overflow-x: auto; font-size: 13px; line-height: 1.55; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 16px; }
-  .cards h3 { margin: 0 0 6px; font-size: 15px; }
-  table.api { border-collapse: collapse; font-size: 14px; width: 100%; }
-  table.api td { border-top: 1px solid var(--border); padding: 7px 10px 7px 0; vertical-align: top; }
-  table.api td:first-child { white-space: nowrap; }
-</style>
-</head>
-<body>
-  <div class="viz-header">
-    <h1>pairwise-sorter</h1>
-    <div class="sub">Rank anything by answering <b>“which is better?”</b> one pair at a time — about n·log₂n questions instead of every pair, and adding an item later costs only ~log₂n more. A TypeScript logic core for Node and the browser, and web components that drop into any page.</div>
-  </div>
-  <nav class="links">
-    <a class="primary" href="../">Open the sorter app</a>
-    <a href="../api/">API reference</a>
-    <a href="https://github.com/RascalTwo/pairwise-sorter">GitHub</a>
-  </nav>
-
-  <!-- ── 1. how it asks ─────────────────────────────────────────────── -->
-  <section id="how">
-    <h2>How it asks</h2>
-    <p class="lede">Binary insertion with you as the comparator. Each item is slotted into the list already placed by halving the gap it could go in. Step through it — this trace was recorded by running the library's own <code>sortIndices</code> on eight coffees.</p>
-    <figure id="howFig" tabindex="0" aria-label="Binary insertion walkthrough; use arrow keys to step" data-viz-id="how-figure" data-label="Binary insertion walkthrough">
-      <svg id="howSvg" viewBox="0 0 1000 660"></svg>
-      <p class="say" id="howSay"></p>
-      <div class="ctl">
-        <button id="howPrev" aria-label="Previous step">◀</button>
-        <button id="howPlay">▶ Play</button>
-        <button id="howNext" aria-label="Next step">▶</button>
-        <output id="howAt"></output>
-        <span class="muted">— or focus the figure and use ← →</span>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Already dark: stop Dark Reader re-theming it (it also breaks the highlight.js theme). -->
+    <meta name="darkreader-lock" />
+    <title>pairwise-sorter — rank anything one pair at a time</title>
+    <!-- Publish posture: public — this page is the library's documentation home on GitHub Pages. -->
+    <meta name="viz:uid" content="v-daec3bc3b495" />
+    <meta name="viz:posture" content="public" />
+    <meta name="viz:listed" content="listed" />
+    <meta name="viz:title" content="pairwise-sorter" />
+    <meta
+      name="viz:description"
+      content='Rank anything by answering "which is better?" one pair at a time. A TypeScript logic core and web components — how it works, what&apos;s in it, and how to use it.'
+    />
+    <link rel="stylesheet" href="/_kit/viz-kit.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+      body {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 24px 32px 80px;
+      }
+      nav.links {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 14px 0 6px;
+      }
+      nav.links a {
+        padding: 7px 14px;
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        text-decoration: none;
+      }
+      nav.links a.primary {
+        background: var(--accent);
+        color: #06101d;
+        border-color: var(--accent);
+        font-weight: 600;
+      }
+      section {
+        margin: 56px 0;
+      }
+      section > h2 {
+        margin-bottom: 4px;
+      }
+      .lede {
+        color: var(--muted);
+        max-width: 80ch;
+        margin: 0 0 16px;
+      }
+      figure {
+        margin: 0;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      figure:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+      figcaption {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 10px;
+      }
+      svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .ctl {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 12px;
+        font-size: 14px;
+      }
+      .ctl button {
+        background: var(--panel-2);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        padding: 5px 12px;
+        cursor: pointer;
+      }
+      .ctl output {
+        font-variant-numeric: tabular-nums;
+        color: var(--muted);
+      }
+      .legend {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        color: var(--muted);
+        margin: 8px 0 0;
+      }
+      .legend i {
+        display: inline-block;
+        width: 14px;
+        height: 10px;
+        border-radius: 3px;
+        vertical-align: middle;
+        margin-right: 6px;
+      }
+      #howSvg .node,
+      #howSvg .slot,
+      #howSvg .count {
+        transition:
+          transform 0.55s cubic-bezier(0.3, 0.7, 0.3, 1),
+          opacity 0.4s;
+      }
+      #howSvg .node rect,
+      #howSvg .slot line,
+      #howSvg .slot circle {
+        transition:
+          fill 0.3s,
+          stroke 0.3s;
+      }
+      #howSvg .better {
+        transition: opacity 0.3s 0.15s;
+      }
+      /* The connector GROWS out of the compared item towards the new one. */
+      #howSvg .grow {
+        transform-box: fill-box;
+        transform-origin: left center;
+        transition:
+          transform 0.45s cubic-bezier(0.3, 0.7, 0.3, 1),
+          stroke 0.3s;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #howSvg * {
+          transition: none !important;
+        }
+      }
+      .say {
+        font-size: 17px;
+        min-height: 1.5em;
+        margin: 10px 0 0;
+      }
+      .two {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 16px;
+        align-items: start;
+      }
+      @media (max-width: 860px) {
+        .two {
+          grid-template-columns: 1fr;
+        }
+      }
+      #detail {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        font-size: 14px;
+      }
+      #detail h3 {
+        margin: 0 0 6px;
+      }
+      #detail code,
+      .lede code,
+      li code {
+        background: var(--panel-2);
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+      .arch .box rect {
+        rx: 8;
+        fill: var(--panel-2);
+        stroke: var(--border);
+        stroke-width: 1.5;
+        cursor: pointer;
+      }
+      .arch .box:hover rect,
+      .arch .box.on rect {
+        stroke: var(--accent);
+      }
+      .arch .frame {
+        fill: none;
+        stroke: var(--border);
+        stroke-dasharray: 4 4;
+        rx: 12;
+      }
+      .arch .edge {
+        stroke: var(--muted);
+        stroke-width: 1.5;
+        fill: none;
+      }
+      .arch .vsvg-label {
+        font-size: 15px;
+      }
+      .arch .col {
+        fill: var(--muted);
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .live {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 860px) {
+        .live {
+          grid-template-columns: 1fr;
+        }
+      }
+      .live > div {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .live h3 {
+        margin: 0 0 10px;
+        font-size: 14px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      pre code.hljs {
+        background: transparent;
+        padding: 0;
+      }
+      pre {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px;
+        overflow-x: auto;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+        gap: 16px;
+      }
+      .cards h3 {
+        margin: 0 0 6px;
+        font-size: 15px;
+      }
+      table.api {
+        border-collapse: collapse;
+        font-size: 14px;
+        width: 100%;
+      }
+      table.api td {
+        border-top: 1px solid var(--border);
+        padding: 7px 10px 7px 0;
+        vertical-align: top;
+      }
+      table.api td:first-child {
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="viz-header">
+      <h1>pairwise-sorter</h1>
+      <div class="sub">
+        Rank anything by answering <b>“which is better?”</b> one pair at a time — about n·log₂n
+        questions instead of every pair, and adding an item later costs only ~log₂n more. A
+        TypeScript logic core for Node and the browser, and web components that drop into any page.
       </div>
-      <div class="legend">
-        <span><i style="background:var(--accent)"></i>item being placed</span>
-        <span><i style="background:var(--warn)"></i>the item it is compared with</span>
-        <span><i style="height:0;border-top:3px dashed var(--warn);border-radius:0"></i>a place it could still go</span>
-        <span><i style="height:0;border-top:3px dashed var(--good);border-radius:0"></i>the one place left</span>
-        <span><i style="background:var(--good)"></i>the better of the pair</span>
-        <span><i style="background:var(--panel-2);border:1px solid var(--border);opacity:.4"></i>ruled out — no need to ask</span>
-      </div>
-      <figcaption>Top to bottom is rank, best first. Placed items never change order relative to each other — which is why stopping early keeps everything placed so far.</figcaption>
-    </figure>
-  </section>
-
-  <!-- ── 2. what it costs ───────────────────────────────────────────── -->
-  <section id="cost">
-    <h2>Why it's cheap</h2>
-    <p class="lede">Questions needed to rank <i>n</i> items. Comparing every pair grows with n², binary insertion with n·log₂n — and because it is append-stable, adding one more item only replays old answers and asks ~log₂n new ones.</p>
-    <figure data-viz-id="cost-figure" data-label="Questions needed against list size">
-      <svg id="costSvg" viewBox="0 0 1000 360"></svg>
-      <div class="ctl"><label>List size <input id="costN" type="range" min="2" max="200" value="30"></label> <output id="costOut"></output></div>
-      <div class="legend">
-        <span><i style="background:var(--danger)"></i>every pair, n(n−1)/2</span>
-        <span><i style="background:var(--accent)"></i>binary insertion, worst case</span>
-        <span><i style="background:var(--good)"></i>adding one item to a sorted list</span>
-      </div>
-      <figcaption>Log scale on the vertical axis; each gridline is ten times the one below.</figcaption>
-    </figure>
-  </section>
-
-  <!-- ── 3. what's in the box ───────────────────────────────────────── -->
-  <section id="parts">
-    <h2>What's in the box</h2>
-    <p class="lede">One package, two entry points. The core is plain logic that runs anywhere and never stores anything itself; the elements are views over a shared <code>Sorter</code>. Click any box.</p>
-    <div class="two">
-      <figure class="arch" data-viz-id="arch-figure" data-label="Package architecture"><svg id="archSvg" viewBox="0 0 700 470"></svg></figure>
-      <div id="detail" aria-live="polite"></div>
     </div>
-  </section>
+    <nav class="links">
+      <a class="primary" href="../">Open the sorter app</a>
+      <a href="../api/">API reference</a>
+      <a href="https://github.com/RascalTwo/pairwise-sorter">GitHub</a>
+    </nav>
 
-  <!-- ── 4. live ────────────────────────────────────────────────────── -->
-  <section id="try">
-    <h2>Three elements, one Sorter</h2>
-    <p class="lede">These are the real components, each handed the same <code>Sorter</code> through its <code>.sorter</code> property. Answer on the left (click, or ← → and ↓ for equal) and watch the others follow.</p>
-    <div class="live">
-      <div><h3>&lt;pairwise-compare&gt; + &lt;pairwise-progress&gt;</h3><pairwise-compare id="liveCompare"></pairwise-compare><pairwise-progress id="liveProgress" style="margin-top:14px"></pairwise-progress></div>
-      <div><h3>&lt;pairwise-ranking&gt;</h3><pairwise-ranking id="liveRanking"></pairwise-ranking>
-        <div class="ctl"><button id="liveReset">Start over</button></div></div>
-    </div>
-  </section>
+    <!-- ── 1. how it asks ─────────────────────────────────────────────── -->
+    <section id="how">
+      <h2>How it asks</h2>
+      <p class="lede">
+        Binary insertion with you as the comparator. Each item is slotted into the list already
+        placed by halving the gap it could go in. Step through it — this trace was recorded by
+        running the library's own <code>sortIndices</code> on eight coffees.
+      </p>
+      <figure
+        id="howFig"
+        tabindex="0"
+        aria-label="Binary insertion walkthrough; use arrow keys to step"
+        data-viz-id="how-figure"
+        data-label="Binary insertion walkthrough"
+      >
+        <svg id="howSvg" viewBox="0 0 1000 660"></svg>
+        <p class="say" id="howSay"></p>
+        <div class="ctl">
+          <button id="howPrev" aria-label="Previous step">◀</button>
+          <button id="howPlay">▶ Play</button>
+          <button id="howNext" aria-label="Next step">▶</button>
+          <output id="howAt"></output>
+          <span class="muted">— or focus the figure and use ← →</span>
+        </div>
+        <div class="legend">
+          <span><i style="background: var(--accent)"></i>item being placed</span>
+          <span><i style="background: var(--warn)"></i>the item it is compared with</span>
+          <span
+            ><i style="height: 0; border-top: 3px dashed var(--warn); border-radius: 0"></i>a place
+            it could still go</span
+          >
+          <span
+            ><i style="height: 0; border-top: 3px dashed var(--good); border-radius: 0"></i>the one
+            place left</span
+          >
+          <span><i style="background: var(--good)"></i>the better of the pair</span>
+          <span
+            ><i
+              style="background: var(--panel-2); border: 1px solid var(--border); opacity: 0.4"
+            ></i
+            >ruled out — no need to ask</span
+          >
+        </div>
+        <figcaption>
+          Top to bottom is rank, best first. Placed items never change order relative to each other
+          — which is why stopping early keeps everything placed so far.
+        </figcaption>
+      </figure>
+    </section>
 
-  <!-- ── 5. use it ──────────────────────────────────────────────────── -->
-  <section id="start">
-    <h2>Use it</h2>
-    <p class="lede">Installed straight from GitHub; a <code>prepare</code> script builds it on install. Bun skips dependency build scripts unless you trust the package, so Bun users list it in <code>trustedDependencies</code>.</p>
-    <pre><code class="language-bash">npm i github:RascalTwo/pairwise-sorter
+    <!-- ── 2. what it costs ───────────────────────────────────────────── -->
+    <section id="cost">
+      <h2>Why it's cheap</h2>
+      <p class="lede">
+        Questions needed to rank <i>n</i> items. Comparing every pair grows with n², binary
+        insertion with n·log₂n — and because it is append-stable, adding one more item only replays
+        old answers and asks ~log₂n new ones.
+      </p>
+      <figure data-viz-id="cost-figure" data-label="Questions needed against list size">
+        <svg id="costSvg" viewBox="0 0 1000 360"></svg>
+        <div class="ctl">
+          <label>List size <input id="costN" type="range" min="2" max="200" value="30" /></label>
+          <output id="costOut"></output>
+        </div>
+        <div class="legend">
+          <span><i style="background: var(--danger)"></i>every pair, n(n−1)/2</span>
+          <span><i style="background: var(--accent)"></i>binary insertion, worst case</span>
+          <span><i style="background: var(--good)"></i>adding one item to a sorted list</span>
+        </div>
+        <figcaption>
+          Log scale on the vertical axis; each gridline is ten times the one below.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ── 3. what's in the box ───────────────────────────────────────── -->
+    <section id="parts">
+      <h2>What's in the box</h2>
+      <p class="lede">
+        One package, two entry points. The core is plain logic that runs anywhere and never stores
+        anything itself; the elements are views over a shared <code>Sorter</code>. Click any box.
+      </p>
+      <div class="two">
+        <figure class="arch" data-viz-id="arch-figure" data-label="Package architecture">
+          <svg id="archSvg" viewBox="0 0 700 470"></svg>
+        </figure>
+        <div id="detail" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ── 4. live ────────────────────────────────────────────────────── -->
+    <section id="try">
+      <h2>Three elements, one Sorter</h2>
+      <p class="lede">
+        These are the real components, each handed the same <code>Sorter</code> through its
+        <code>.sorter</code> property. Answer on the left (click, or ← → and ↓ for equal) and watch
+        the others follow.
+      </p>
+      <div class="live">
+        <div>
+          <h3>&lt;pairwise-compare&gt; + &lt;pairwise-progress&gt;</h3>
+          <pairwise-compare id="liveCompare"></pairwise-compare
+          ><pairwise-progress id="liveProgress" style="margin-top: 14px"></pairwise-progress>
+        </div>
+        <div>
+          <h3>&lt;pairwise-ranking&gt;</h3>
+          <pairwise-ranking id="liveRanking"></pairwise-ranking>
+          <div class="ctl"><button id="liveReset">Start over</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 5. use it ──────────────────────────────────────────────────── -->
+    <section id="start">
+      <h2>Use it</h2>
+      <p class="lede">
+        Installed straight from GitHub; a <code>prepare</code> script builds it on install. Bun
+        skips dependency build scripts unless you trust the package, so Bun users list it in
+        <code>trustedDependencies</code>.
+      </p>
+      <pre><code class="language-bash">npm i github:RascalTwo/pairwise-sorter
 # or: bun add github:RascalTwo/pairwise-sorter   (+ "trustedDependencies": ["@rascaltwo/pairwise-sorter"])</code></pre>
-    <div class="cards">
-      <div>
-        <h3>The core, anywhere</h3>
-<pre><code class="language-javascript">import { Sorter, emptyList, item } from "@rascaltwo/pairwise-sorter";
+      <div class="cards">
+        <div>
+          <h3>The core, anywhere</h3>
+          <pre><code class="language-javascript">import { Sorter, emptyList, item } from "@rascaltwo/pairwise-sorter";
 
 const s = new Sorter({ ...emptyList("Coffee"),
   items: ["Flat white", "Mocha", "Cold brew"].map((t) => item(t)) });
@@ -158,23 +418,23 @@ while (s.question) {
   await s.answer(await ask(a, b));      // -1 · 0 · 1
 }
 s.ranking();   // [{ rank, tied, item }]</code></pre>
-      </div>
-      <div>
-        <h3>The whole app, one tag</h3>
-<pre><code class="language-xml">&lt;script type="module"&gt;
+        </div>
+        <div>
+          <h3>The whole app, one tag</h3>
+          <pre><code class="language-xml">&lt;script type="module"&gt;
   import "@rascaltwo/pairwise-sorter/element";
 &lt;/script&gt;
 
 &lt;!-- in memory; add storage-key to keep it --&gt;
 &lt;pairwise-sorter storage-key="my-lists"&gt;&lt;/pairwise-sorter&gt;</code></pre>
-        <h3>Or just the parts you want</h3>
-<pre><code class="language-javascript">const s = new Sorter(list);
+          <h3>Or just the parts you want</h3>
+          <pre><code class="language-javascript">const s = new Sorter(list);
 for (const el of document.querySelectorAll(
   "pairwise-compare, pairwise-ranking")) el.sorter = s;</code></pre>
-      </div>
-      <div>
-        <h3>Theme it</h3>
-<pre><code class="language-css">pairwise-sorter, pairwise-compare {
+        </div>
+        <div>
+          <h3>Theme it</h3>
+          <pre><code class="language-css">pairwise-sorter, pairwise-compare {
   --pw-accent: hotpink;  --pw-bg: #fff;
   --pw-panel: #f4f4f6;   --pw-text: #111;
   --pw-muted: #666;      --pw-border: #ddd;
@@ -182,22 +442,50 @@ for (const el of document.querySelectorAll(
   --pw-radius: 6px;
 }
 pairwise-compare::part(choose) { font-size: 18px; }</code></pre>
-        <h3>Script it</h3>
-<pre><code class="language-javascript">import { installConsole } from "@rascaltwo/pairwise-sorter/element";
+          <h3>Script it</h3>
+          <pre><code class="language-javascript">import { installConsole } from "@rascaltwo/pairwise-sorter/element";
 installConsole(document.querySelector("pairwise-sorter"));
 // DevTools: pairwiseSorter.help()</code></pre>
+        </div>
       </div>
-    </div>
-    <h3 style="margin-top:28px">Events</h3>
-    <table class="api">
-      <tr><td><code>question</code> · <code>change</code> · <code>done</code> · <code>upcoming</code></td><td>on a <code>Sorter</code>: a pair is waiting · the list changed, save it · a full ranking is ready · items that may be asked next (preload their media)</td></tr>
-      <tr><td><code>pairwise-change</code></td><td>on <code>&lt;pairwise-sorter&gt;</code>, detail <code>{library}</code> — every list, after any change</td></tr>
-      <tr><td><code>pairwise-edit</code></td><td>from compare, ranking and bench, detail <code>{index}</code> — an item's edit button</td></tr>
-      <tr><td><code>pairwise-stop</code></td><td>from <code>&lt;pairwise-progress&gt;</code> — “see the list” once half the items are placed</td></tr>
-    </table>
-    <p class="lede" style="margin-top:20px">Every export, type and element is documented in the <a href="../api/">API reference</a>, generated from the source.</p>
-  </section>
+      <h3 style="margin-top: 28px">Events</h3>
+      <table class="api">
+        <tr>
+          <td>
+            <code>question</code> · <code>change</code> · <code>done</code> · <code>upcoming</code>
+          </td>
+          <td>
+            on a <code>Sorter</code>: a pair is waiting · the list changed, save it · a full ranking
+            is ready · items that may be asked next (preload their media)
+          </td>
+        </tr>
+        <tr>
+          <td><code>pairwise-change</code></td>
+          <td>
+            on <code>&lt;pairwise-sorter&gt;</code>, detail <code>{library}</code> — every list,
+            after any change
+          </td>
+        </tr>
+        <tr>
+          <td><code>pairwise-edit</code></td>
+          <td>
+            from compare, ranking and bench, detail <code>{index}</code> — an item's edit button
+          </td>
+        </tr>
+        <tr>
+          <td><code>pairwise-stop</code></td>
+          <td>
+            from <code>&lt;pairwise-progress&gt;</code> — “see the list” once half the items are
+            placed
+          </td>
+        </tr>
+      </table>
+      <p class="lede" style="margin-top: 20px">
+        Every export, type and element is documented in the <a href="../api/">API reference</a>,
+        generated from the source.
+      </p>
+    </section>
 
-  <script type="module" src="./app.js"></script>
-</body>
+    <script type="module" src="./app.js"></script>
+  </body>
 </html>
