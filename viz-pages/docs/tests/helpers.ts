@@ -6,7 +6,6 @@
 import type { HTTPRequest, Page } from "puppeteer-core";
 
 declare global {
-  // eslint-disable-next-line no-var -- global declarations require var
   var viz: {
     open(
       hash?: string | object,
@@ -40,7 +39,6 @@ export async function open(hash?: object): Promise<Page & { errors: string[] }> 
     height: 900,
     before: async (p) => {
       await p.setRequestInterception(true);
-      // oxlint-disable-next-line no-void -- puppeteer's handler type is void, so a failed answer stays a stray rejection as before
       p.on("request", (req) => {
         // oxlint-disable-next-line no-void -- puppeteer's handler type is void, so a failed answer stays a stray rejection as before
         void answer(req);
