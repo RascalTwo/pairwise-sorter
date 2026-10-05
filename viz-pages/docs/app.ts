@@ -1,4 +1,4 @@
-import { arrowMarkers, connect, labelBox, stepper, $, esc, type Box } from "/_kit/viz.js";
+import { arrowMarkers, connect, labelBox, stepper, $, esc, type Box } from "@viz/kit";
 declare const hljs: typeof import("highlight.js").default;
 type Verdict = -1 | 0 | 1;
 /** The slice of the library (./dist/index.js, built, not in git) this page uses. */
