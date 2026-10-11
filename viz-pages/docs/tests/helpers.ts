@@ -5,15 +5,6 @@
 // request is refused so a test never touches the network.
 import type { HTTPRequest, Page } from "puppeteer-core";
 
-declare global {
-  var viz: {
-    open(
-      hash?: string | object,
-      o?: { width?: number; height?: number; before?: (p: Page) => unknown },
-    ): Promise<Page & { errors: string[] }>;
-  };
-}
-
 const BASE = new URL(process.env.VIZ_URL!.replace(/#.*$/u, ""));
 
 const answer = async (req: HTTPRequest): Promise<void> => {
