@@ -23,14 +23,13 @@
     "./dist/element/index.js"
   ],
   "scripts": {
-    "prepare": "if command -v tsc >/dev/null; then tsc -p tsconfig.build.json; else npx -y -p typescript@5 tsc -p tsconfig.build.json; fi",
-    "build": "tsc -p tsconfig.build.json",
+    "compile": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "docs": "typedoc",
     "docs:dev": "tsc -p tsconfig.build.json --outDir viz-pages/docs/dist",
     "docs:publish": "node scripts/publish-docs.ts",
-    "site": "npm run build && npm run docs && cp -R pages/. site/ && cp -R dist site/dist",
+    "site": "npm run compile && npm run docs && cp -R pages/. site/ && cp -R dist site/dist",
     "check": "run-s --continue-on-error clean typecheck test coverage",
     "clean": "node -e \"fs.rmSync('out', { recursive: true, force: true })\"",
     "coverage": "r2-test-kit merge"

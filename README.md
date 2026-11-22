@@ -8,7 +8,7 @@ and adding an item later costs only ~log₂n more.
 npm i github:RascalTwo/pairwise-sorter
 ```
 
-Installing from GitHub builds the package with its `prepare` script.
+Installing from GitHub needs no build: the compiled `dist/` is committed. After changing `src/`, run `npm run compile` and commit `dist/` (a test fails until you do).
 
 ```js
 import { Sorter, emptyList, item } from "@rascaltwo/pairwise-sorter";
