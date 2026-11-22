@@ -15,10 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-      - run: bun install --frozen-lockfile
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
       # The docs page (pages/docs/index.html) is committed: it is a published viz, and CI has no viz skill.
-      - run: bun run site
+      - run: npm run site
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

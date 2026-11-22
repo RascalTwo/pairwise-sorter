@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { emptyList, flipOfIds, idOf, item, pairKeyOf, Sorter, type LogEntry, type Verdict } from "../src/index.ts";
 
 const said = (a: string, b: string, v: Verdict): LogEntry => [pairKeyOf(a, b), (v * flipOfIds(a, b)) as Verdict];

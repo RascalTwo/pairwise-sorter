@@ -5,11 +5,10 @@ as the comparator: about n·log₂n questions instead of comparing everything to
 and adding an item later costs only ~log₂n more.
 
 ```sh
-npm i github:RascalTwo/pairwise-sorter     # or: bun add github:RascalTwo/pairwise-sorter
+npm i github:RascalTwo/pairwise-sorter
 ```
 
-Installing from GitHub builds the package with its `prepare` script. Bun skips dependency
-build scripts unless you trust the package, so Bun users add it to `trustedDependencies`.
+Installing from GitHub builds the package with its `prepare` script.
 
 ```js
 import { Sorter, emptyList, item } from "@rascaltwo/pairwise-sorter";
@@ -30,14 +29,14 @@ Try it: <https://rascaltwo.github.io/pairwise-sorter/> · Documentation: <https:
 ## Develop
 
 ```sh
-bun install
-bun run test      # behaviour tests (browser ones in headless Chrome); fails under 100% coverage
-bun run typecheck
-bun run site      # build what GitHub Pages serves into site/: the app, docs/, api/ (TypeDoc)
+npm ci
+npm test          # behaviour tests (browser ones in headless Chrome); fails under 100% coverage
+npm run typecheck
+npm run site      # build what GitHub Pages serves into site/: the app, docs/, api/ (TypeDoc)
 ```
 
-The docs page is a [/viz](https://github.com/RascalTwo/ai-setup) page in `viz-pages/docs/` (`bun run docs:dev` builds the
-library beside it for the local viz server). After editing it or its `hero.html`, `bun run docs:publish` (needs the viz
+The docs page is a [/viz](https://github.com/RascalTwo/ai-setup) page in `viz-pages/docs/` (`npm run docs:dev` builds the
+library beside it for the local viz server). After editing it or its `hero.html`, `npm run docs:publish` (needs the viz
 skill) regenerates the committed `pages/docs/`; a test fails until you do. The page loads the library at runtime, so
 library changes reach the docs demo on the next deploy without re-publishing.
 

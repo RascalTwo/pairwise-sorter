@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { close, open, text, texts } from "./harness.ts";
 
 /** <pairwise-conflicts> over a sorter seeded with `said` answers: [winner, loser] or [x, y, "="]. */

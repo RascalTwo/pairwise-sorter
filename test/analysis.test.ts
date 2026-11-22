@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import {
   budgetFor, disagreements, flipOfIds, idOf, item, minimiseDisagreements, pairKeyOf, placement, preferences,
   rankRows, roc, STOP_AT, tieredBudget, tierOverrides, weightedOrder, type LogEntry, type Verdict,

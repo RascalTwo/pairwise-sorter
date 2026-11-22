@@ -2,7 +2,7 @@
 // sortIndices, the cost chart calls the real budgetFor, and the three live elements are the real components over one
 // Sorter. What must not go wrong silently: a trace that does not end in the right order, a cost figure that is
 // wrong, live elements that disagree with each other or with the answers given.
-import { describe, it, expect } from "bun:test";
+import { describe, it, expect } from "vitest";
 import type { Page } from "puppeteer-core";
 import { open, text, question, ranking, progress, nextQuestion, inside } from "./helpers.ts";
 

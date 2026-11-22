@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import {
   addList, deleteList, emptyLibrary, emptyList, exportList, flipOfIds, idOf, importList, item, localStore, migrate,
   pairKeyOf, resolveList, SCHEMA, type Library, type Verdict,

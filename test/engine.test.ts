@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { budgetFor, createEngine, findConflicts, replay, retireLog, flipOfIds, idOf, item, migrateId, orient, pairKeyOf, SEP, tieClasses, tierName, tierOf, tierVerdict, type LogEntry, type Verdict } from "../src/index.ts";
 
 const alphabetical = ["e", "c", "a", "d", "b"].map((t) => item(t, "u" + t));

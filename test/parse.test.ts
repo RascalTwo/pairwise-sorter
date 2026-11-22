@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { fromJSON, idOf, idParts, isAudio, isMedia, isVideo, item, parseItems, parseLine, toText } from "../src/index.ts";
 
 describe("parseLine", () => {

@@ -486,9 +486,8 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-
   <!-- ── 5. use it ──────────────────────────────────────────────────── -->
   <section id="start">
     <h2>Use it</h2>
-    <p class="lede">Installed straight from GitHub; a <code>prepare</code> script builds it on install. Bun skips dependency build scripts unless you trust the package, so Bun users list it in <code>trustedDependencies</code>.</p>
-    <pre><code class="language-bash">npm i github:RascalTwo/pairwise-sorter
-# or: bun add github:RascalTwo/pairwise-sorter   (+ "trustedDependencies": ["@rascaltwo/pairwise-sorter"])</code></pre>
+    <p class="lede">Installed straight from GitHub; a <code>prepare</code> script builds it on install.</p>
+    <pre><code class="language-bash">npm i github:RascalTwo/pairwise-sorter</code></pre>
     <div class="cards">
       <div>
         <h3>The core, anywhere</h3>
@@ -548,7 +547,7 @@ installConsole(document.querySelector("pairwise-sorter"));
     import { arrowMarkers, connect, labelBox, stepper, $, esc } from "/_kit/viz.js";
     // The library is loaded at RUNTIME, never bundled into the published page: a bundled copy
     // would silently keep demoing old code whenever the library changed without a re-publish.
-    // Locally (`bun run docs:dev`) it sits in ./dist/ beside this page; on the site this page is
+    // Locally (`npm run docs:dev`) it sits in ./dist/ beside this page; on the site this page is
     // /docs/ and CI builds the library into /dist/. A computed specifier is also what stops
     // `viz publish` from bundling it.
     const lib = location.pathname.includes("/viz-pages/") ? "./dist/" : "../dist/";
@@ -822,4 +821,4 @@ stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="tru
 </body>
 </html>
 
-<!-- docs-source-sha256: 0b448e17db87012cacb9df28d77ac9152e308606085fec9cb35688a7ea959e25 -->
+<!-- docs-source-sha256: 1e25e0bc1cbac7d63753d2b5cc6f194e32b43be99b90c0964a2ea54bfbd70051 -->

@@ -14,7 +14,7 @@
     "rewriteRelativeImportExtensions": true,
     "verbatimModuleSyntax": true,
     "types": [
-      "bun"
+      "node"
     ],
     "skipLibCheck": true
   },

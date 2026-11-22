@@ -1,8 +1,9 @@
 // Shared by the docs page's tests. The page has no backend, but it loads the LIBRARY it documents at run time
-// (./dist/index.js, built by `bun run docs:dev`, not in git), so these tests run the real library: the trace, the
+// (./dist/index.js, built by `npm run docs:dev`, not in git), so these tests run the real library: the trace, the
 // cost chart and the live elements are the library's own answers. The one outside dependency, highlight.js
 // from cdnjs, only colours the code samples, so a five-line stand-in answers it; every other cross-origin
 // request is refused so a test never touches the network.
+import { setTimeout } from "node:timers/promises";
 import type { HTTPRequest, Page } from "puppeteer-core";
 
 const BASE = new URL(process.env.VIZ_URL!.replace(/#.*$/u, ""));
@@ -103,7 +104,7 @@ export const nextQuestion = async (
     const q = await question(page);
     if ((q?.a ?? null) !== (then?.a ?? null) || (q?.b ?? null) !== (then?.b ?? null)) return q;
     // oxlint-disable-next-line no-await-in-loop -- polling: wait between checks
-    await Bun.sleep(25);
+    await setTimeout(25);
   }
   throw new Error("the comparison never moved on from " + JSON.stringify(then));
 };

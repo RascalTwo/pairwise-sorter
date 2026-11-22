@@ -4,3 +4,4 @@ coverage/
 site/
 viz-pages/docs/dist/
 .viz-publish/
+out/

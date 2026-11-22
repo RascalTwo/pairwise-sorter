@@ -1,17 +1,25 @@
-// Runs the web components in real headless Chrome. Bun serves the built package; each test
-// opens a fixture page that imports it. Chrome's own V8 coverage is collected for the element
-// code (Bun cannot see code that runs in a browser) and gated at 100% in `setup.ts`.
+// Runs the web components in real headless Chrome. A Node server serves the library's own source,
+// types stripped and instrumented with Istanbul, and each test opens a fixture page that imports it.
+// The counters the page collects are saved per test for `r2-test-kit merge`, which merges them with
+// the logic tests' counters and checks the coverage floor.
 
-import { existsSync } from "node:fs";
-import puppeteer, { type Browser, type CoverageEntry, type Page } from "puppeteer-core";
+import { existsSync, readFileSync } from "node:fs";
+import { createServer, type Server } from "node:http";
+import type { AddressInfo } from "node:net";
+import { relative } from "node:path";
+import { stripTypeScriptTypes } from "node:module";
+import { createInstrumenter } from "istanbul-lib-instrument";
+import puppeteer, { type Browser, type Page } from "puppeteer-core";
+import { add, diff, OUT, writeRecord } from "@rascaltwo/r2-test-kit/record";
 
 const ROOT = new URL("../../", import.meta.url).pathname;
 const fixtures = new Map<string, string>();
-let server: ReturnType<typeof Bun.serve> | null = null;
+const instrumenter = createInstrumenter({ esModules: true, compact: false, coverageGlobalScope: "globalThis", coverageGlobalScopeFunc: false });
+let server: Server | null = null;
 let browser: Browser | null = null;
-let built = false;
-/** Covered and total character ranges per element script, merged across every page. */
-export const coverage = new Map<string, { text: string; covered: [number, number][] }>();
+/** What the pages of the running test counted, and the static maps they counted against. */
+let counted = {};
+let maps: Record<string, object> = {};
 
 const CHROME = [
   process.env.PUPPETEER_EXECUTABLE_PATH,
@@ -20,25 +28,30 @@ const CHROME = [
   "/usr/bin/chromium",
 ].find((p) => p && existsSync(p));
 
+/** The source file a request names: only src/**.ts, instrumented. Positions survive type stripping, so lines match the source. */
+function source(path: string): string | null {
+  if (!/^\/src\/[\w/.-]+\.ts$/.test(path) || path.includes("..")) return null;
+  const file = ROOT + path.slice(1);
+  if (!existsSync(file)) return null;
+  return instrumenter.instrumentSync(stripTypeScriptTypes(readFileSync(file, "utf8")), file);
+}
+
 async function start() {
-  if (!built) {
-    const tsc = Bun.spawnSync(["bun", "run", "build"], { cwd: ROOT, stdout: "pipe", stderr: "pipe" });
-    if (tsc.exitCode !== 0) throw new Error("build failed:\n" + tsc.stdout.toString() + tsc.stderr.toString());
-    built = true;
-  }
-  server ??= Bun.serve({
-    port: 0,
-    fetch(req) {
-      const path = new URL(req.url).pathname;
+  server ??= await new Promise<Server>((resolve) => {
+    const s = createServer((req, res) => {
+      const path = new URL(req.url!, "http://x").pathname;
       const html = fixtures.get(path);
-      if (html) return new Response(html, { headers: { "content-type": "text/html" } });
-      const file = Bun.file(ROOT + path.slice(1));
-      return file.size ? new Response(file) : new Response("not found", { status: 404 });
-    },
+      const js = html ? null : source(path);
+      if (html) res.writeHead(200, { "content-type": "text/html" }).end(html);
+      else if (js !== null) res.writeHead(200, { "content-type": "text/javascript" }).end(js);
+      else if (path === "/test/element/px.svg") res.writeHead(200, { "content-type": "image/svg+xml" }).end(readFileSync(ROOT + path.slice(1)));
+      else res.writeHead(404).end("not found");
+    });
+    s.listen(0, () => resolve(s));
   });
   if (!CHROME) throw new Error("no Chrome found — set PUPPETEER_EXECUTABLE_PATH");
   browser ??= await puppeteer.launch({ executablePath: CHROME, headless: true, args: ["--no-sandbox"] });
-  return { server, browser };
+  return { port: (server.address() as AddressInfo).port, browser };
 }
 
 let n = 0;
@@ -48,12 +61,12 @@ const openPages = new Set<Page>();
  * `pwel` (the element entry); the page is ready once it has run.
  */
 export async function open(body: string, script = ""): Promise<Page> {
-  const { server, browser } = await start();
+  const { port, browser } = await start();
   const path = `/fixture/${++n}`;
   fixtures.set(path, `<!doctype html><html><head><meta charset="utf-8"></head><body>${body}
 <script type="module">
-import * as pw from "/dist/index.js";
-import * as pwel from "/dist/element/index.js";
+import * as pw from "/src/index.ts";
+import * as pwel from "/src/element/index.ts";
 window.pw = pw; window.pwel = pwel;
 ${script}
 window.__ready = true;
@@ -63,46 +76,20 @@ window.__ready = true;
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(String(e)));
   (page as Page & { errors: string[] }).errors = errors;
-  await page.coverage.startJSCoverage({ resetOnNavigation: false });
-  await page.goto(`http://localhost:${server.port}${path}`);
+  await page.goto(`http://localhost:${port}${path}`);
   await page.waitForFunction("window.__ready === true");
   return page;
 }
 
-/** Close a page, folding its coverage into the running total. Throws if the page logged errors. */
+/** Close a page, folding its coverage into the running test's. Throws if the page logged errors. */
 export async function close(page: Page): Promise<void> {
   openPages.delete(page);
-  record(await page.coverage.stopJSCoverage());
+  const cov = (await page.evaluate("window.__coverage__ ?? {}")) as Record<string, object>;
+  Object.assign(maps, cov);
+  add(counted, diff({}, cov));
   const errors = (page as Page & { errors: string[] }).errors;
   await page.close();
   if (errors.length) throw new Error("page errors:\n" + errors.join("\n"));
-}
-
-function record(entries: CoverageEntry[]) {
-  for (const e of entries) {
-    const m = e.url.match(/\/dist\/element\/.+\.js$/);
-    if (!m) continue;
-    const cur = coverage.get(m[0]) ?? { text: e.text, covered: [] };
-    cur.covered.push(...e.ranges.map((r): [number, number] => [r.start, r.end]));
-    coverage.set(m[0], cur);
-  }
-}
-
-/** Lines of element code no page ever ran. Blank, comment and bracket-only lines don't count. */
-export function uncoveredLines(): string[] {
-  const out: string[] = [];
-  for (const [url, { text, covered }] of coverage) {
-    const hit = new Uint8Array(text.length);
-    for (const [s, e] of covered) hit.fill(1, s, e);
-    let pos = 0;
-    text.split("\n").forEach((line, i) => {
-      const code = line.replace(/\/\/.*$/, "").trim();
-      const missed = [...line].some((ch, j) => !hit[pos + j] && ch.trim());
-      if (missed && code && !/^[\s})\];,]*$/.test(code) && !/^(\*|\/\*\*|\*\/)/.test(code)) out.push(`${url}:${i + 1}: ${code}`);
-      pos += line.length + 1;
-    });
-  }
-  return out;
 }
 
 /** Close pages a failed test left open, keeping their coverage. */
@@ -110,9 +97,16 @@ export async function closeLeftovers(): Promise<void> {
   for (const page of openPages) await close(page).catch(() => {});
 }
 
+/** Save what the finished test's pages counted as one record, for `r2-test-kit merge`. */
+export function saveCoverage(name: string): void {
+  if (Object.keys(counted).length) writeRecord(`${OUT}/e2e`, { runner: "vitest-chrome", name }, counted, maps, process.cwd());
+  counted = {};
+  maps = {};
+}
+
 export async function stop() {
   await browser?.close();
-  server?.stop(true);
+  server?.close();
   browser = null;
   server = null;
 }

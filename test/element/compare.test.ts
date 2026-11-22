@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import type { Page } from "puppeteer-core";
 import { close, open, text, texts } from "./harness.ts";
 
@@ -257,8 +257,8 @@ describe("<pairwise-compare>", () => {
     // WHEN the cards render
     const sizes = await page.$$eval("pairwise-compare >>> [part~=card]", (cs) => cs.map((c) => [c.clientWidth, c.scrollWidth]));
     // THEN they share the width evenly and nothing spills out of either
-    expect(sizes[0][0]).toBe(sizes[1][0]);
-    for (const [client, scroll] of sizes) expect(scroll).toBeLessThanOrEqual(client);
+    expect(sizes[0]?.[0]).toBe(sizes[1]?.[0]);
+    for (const [client = 0, scroll = 0] of sizes) expect(scroll).toBeLessThanOrEqual(client);
     await close(page);
   });
 

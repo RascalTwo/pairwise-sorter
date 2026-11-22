@@ -1,7 +1,7 @@
 {
   "name": "@rascaltwo/pairwise-sorter",
   "version": "0.1.0",
-  "description": "Rank anything by answering \"which is better?\" one pair at a time \u2014 a logic core and web components.",
+  "description": "Rank anything by answering \"which is better?\" one pair at a time — a logic core and web components.",
   "license": "MIT",
   "type": "module",
   "repository": "github:RascalTwo/pairwise-sorter",
@@ -23,19 +23,31 @@
     "./dist/element/index.js"
   ],
   "scripts": {
-    "prepare": "if command -v tsc >/dev/null; then tsc -p tsconfig.build.json; else bunx -p typescript@5 tsc -p tsconfig.build.json; fi",
+    "prepare": "if command -v tsc >/dev/null; then tsc -p tsconfig.build.json; else npx -y -p typescript@5 tsc -p tsconfig.build.json; fi",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
-    "test": "bun test --timeout 60000",
+    "test": "vitest run",
     "docs": "typedoc",
     "docs:dev": "tsc -p tsconfig.build.json --outDir viz-pages/docs/dist",
-    "docs:publish": "bun scripts/publish-docs.ts",
-    "site": "bun run build && bun run docs && cp -R pages/. site/ && cp -R dist site/dist"
+    "docs:publish": "node scripts/publish-docs.ts",
+    "site": "npm run build && npm run docs && cp -R pages/. site/ && cp -R dist site/dist",
+    "check": "run-s --continue-on-error clean typecheck test coverage",
+    "clean": "node -e \"fs.rmSync('out', { recursive: true, force: true })\"",
+    "coverage": "r2-test-kit merge"
   },
   "devDependencies": {
-    "@types/bun": "^1.4.2",
+    "@rascaltwo/r2-test-kit": "file:../ai-setup/tools/r2-test-kit",
+    "@types/istanbul-lib-instrument": "^1.7.8",
+    "@types/node": "^24.0.0",
+    "istanbul-lib-instrument": "^6.0.3",
+    "npm-run-all2": "9.0.4",
     "puppeteer-core": "^25.12.0",
     "typedoc": "^0.28.20",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vite": "8.3.8",
+    "vitest": "5.1.0"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

@@ -28,7 +28,7 @@ interface Step {
 type Entry = [id: string, label: string, what: string, api: string[]];
 // The library is loaded at RUNTIME, never bundled into the published page: a bundled copy
 // would silently keep demoing old code whenever the library changed without a re-publish.
-// Locally (`bun run docs:dev`) it sits in ./dist/ beside this page; on the site this page is
+// Locally (`npm run docs:dev`) it sits in ./dist/ beside this page; on the site this page is
 // /docs/ and CI builds the library into /dist/. A computed specifier is also what stops
 // `viz publish` from bundling it.
 const lib = location.pathname.includes("/viz-pages/") ? "./dist/" : "../dist/";

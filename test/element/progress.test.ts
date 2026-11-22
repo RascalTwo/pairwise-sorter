@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { close, open, text } from "./harness.ts";
 
 /** A page with a sorter over `titles` wired to one element, answering questions by title. */
