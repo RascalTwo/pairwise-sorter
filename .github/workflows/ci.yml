@@ -5,10 +5,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: pairwise-sorter
+      # package.json installs r2-test-kit from file:../ai-setup/tools/r2-test-kit, so ai-setup sits beside the repo
+      - uses: actions/checkout@v4
+        with:
+          repository: RascalTwo/ai-setup
+          path: ai-setup
       - uses: actions/setup-node@v4
         with:
           node-version: 24
       - run: npm ci
+        working-directory: pairwise-sorter
       - run: npm run typecheck
+        working-directory: pairwise-sorter
       - run: npm test
+        working-directory: pairwise-sorter
       - run: npm run build
+        working-directory: pairwise-sorter

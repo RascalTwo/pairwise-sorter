@@ -14,7 +14,7 @@ The element tests' harness serves `src/**/*.ts` to Chrome straight from source: 
 
 The floor is rounded down to whole percents (99 lines, 99 statements, 99 functions, 93 branches): the kit's exact-value ratchet flaps on 0.01 noise. It is lower than the old 100% lines gate because Istanbul counts statements and branch arms Bun did not; `engine.ts` has two uncovered lines, and the floor only rises from here.
 
-Not decided here: a published `r2-test-kit`. It installs from the sibling `ai-setup` checkout (`file:../ai-setup/tools/r2-test-kit`), so `npm ci` in GitHub Actions fails until the kit is published or vendored.
+`r2-test-kit` isn't published and sits in a subfolder of `ai-setup`, which npm can't install from a git URL. It installs from `file:../ai-setup/tools/r2-test-kit`, and both workflows check out the public `RascalTwo/ai-setup` beside the repo to satisfy that path. Until ai-setup's `main` carries the kit's `./record` export, CI fails; revisit when the kit gets its own repo or an npm release.
 
 ## Alternatives Considered
 

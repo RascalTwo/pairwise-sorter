@@ -15,15 +15,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: pairwise-sorter
+      # package.json installs r2-test-kit from file:../ai-setup/tools/r2-test-kit, so ai-setup sits beside the repo
+      - uses: actions/checkout@v4
+        with:
+          repository: RascalTwo/ai-setup
+          path: ai-setup
       - uses: actions/setup-node@v4
         with:
           node-version: 24
       - run: npm ci
+        working-directory: pairwise-sorter
       # The docs page (pages/docs/index.html) is committed: it is a published viz, and CI has no viz skill.
       - run: npm run site
+        working-directory: pairwise-sorter
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: pairwise-sorter/site
   deploy:
     needs: build
     runs-on: ubuntu-latest
